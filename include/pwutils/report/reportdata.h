@@ -5,7 +5,7 @@
 #include <fstream>
 #include <filesystem>
 #include <memory>
-#include "report/reporthelper.h"
+#include "pwutils/report/reporthelper.h"
 
 namespace pw{
 

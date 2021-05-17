@@ -32,7 +32,7 @@ add_library(${PWUTILS_LIBNAME} ${SRC_FILES} ${INCLUDE_FILES})
 add_library("pw::${PWUTILS_LIBNAME}" ALIAS ${PWUTILS_LIBNAME})
 
 target_include_directories(${PWUTILS_LIBNAME} PUBLIC 
-	$<BUILD_INTERFACE:${pwutils_SOURCE_DIR}/include/pwutils>
+	$<BUILD_INTERFACE:${pwutils_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include/pwutils>
 )
 

@@ -1,6 +1,6 @@
 
-#include "pwthreads.h"
-#include "pwexcept.h"
+#include "pwutils/pwthreads.h"
+#include "pwutils/pwexcept.h"
 #include <vector>
 
 namespace pw{

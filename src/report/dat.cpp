@@ -1,6 +1,6 @@
 
-#include "report/dat.h"
-#include "report/reporthelper.h"
+#include "pwutils/report/dat.h"
+#include "pwutils/report/reporthelper.h"
 #include <algorithm>
 #include <fstream>
 #include <iomanip>

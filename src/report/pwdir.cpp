@@ -6,9 +6,9 @@
 #include <iostream>
 #include <filesystem>
 #include <sstream>
-#include "pwstrings.h"
-#include "pwexcept.h"
-#include "report/pwdir.h"
+#include "pwutils/pwstrings.h"
+#include "pwutils/pwexcept.h"
+#include "pwutils/report/pwdir.h"
 
 namespace pw{
 

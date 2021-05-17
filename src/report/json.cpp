@@ -1,7 +1,7 @@
 
-#include "report/json.h"
-#include "report/reporthelper.h"
-#include "report/reportdata.h"
+#include "pwutils/report/json.h"
+#include "pwutils/report/reporthelper.h"
+#include "pwutils/report/reportdata.h"
 #include <fstream>
 #include <iomanip>
 #include <string>

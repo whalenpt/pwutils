@@ -2,8 +2,8 @@
 #ifndef JSON_H_
 #define JSON_H_ 
 
-#include "report/reportdata.h"
-#include "report/reporthelper.h"
+#include "pwutils/report/reportdata.h"
+#include "pwutils/report/reporthelper.h"
 #include <complex> 
 #include <string> 
 #include <vector> 

@@ -8,8 +8,8 @@
 #include <ctime>
 #include <map> 
 #include <fstream>
-#include "report/reportdata.h"
-#include "report/reporthelper.h"
+#include "pwutils/report/reportdata.h"
+#include "pwutils/report/reporthelper.h"
 
 namespace dat{
 
