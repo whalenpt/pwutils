@@ -1,5 +1,6 @@
 
 #include "pwutils/report/reportdata.h"
+#include "pwutils/report/reporthelper.h"
 #include <filesystem>
 
 namespace pw{
@@ -22,14 +23,22 @@ std::filesystem::path filePath(const std::filesystem::path& dir_path,
 
 std::filesystem::path filePath(const std::string& nm,int repNum,const std::string& extension)
 {
+    std::filesystem::path dir_path(CURRENT_DIR_PATH);
+    dir_path /= DEFAULT_REPORTOUT_DIR; 
+    if(!std::filesystem::is_directory(dir_path))
+        std::filesystem::create_directory(dir_path);
 	std::filesystem::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
-	return local_path;
+	return dir_path / local_path;
 }
 
 std::filesystem::path filePath(const std::string& nm,const std::string& extension)
 {
+    std::filesystem::path dir_path(CURRENT_DIR_PATH);
+    dir_path /= DEFAULT_REPORTOUT_DIR; 
+    if(!std::filesystem::is_directory(dir_path))
+        std::filesystem::create_directory(dir_path);
 	std::filesystem::path local_path(nm+"."+extension);
-	return local_path;
+	return dir_path / local_path;
 }
 
 void VBReport::setItem(const std::string& key,double val) {

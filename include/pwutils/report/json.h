@@ -40,7 +40,7 @@ class ReportRealData1D : public pw::VBReportRealData1D
                 pw::VBReportRealData1D(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
         ~ReportRealData1D() {};
-        void report(std::ofstream& os) {
+        void report(std::ofstream& os) const {
             os << "{" << std::endl;
             if(VBReportData::metadataOn())
                 reportMetadata(os);
@@ -63,7 +63,7 @@ class ReportComplexData1D : public pw::VBReportComplexData1D
                 pw::VBReportComplexData1D(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
 		~ReportComplexData1D() {}
-        void report(std::ofstream& os) {
+        void report(std::ofstream& os) const {
             os << "{" << std::endl;
             if(VBReportData::metadataOn())
                 reportMetadata(os);
@@ -88,7 +88,7 @@ class ReportRealData2D : public pw::VBReportRealData2D
                 name,x,y,z,x_label,y_label,z_label) {
                     pw::VBReport::setFileExtension("json"); }
         ~ReportRealData2D() {}
-        void report(std::ofstream& os) {
+        void report(std::ofstream& os) const {
             os << "{" << std::endl;
             if(VBReportData::metadataOn())
                 reportMetadata(os);
@@ -114,7 +114,7 @@ class ReportComplexData2D : public pw::VBReportComplexData2D
                 name,x,y,z,x_label,y_label,z_label) {
                     pw::VBReport::setFileExtension("json");}
 		~ReportComplexData2D() {}
-        void report(std::ofstream& os) {
+        void report(std::ofstream& os) const {
             os << "{" << std::endl;
             if(VBReportData::metadataOn())
                 reportMetadata(os);

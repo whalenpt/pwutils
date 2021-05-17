@@ -4,12 +4,16 @@
 
 #include <vector>
 #include <map>
+#include <string>
+#include <filesystem>
 #include "pwutils/pwconstants.h"
 
 namespace pw{
 
 const int REPORT_PRECISION = 16;
 const int REPORT_PADING = 8;
+const std::filesystem::path CURRENT_DIR_PATH(std::filesystem::current_path());
+const std::string DEFAULT_REPORTOUT_DIR("pwout");
 using metadataMap = std::map<std::string,std::string>;
 using metadataPair = std::pair<std::string,std::string>;
 

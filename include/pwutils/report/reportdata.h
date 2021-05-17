@@ -60,15 +60,20 @@ class VBReportData : public VBReport
 		VBReportData(const std::string& nm) 
 		  : VBReport(nm) {}
 		virtual ~VBReportData() {}
-		virtual void report(std::ofstream& os) {
+		virtual void report(std::ofstream& os) const {
 		    if(metadataOn())
 		        reportMetadata(os);
 		    reportData(os);
         }
-		friend std::ofstream& operator<<(std::ofstream& os,std::unique_ptr<VBReportData> def){
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData& def){
+			def.report(os);
+			return os;
+		}
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData* def){
 			def->report(os);
 			return os;
 		}
+
 	private:
 		const std::string m_name;
 		bool m_report_metadata;
@@ -227,12 +232,16 @@ class VBReportVector : public VBReport
 		VBReportVector(const std::string& nm,std::string label="x") : 
 		    VBReport(nm), m_label(label) {}
 		virtual ~VBReportVector() {}
-		virtual void report(std::ofstream& os) {
+		virtual void report(std::ofstream& os) const {
 		    if(metadataOn())
 		        reportMetadata(os);
 		    reportVector(os);
         }
-		friend std::ofstream& operator<<(std::ofstream& os,std::unique_ptr<VBReportVector> def){
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector& def) {
+			def.report(os);
+			return os;
+		}
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector* def) {
 			def->report(os);
 			return os;
 		}
