@@ -18,6 +18,8 @@ else()
 	set(PWUTILS_LIBNAME "pwutils_static")
 endif()
 
+add_subdirectory(src)
+
 
 
 
