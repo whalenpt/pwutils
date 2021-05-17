@@ -8,5 +8,6 @@
 .cache
 *.swo
 *.swp
+*.dat
 
 
