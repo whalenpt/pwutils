@@ -1,6 +1,6 @@
 # pwutils #
 
-c++ commonly used helper functions and classes
+C++ helper functions and classes for repetitive tasks
 
 # Dependencies #
 
