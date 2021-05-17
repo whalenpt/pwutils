@@ -24,7 +24,18 @@ int main()
     os.open(report_real->filePath().string());
     report_real->report(os);
     os.close();
+
+    std::vector<pw::dcmplx> cplx_vec2(N,0.);
+    std::unique_ptr<dat::ReportComplexVector> complex_def(\
+        new dat::ReportComplexVector("complex_vector2",cplx_vec2));
+    complex_def->setReportMetadata(false);
+    complex_def->setPrecision(3);
+    os.open(complex_def->filePath().string());
+    // Need to dereference unique_ptr
+    os << *complex_def;
+    os.close();
     return 0;
+
 }
 
 

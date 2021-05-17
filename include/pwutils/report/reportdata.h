@@ -65,14 +65,12 @@ class VBReportData : public VBReport
 		        reportMetadata(os);
 		    reportData(os);
         }
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData& def){
-			def.report(os);
-			return os;
-		}
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData* def){
-			def->report(os);
-			return os;
-		}
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData& def){ def.report(os);
+			return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData* def){ def->report(os);
+			return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<VBReportData> def){ def->report(os); 
+		    return os; }
 
 	private:
 		const std::string m_name;
@@ -237,14 +235,13 @@ class VBReportVector : public VBReport
 		        reportMetadata(os);
 		    reportVector(os);
         }
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector& def) {
-			def.report(os);
-			return os;
-		}
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector* def) {
-			def->report(os);
-			return os;
-		}
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector& def) { def.report(os);
+			return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector* def) { def->report(os);
+			return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,std::unique_ptr<VBReportVector>const& def) { 
+		    return os << *def;}
+
 		std::string getLabel() const {return m_label;}
 		void setLabel(const std::string& label) {m_label = label;}
 	private:
