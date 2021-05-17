@@ -13,11 +13,11 @@ endif()
 
 if (NOT PWUTILS_STATIC)
     set(BUILD_SHARED_LIBS ON)
-    message(STATUS "Building shared spida library")
+    message(STATUS "Building shared pwutils library")
 	set(PWUTILS_LIBNAME "pwutils")
 else()
     set(BUILD_SHARED_LIBS OFF)
-    message(STATUS "Building static spida library")
+    message(STATUS "Building static pwutils library")
 	set(PWUTILS_LIBNAME "pwutils_static")
 endif()
 
