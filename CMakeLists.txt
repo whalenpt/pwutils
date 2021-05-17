@@ -32,6 +32,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     endif()
     if(PWUTILS_EXAMPLES)
         add_subdirectory(examples)
+    endif()
 endif()
 
 
