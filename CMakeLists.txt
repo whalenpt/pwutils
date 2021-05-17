@@ -5,6 +5,7 @@ project(pwutils VERSION 0.0.1 LANGUAGES CXX)
 
 option(PWUTILS_STATIC "Build pwutils as static (ON) or shared library (OFF)" OFF)
 option(PWUTILS_TEST "Build pwutils tests" OFF)
+option(PWUTILS_EXAMPLES "Build pwutils examples" OFF)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
 	include(GNUInstallDirs)
@@ -29,6 +30,8 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         add_subdirectory(external/googletest)
         add_subdirectory(test)
     endif()
+    if(PWUTILS_EXAMPLES)
+        add_subdirectory(examples)
 endif()
 
 

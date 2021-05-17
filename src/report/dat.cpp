@@ -134,11 +134,14 @@ void writeColVec(std::ofstream& os,const std::vector<double>& x,int precision)
 }
 void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x,int precision)
 {
+    std::cout << "FLAG 1" << std::endl;
+    std::cout << "WriteColVec size: " << x.size() << std::endl;
 	for(unsigned int i = 0; i < x.size(); i++){
 		os << std::scientific << std::setprecision(precision) << std::setw(precision+REPORT_PADING) << x[i].real() \
 		   << std::scientific << std::setprecision(precision) << std::setw(precision+REPORT_PADING) << x[i].imag() \
 		   << std::endl;
 	}
+    std::cout << "FLAG 2" << std::endl;
 }
 
 void writeDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
