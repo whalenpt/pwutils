@@ -8,7 +8,7 @@
 #include <ctime>
 #include <map> 
 #include <fstream>
-#include "pwutils/report/reportdata.h"
+#include "pwutils/report/vbreportbase.h"
 #include "pwutils/report/reporthelper.h"
 
 namespace dat{

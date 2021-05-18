@@ -1,11 +1,12 @@
-#ifndef REPORTDATA_H
-#define REPORTDATA_H
+#ifndef VBREPORTBASE_H
+#define VBREPORTBASE_H
 
 #include <string>
 #include <fstream>
 #include <filesystem>
 #include <memory>
 #include "pwutils/report/reporthelper.h"
+#include "pwutils/report/dataio.h"
 
 namespace pw{
 

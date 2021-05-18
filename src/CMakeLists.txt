@@ -8,9 +8,10 @@ set(SRC_FILES
 	pwmath.cpp
 	report/dat.cpp
 	report/json.cpp
-	report/reportdata.cpp
+	report/vbreportbase.cpp
 	report/reporthelper.cpp
 	report/pwdir.cpp
+	report/dataio.cpp
 )
 
 set(INCL_DIR "${pwutils_SOURCE_DIR}/include/pwutils")
@@ -24,8 +25,9 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/pwdir.h"
    "${INCL_DIR}/report/dat.h"
    "${INCL_DIR}/report/json.h"
-   "${INCL_DIR}/report/reportdata.h"
+   "${INCL_DIR}/report/vbreportbase.h"
    "${INCL_DIR}/report/reporthelper.h"
+   "${INCL_DIR}/report/dataio.h"
 )
 
 add_library(${PWUTILS_LIBNAME} ${SRC_FILES} ${INCLUDE_FILES})

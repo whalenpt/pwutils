@@ -2,7 +2,7 @@
 #ifndef JSON_H_
 #define JSON_H_ 
 
-#include "pwutils/report/reportdata.h"
+#include "pwutils/report/vbreportbase.h"
 #include "pwutils/report/reporthelper.h"
 #include <complex> 
 #include <string> 
