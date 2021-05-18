@@ -28,7 +28,6 @@ int main()
     complex_def.setReportMetadata(false);
     complex_def.setPrecision(3);
     os.open(complex_def.filePath("outfolder").string());
-    // Need to dereference unique_ptr
     os << complex_def;
     os.close();
 
