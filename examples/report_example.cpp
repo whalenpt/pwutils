@@ -34,6 +34,19 @@ int main()
     // Need to dereference unique_ptr
     os << *complex_def;
     os.close();
+
+    pw::DataIO<double> dataio("outfolder");
+    dataio.writeFile("double_vec.dat",double_vec);
+    std::vector<double> double_vec2(N,5.0);
+    dataio.writeFile("two_double_vecs.dat",double_vec,double_vec2);
+
+    pw::DataIO<int> dataio2("outfolder");
+    std::vector<int> int_vec(10,1);
+    dataio2.writeFile("int_vec.dat",int_vec);
+
+    pw::DataIO<pw::dcmplx> dataio3("outfolder");
+    dataio3.writeFile("complex_vec.dat",cplx_vec);
+
     return 0;
 
 }

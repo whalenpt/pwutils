@@ -1,46 +1,68 @@
 
 #include "pwutils/report/reporthelper.h"
+#include "pwutils/report/dataio.h"
+#include "pwutils/pwexcept.h"
 #include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <cassert>
 
 namespace pw{
 
-std::filesystem::path createDirectory(const std::string& dir_name)
+fs::path createDirectory(const std::string& dir_name, bool overwrite)
 {
-    std::filesystem::path dir_path = CURRENT_DIR_PATH / dir_name;
-    if(!std::filesystem::is_directory(dir_path))
-        std::filesystem::create_directory(dir_path);
+    fs::path dir_path = fs::current_path() / dir_name;
+    createDirectory(dir_path,overwrite);
     return dir_path;
 }
 
-std::filesystem::path filePath(const std::filesystem::path& dir_path,
+void createDirectory(const std::filesystem::path& dir_path,bool overwrite)
+{
+	if(overwrite)
+	    clearDirectory(dir_path);
+	if(!fs::exists(dir_path)){
+        fs::create_directory(dir_path);
+	}
+}
+
+void clearDirectory(const std::filesystem::path& dir_path)
+{
+	if(fs::exists(dir_path)){
+        fs::remove_all(dir_path);
+	}
+}
+
+fs::path filePath(const fs::path& dir_path,
 		const std::string& nm,int repNum,const std::string& extension) 
 {
-	std::filesystem::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
-	std::filesystem::path full_path = dir_path / local_path;
+	fs::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
+	fs::path full_path = dir_path / local_path;
 	return full_path;
 }
 
-std::filesystem::path filePath(const std::filesystem::path& dir_path,
+fs::path filePath(const fs::path& dir_path,
 		const std::string& nm,const std::string& extension) 
 {
-	std::filesystem::path local_path(nm+"."+extension);
-	std::filesystem::path full_path = dir_path / local_path;
+	fs::path local_path(nm+"."+extension);
+	fs::path full_path = dir_path / local_path;
 	return full_path;
 }
 
-std::filesystem::path filePath(const std::string& nm,int repNum,const std::string& extension)
+fs::path filePath(const std::string& nm,int repNum,const std::string& extension)
 {
-    std::filesystem::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR);
-	std::filesystem::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
+    fs::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR,false);
+	fs::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
 	return dir_path / local_path;
 }
 
-std::filesystem::path filePath(const std::string& nm,const std::string& extension)
+fs::path filePath(const std::string& nm,const std::string& extension)
 {
-    std::filesystem::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR);
-	std::filesystem::path local_path(nm+"."+extension);
+    fs::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR,false);
+	fs::path local_path(nm+"."+extension);
 	return dir_path / local_path;
 }
+
+
 
 }
 
