@@ -32,14 +32,10 @@ class VBReport{
 		bool metadataOn() const {return m_report_metadata;}
 		const metadataMap& metadata() const {return m_metadata_map;} 
 		std::string fileExtension() const {return m_extension;}
-        std::filesystem::path filePath(const std::filesystem::path& dir_path,int repNum) const
-            { return pw::filePath(dir_path,m_name,repNum,m_extension);}
         std::filesystem::path filePath(const std::filesystem::path& dir_path) const
             { return pw::filePath(dir_path,m_name,m_extension);}
-        std::filesystem::path filePath(int repNum) const
-            { return pw::filePath(m_name,repNum,m_extension);}
-        std::filesystem::path filePath() const
-            { return pw::filePath(m_name,m_extension);}
+        std::filesystem::path filePath(const std::filesystem::path& dir_path,int repNum) const
+            { return pw::filePath(dir_path,m_name,repNum,m_extension);}
 	private:
 		const std::string m_name;
 		bool m_report_metadata;

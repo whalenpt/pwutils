@@ -11,7 +11,7 @@ int main()
     dat::ReportComplexVector report_def("complex_vector",cplx_vec);
     report_def.setReportMetadata(false);
     report_def.setPrecision(3);
-    std::ofstream os(report_def.filePath().string());
+    std::ofstream os(report_def.filePath("outfolder").string());
     os << report_def;
     os.close();
 
@@ -19,7 +19,7 @@ int main()
     dat::ReportRealVector report_real("real_vector",double_vec);
     report_real.setReportMetadata(false);
     report_real.setPrecision(3);
-    os.open(report_real.filePath().string());
+    os.open(report_real.filePath("outfolder").string());
     report_real.report(os);
     os.close();
 
@@ -27,7 +27,7 @@ int main()
     dat::ReportComplexVector complex_def("complex_vector2",cplx_vec2);
     complex_def.setReportMetadata(false);
     complex_def.setPrecision(3);
-    os.open(complex_def.filePath().string());
+    os.open(complex_def.filePath("outfolder").string());
     // Need to dereference unique_ptr
     os << complex_def;
     os.close();

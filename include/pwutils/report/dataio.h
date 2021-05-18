@@ -20,8 +20,6 @@ fs::path filePath(const fs::path& dir_path,\
         const std::string& nm,int repNum,const std::string& extension); 
 fs::path filePath(const fs::path& dir_path,\
         const std::string& nm,const std::string& extension);
-fs::path filePath(const std::string& nm,int repNum,const std::string& extension);
-fs::path filePath(const std::string& nm,const std::string& extension);
 
 class DataIO{
     public:

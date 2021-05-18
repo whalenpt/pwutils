@@ -48,20 +48,6 @@ fs::path filePath(const fs::path& dir_path,
 	return full_path;
 }
 
-fs::path filePath(const std::string& nm,int repNum,const std::string& extension)
-{
-    fs::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR,false);
-	fs::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
-	return dir_path / local_path;
-}
-
-fs::path filePath(const std::string& nm,const std::string& extension)
-{
-    fs::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR,false);
-	fs::path local_path(nm+"."+extension);
-	return dir_path / local_path;
-}
-
 DataIO::DataIO(const fs::path& dir_path) : m_dirpath(dir_path)
 {
     createDirectory(m_dirpath,false);
