@@ -9,12 +9,6 @@
 
 namespace pw{
 
-std::filesystem::path filePath(const std::filesystem::path& dir_path,\
-        const std::string& nm,int repNum,const std::string& extension); 
-std::filesystem::path filePath(const std::filesystem::path& dir_path,\
-        const std::string& nm,const std::string& extension);
-std::filesystem::path filePath(const std::string& nm,int repNum,const std::string& extension);
-std::filesystem::path filePath(const std::string& nm,const std::string& extension);
 
 class VBReport{
 	public:

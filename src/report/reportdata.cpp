@@ -5,6 +5,14 @@
 
 namespace pw{
 
+std::filesystem::path createDirectory(const std::string& dir_name)
+{
+    std::filesystem::path dir_path = CURRENT_DIR_PATH / dir_name;
+    if(!std::filesystem::is_directory(dir_path))
+        std::filesystem::create_directory(dir_path);
+    return dir_path;
+}
+
 std::filesystem::path filePath(const std::filesystem::path& dir_path,
 		const std::string& nm,int repNum,const std::string& extension) 
 {
@@ -23,20 +31,14 @@ std::filesystem::path filePath(const std::filesystem::path& dir_path,
 
 std::filesystem::path filePath(const std::string& nm,int repNum,const std::string& extension)
 {
-    std::filesystem::path dir_path(CURRENT_DIR_PATH);
-    dir_path /= DEFAULT_REPORTOUT_DIR; 
-    if(!std::filesystem::is_directory(dir_path))
-        std::filesystem::create_directory(dir_path);
+    std::filesystem::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR);
 	std::filesystem::path local_path(nm+"_"+std::to_string(repNum)+"." + extension);
 	return dir_path / local_path;
 }
 
 std::filesystem::path filePath(const std::string& nm,const std::string& extension)
 {
-    std::filesystem::path dir_path(CURRENT_DIR_PATH);
-    dir_path /= DEFAULT_REPORTOUT_DIR; 
-    if(!std::filesystem::is_directory(dir_path))
-        std::filesystem::create_directory(dir_path);
+    std::filesystem::path dir_path = createDirectory(DEFAULT_REPORTOUT_DIR);
 	std::filesystem::path local_path(nm+"."+extension);
 	return dir_path / local_path;
 }
