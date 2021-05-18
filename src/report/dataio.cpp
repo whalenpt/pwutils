@@ -62,6 +62,23 @@ fs::path filePath(const std::string& nm,const std::string& extension)
 	return dir_path / local_path;
 }
 
+DataIO::DataIO(const fs::path& dir_path) : m_dirpath(dir_path)
+{
+    createDirectory(m_dirpath,false);
+}
+
+void DataIO::setDirectoryPath(const fs::path& dirpath)
+{
+    if(fs::is_directory(dirpath)){
+       m_dirpath = dirpath;
+    } else{
+        std::string str("DataIO::DataIO(std::filesystem::path& path) \
+             specified directory path IS NOT a directory path ");
+        throw pw::Exception(str);
+    }
+}
+
+
 
 
 }

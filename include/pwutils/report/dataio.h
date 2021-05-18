@@ -23,13 +23,14 @@ fs::path filePath(const fs::path& dir_path,\
 fs::path filePath(const std::string& nm,int repNum,const std::string& extension);
 fs::path filePath(const std::string& nm,const std::string& extension);
 
-template<class T>
 class DataIO{
     public:
         DataIO(const fs::path& dirpath = fs::current_path());
         void setDirectoryPath(const fs::path& dirpath);
+        template<typename T>
         void writeFile(const fs::path& fname,const std::vector<T>& x) const;
-        void writeFile(const fs::path& fname,const std::vector<T>& x,const std::vector<T>& y) const;
+        template<typename T1,typename T2>
+        void writeFile(const fs::path& fname,const std::vector<T1>& x,const std::vector<T2>& y) const;
         void clearDirectory() { pw::clearDirectory(m_dirpath); }
     private:
         fs::path m_dirpath;
@@ -37,14 +38,8 @@ class DataIO{
         static const int WIDTH = 24;
 };
 
-template<class T>
-DataIO<T>::DataIO(const fs::path& dir_path) : m_dirpath(dir_path)
-{
-    createDirectory(m_dirpath,false);
-}
-
-template<class T>
-void DataIO<T>::writeFile(const fs::path& fname,const std::vector<T>& x) const
+template<typename T>
+void DataIO::writeFile(const fs::path& fname,const std::vector<T>& x) const
 {
     fs::path file_path = m_dirpath / fname;
     std::ofstream fout(file_path);
@@ -53,11 +48,10 @@ void DataIO<T>::writeFile(const fs::path& fname,const std::vector<T>& x) const
     fout.close();
 }
 
-template<class T>
-void DataIO<T>::writeFile(const fs::path& fname,const std::vector<T>& x,const std::vector<T>& y) const
+template<typename T1,typename T2>
+void DataIO::writeFile(const fs::path& fname,const std::vector<T1>& x,const std::vector<T2>& y) const
 {
     assert(x.size() == y.size());
-
     fs::path file_path = m_dirpath / fname;
     std::ofstream fout(file_path);
     for(int j = 0; j < x.size(); j++){
@@ -65,18 +59,6 @@ void DataIO<T>::writeFile(const fs::path& fname,const std::vector<T>& x,const st
            << std::scientific << std::setprecision(PRECISION) << std::setw(WIDTH) << y[j] << std::endl; 
     }
     fout.close();
-}
-
-template<class T>
-void DataIO<T>::setDirectoryPath(const fs::path& dirpath)
-{
-    if(fs::is_directory(dirpath)){
-       m_dirpath = dirpath;
-    } else{
-        std::string str("DataIO::DataIO(std::filesystem::path& path) \
-             specified directory path IS NOT a directory path ");
-        throw pw::Exception(str);
-    }
 }
 
 
