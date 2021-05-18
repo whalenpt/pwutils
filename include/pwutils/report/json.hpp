@@ -1,6 +1,6 @@
 
-#ifndef JSON_H_
-#define JSON_H_ 
+#ifndef JSON_HPP_
+#define JSON_HPP_ 
 
 #include "pwutils/report/vbreportbase.h"
 #include "pwutils/report/reporthelper.h"
@@ -18,63 +18,151 @@ using pw::dcmplx;
 void writeJSONLabel(std::ofstream& os,const std::string& label,const std::string& indent="\t");
 void writeJSONValue(std::ofstream& os,const std::string& value,
 		const std::string& indent="",bool end_value=false);
-void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<double>& v,
-		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION);
+
+template<typename T>
+void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<T>& v,
+		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION)
+{
+	writeJSONLabel(os,label,indent);
+	os << "[";
+	for(unsigned int i = 0; i < v.size()-1; i++){
+		os << std::scientific << std::setprecision(precision) << v[i] << ", ";
+	}
+	std::string end_string = end_value ?  "]" : "],"; 
+	os << v.back() << end_string << std::endl;
+}
+
+// Complex value specialization of writeJSONVector
+template<>
 void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
-		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION);
+		const std::string& indent,bool end_value,int precision)
+{
+	std::string two_indent = indent + indent;
+    writeJSONLabel(os,label,indent);
+	os << "{" << std::endl;
+    writeJSONLabel(os,"dtype",two_indent);
+    writeJSONValue(os,"complex128");
+	writeJSONLabel(os,"real",two_indent);
+	os << "[";
+	for(unsigned int i = 0; i < v.size()-1; i++){
+		os << std::scientific << std::setprecision(precision) << v[i].real() << ", ";
+	}
+	os << v.back().real() << "]," << std::endl;
+	writeJSONLabel(os,"imag",two_indent);
+	os << "[";
+	for(unsigned int i = 0; i < v.size()-1; i++){
+		os << std::scientific << std::setprecision(precision) << v[i].imag() << ", ";
+	}
+	os << v.back().imag() << "]" << std::endl;
+	std::string end_string = end_value ?  "}" : "},"; 
+	os << indent << end_string << std::endl;
+}
+
+
+// Complex value specialization of writeJSONVector
+//template<>
+//void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
+//		const std::string& indent,bool end_value,int precision)
+//{
+//	std::string two_indent = indent + indent;
+//    writeJSONLabel(os,label,indent);
+//	os << "{" << std::endl;
+//    writeJSONLabel(os,"dtype",two_indent);
+//    writeJSONValue(os,"complex128");
+//	writeJSONLabel(os,"real",two_indent);
+//	os << "[";
+//	for(unsigned int i = 0; i < v.size()-1; i++){
+//		os << std::scientific << std::setprecision(precision) << v[i].real() << ", ";
+//	}
+//	os << v.back().real() << "]," << std::endl;
+//	writeJSONLabel(os,"imag",two_indent);
+//	os << "[";
+//	for(unsigned int i = 0; i < v.size()-1; i++){
+//		os << std::scientific << std::setprecision(precision) << v[i].imag() << ", ";
+//	}
+//	os << v.back().imag() << "]" << std::endl;
+//	std::string end_string = end_value ?  "}" : "},"; 
+//	os << indent << end_string << std::endl;
+//}
+//
+
 void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
 		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION);
+
 void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
 		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION);
 void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=false);
 
 
-class ReportRealData1D : public pw::VBReportRealData1D
+template<class T1,class T2>
+class ReportData1D : public pw::VBReportData1D<T1,T2>
 {
     public:
-        ReportRealData1D(const std::string& name,
-            const std::vector<double>& x, 
-            const std::vector<double>& y, 
+        ReportData1D(const std::string& name,
+            const std::vector<T1>& x, 
+            const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBReportRealData1D(name,x,y,x_label,y_label) {
+                pw::VBReportData1D<T1,T2>(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
-        ~ReportRealData1D() {};
+        ~ReportData1D() {};
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
-            if(VBReportData::metadataOn())
+            if(pw::VBReport::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->metadata(),false);}
-        void reportData(std::ofstream& os) const;
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportData(std::ofstream& os) const; 
 };
 
-class ReportComplexData1D : public pw::VBReportComplexData1D
+template<class T1,class T2>
+void ReportData1D<T1,T2>::reportData(std::ofstream& os) const 
+{
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+}
+
+template<class T1>
+class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
 {
 	public :
         ReportComplexData1D(const std::string& name,
-            const std::vector<double>& x,
+            const std::vector<T1>& x,
             const std::vector<dcmplx>& y,
             std::string x_label="x",
             std::string y_label="y") : 
-                pw::VBReportComplexData1D(name,x,y,x_label,y_label) {
+                pw::VBReportComplexData1D<T1>(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
 		~ReportComplexData1D() {}
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
-            if(VBReportData::metadataOn())
+            if(pw::VBReportData::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->metadata(),false);}
-        void reportData(std::ofstream& os) const;
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportData(std::ofstream& os) const; 
 };
 
+template<class T1>
+void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
+{
+    writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
+	if(this->getPhase())
+		writeJSONPhaseVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+    else if(this->getPower()){
+	    writeJSONPowerVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+	} else
+	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+}
+
+
+/*
 class ReportRealData2D : public pw::VBReportRealData2D
 {
     public:
@@ -179,6 +267,7 @@ class ReportComplexTrackerMax : public ReportTracker
 		void reportTracker(std::ofstream& os,double t);
 };
 
+*/
 
 
 

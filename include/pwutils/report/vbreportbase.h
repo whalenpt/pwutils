@@ -6,10 +6,8 @@
 #include <filesystem>
 #include <memory>
 #include "pwutils/report/reporthelper.h"
-#include "pwutils/report/dataio.h"
 
 namespace pw{
-
 
 class VBReport{
 	public:
@@ -73,63 +71,54 @@ class VBReportData : public VBReport
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
+template<class T1,class T2>
 class VBReportData1D : public VBReportData
 {
 	public:
-        VBReportData1D(const std::string& name) : VBReportData(name) {}
+        VBReportData1D(const std::string& name,
+            const std::vector<T1>& x, 
+            const std::vector<T2>& y, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y") : 
+                VBReportData(name), m_x(x),m_y(y),
+                m_xlabel(x_label),m_ylabel(y_label) {} 
         virtual ~VBReportData1D() {};
+        const std::vector<T1>& getX() const {return m_x;}
+        const std::vector<T2>& getY() const {return m_y;}
 		std::string getLabelX() const {return m_xlabel;}
 		std::string getLabelY() const {return m_ylabel;}
 		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;}
 		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;}
 	private:
+        const std::vector<T1>& m_x;
+        const std::vector<T2>& m_y;
 		std::string m_xlabel;
 		std::string m_ylabel;
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
-class VBReportRealData1D : public VBReportData1D
+template<class T1>
+class VBReportComplexData1D : public VBReportData1D<T1,dcmplx>
 {
-    public:
-        VBReportRealData1D(const std::string& name,
-						const std::vector<double>& x, 
-						const std::vector<double>& y, 
-						const std::string& x_label = "x",
-                const std::string& y_label = "y") : VBReportData1D(name),
-        m_x(x),m_y(y) {setLabelX(x_label); setLabelY(y_label);}
-        virtual ~VBReportRealData1D() {};
-		const std::vector<double>& getX() const {return m_x;}
-		const std::vector<double>& getY() const {return m_y;}
-	private:
-        const std::vector<double>& m_x;
-        const std::vector<double>& m_y;
-		virtual void reportData(std::ofstream& os) const = 0;
-};
-
-class VBReportComplexData1D : public VBReportData1D
-{
-	public :
+	public:
         VBReportComplexData1D(const std::string& name,
-				const std::vector<double>& x,
-				const std::vector<dcmplx>& y,
-                std::string x_label="x",
-                std::string y_label="y") : VBReportData1D(name), m_x(x),m_y(y),
-			    	m_power(false),m_phase(false) {setLabelX(x_label); setLabelY(y_label);}       
-		virtual ~VBReportComplexData1D() {}
+            const std::vector<T1>& x,const std::vector<dcmplx>& y, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y") : 
+                VBReportData1D<T1,dcmplx>(name,x,y,x_label,y_label),
+                    m_power(false),m_phase(false) {}
+        virtual ~VBReportComplexData1D() {};
 		void setPower(bool val) {m_power= val;}  
 		void setPhase(bool val) {m_phase = val;}  
 		bool getPower() const {return m_power;}
 		bool getPhase() const {return m_phase;}
-		const std::vector<double>& getX() const {return m_x;}
-		const std::vector<dcmplx>& getY() const {return m_y;}
 	private:
-		const std::vector<double>& m_x;
-		const std::vector<dcmplx>& m_y;
   		bool m_power;
   		bool m_phase;
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
+/*
 class VBReportData2D : public VBReportData
 {
 	public:
@@ -215,31 +204,7 @@ class VBReportTracker : public VBReport
         std::string m_tlabel;
 };
 
-class VBReportVector : public VBReport
-{
-	public:
-		VBReportVector(const std::string& nm,std::string label="x") : 
-		    VBReport(nm), m_label(label) {}
-		virtual ~VBReportVector() {}
-		virtual void report(std::ofstream& os) const {
-		    if(metadataOn())
-		        reportMetadata(os);
-		    reportVector(os);
-        }
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector& def) { def.report(os);
-			return os; }
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportVector* def) { def->report(os);
-			return os; }
-		friend std::ofstream& operator<<(std::ofstream& os,std::unique_ptr<VBReportVector>const& def) { 
-		    return os << *def;}
-
-		std::string getLabel() const {return m_label;}
-		void setLabel(const std::string& label) {m_label = label;}
-	private:
-		virtual void reportMetadata(std::ofstream& os) const = 0;
-		virtual void reportVector(std::ofstream& os) const = 0;
-        std::string m_label;
-};
+*/
 
 
 

@@ -1,13 +1,13 @@
 
-#ifndef DAT_H_
-#define DAT_H_ 
+#ifndef DAT_HPP_
+#define DAT_HPP_ 
 
 #include <complex> 
 #include <string> 
 #include <vector> 
-#include <ctime>
 #include <map> 
 #include <fstream>
+#include <cassert>
 #include "pwutils/report/vbreportbase.h"
 #include "pwutils/report/reporthelper.h"
 
@@ -16,15 +16,64 @@ namespace dat{
 using pw::dcmplx;
 
 void streamToDat(std::ofstream& os,const pw::metadataMap& str_map);
-void writeDatRow1D(std::ofstream& os,double x,double y,int precision=pw::REPORT_PRECISION);
-void writeDat1D(std::ofstream& os,const std::vector<double>& x,\
-    const std::vector<double>& y,int precision=pw::REPORT_PRECISION);
-void writeDat1D(std::ofstream& os,const std::vector<double>& x,\
-    const std::vector<dcmplx>& y,int precision=pw::REPORT_PRECISION);
-void writePowerDat1D(std::ofstream& os,const std::vector<double>& x,\
-    const std::vector<dcmplx>& y,int precision=pw::REPORT_PRECISION);
-void writePhaseDat1D(std::ofstream& os,const std::vector<double>& x,
-    const std::vector<dcmplx>& y,int precision=pw::REPORT_PRECISION);
+
+template<typename T1,typename T2>
+void writeDatRow1D(std::ofstream& os,T1 x,T2 y,int precision=pw::REPORT_PRECISION)
+{
+    os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x \
+       << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y << std::endl;
+}
+
+template<typename T1,typename T2>
+void writeDat1D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>& y,int precision=pw::REPORT_PRECISION) 
+{
+    assert (x.size() == y.size());
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] \
+		   << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[i] << std::endl;
+	}
+}
+
+template<typename T1>
+void writeDat1D(std::ofstream& os,const std::vector<T1>& x,\
+    const std::vector<dcmplx>& y,int precision=pw::REPORT_PRECISION)
+{
+    assert (x.size() == y.size());
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] \
+		   << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[i].real() \
+		   << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[i].imag()
+		   << std::endl;
+	}
+}
+
+
+template<typename T1>
+void writePowerDat1D(std::ofstream& os,const std::vector<T1>& x,\
+    const std::vector<dcmplx>& y,int precision=pw::REPORT_PRECISION)
+{
+    assert (x.size() == y.size());
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] \
+		   << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) \
+		   << pow(abs(y[i]),2) << std::endl;
+	}
+}
+
+template<typename T1>
+void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
+        const std::vector<dcmplx>& y,int precision)
+{
+    assert (x.size() == y.size());
+    std::vector<double> phaseVec(y.size());
+    for(unsigned int i=0; i < y.size(); i++)
+        phaseVec[i] = arg(y[i]);
+    pw::AdjustPhase(phaseVec,phaseVec.size());
+    writeDat1D(os,x,phaseVec,precision);
+}
+
+
+/*
 void writeDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
     const std::vector<double>& z,int precision=pw::REPORT_PRECISION); 
 void writeDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
@@ -33,36 +82,68 @@ void writePhaseDat2D(std::ofstream& os,const std::vector<double>& x,const std::v
     const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION); 
 void writePowerDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
     const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION); 
-void writeRowVec(std::ofstream& os,const std::vector<double>& x,int precision=pw::REPORT_PRECISION);
-void writeColVec(std::ofstream& os,const std::vector<double>& x,int precision=pw::REPORT_PRECISION);
-void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x,int precision=pw::REPORT_PRECISION);
+*/
 
+template<typename T1>
+void writeRowVec(std::ofstream& os,const std::vector<T1>& x,int precision=pw::REPORT_PRECISION) {
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i]; 
+    }
+	os << std::endl;
+}
 
-class ReportRealData1D : public pw::VBReportRealData1D
+template<typename T1>
+void writeColVec(std::ofstream& os,const std::vector<T1>& x,int precision=pw::REPORT_PRECISION)
+{
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << std::scientific << std::setprecision(precision) \
+		   << std::setw(precision+pw::REPORT_PADING) << x[i] << std::endl; 
+    }
+}
+
+template<>
+void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x,int precision)
+{
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i].real() \
+		   << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i].imag() \
+		   << std::endl;
+	}
+}
+
+template<class T1,class T2>
+class ReportData1D : public pw::VBReportData1D<T1,T2>
 {
     public:
-        ReportRealData1D(const std::string& name,
-            const std::vector<double>& x, 
-            const std::vector<double>& y, 
+        ReportData1D(const std::string& name,
+            const std::vector<T1>& x, 
+            const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBReportRealData1D(name,x,y,x_label,y_label) {
+                pw::VBReportData1D<T1,T2>(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("dat");}
-        ~ReportRealData1D() {};
+        ~ReportData1D() {};
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
-class ReportComplexData1D : public pw::VBReportComplexData1D
+template<class T1,class T2>
+void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
+{
+    writeDat1D(os,this->getX(),this->getY(),this->precision());
+}
+
+template<class T1>
+class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
 {
 	public :
         ReportComplexData1D(const std::string& name,
-            const std::vector<double>& x,
+            const std::vector<T1>& x,
             const std::vector<dcmplx>& y,
             std::string x_label="x",
             std::string y_label="y") : 
-                pw::VBReportComplexData1D(name,x,y,x_label,y_label) {
+                pw::VBReportComplexData1D<T1>(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("dat");}
 		~ReportComplexData1D() {}
     private:
@@ -70,6 +151,19 @@ class ReportComplexData1D : public pw::VBReportComplexData1D
 		void reportData(std::ofstream& os) const; 
 };
 
+template<class T1>
+void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
+{
+    if(this->getPhase())
+		writePhaseDat1D(os,this->getX(),this->getY(),this->precision());
+    else if(this->getPower()){
+		writePowerDat1D(os,this->getX(),this->getY(),this->precision());
+	} else
+        writeDat1D(os,this->getX(),this->getY(),this->precision());
+}
+
+
+/*
 class ReportRealData2D : public pw::VBReportRealData2D
 {
     public:
@@ -152,29 +246,7 @@ class ReportComplexTrackerMax : public ReportTracker
 		void reportTracker(std::ofstream& os,double t) const;
 };
 
-class ReportRealVector : public pw::VBReportVector {
-    public:
-        ReportRealVector(const std::string& nm,std::vector<double>& v,const std::string& label="x") : 
-            pw::VBReportVector(nm,label), m_v(v) {
-                pw::VBReport::setFileExtension("dat");}
-        ~ReportRealVector() {}
-    private:
-        const std::vector<double>& m_v;
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
-		void reportVector(std::ofstream& os) const {writeColVec(os,m_v,this->precision());}
-};
-
-class ReportComplexVector : public pw::VBReportVector {
-    public:
-        ReportComplexVector(const std::string& nm,std::vector<dcmplx>& v,const std::string& label="x") : 
-            pw::VBReportVector(nm,label), m_v(v) {
-                pw::VBReport::setFileExtension("dat");}
-        ~ReportComplexVector() {}
-    private:
-        const std::vector<dcmplx>& m_v;
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
-		void reportVector(std::ofstream& os) const {writeColVec(os,m_v,this->precision());}
-};
+*/
 
 
 

@@ -23,11 +23,11 @@ set(INCLUDE_FILES
    "${INCL_DIR}/pwstrings.h"
    "${INCL_DIR}/pwmath.h"
    "${INCL_DIR}/report/pwdir.h"
-   "${INCL_DIR}/report/dat.h"
-   "${INCL_DIR}/report/json.h"
+   "${INCL_DIR}/report/dat.hpp"
+   "${INCL_DIR}/report/json.hpp"
    "${INCL_DIR}/report/vbreportbase.h"
    "${INCL_DIR}/report/reporthelper.h"
-   "${INCL_DIR}/report/dataio.h"
+   "${INCL_DIR}/report/dataio.hpp"
 )
 
 add_library(${PWUTILS_LIBNAME} ${SRC_FILES} ${INCLUDE_FILES})
