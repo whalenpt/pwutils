@@ -60,29 +60,33 @@ class VBReportData : public VBReport
 			return os; }
 		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<VBReportData> def){ def->report(os); 
 		    return os; }
-
 	private:
-		const std::string m_name;
-		bool m_report_metadata;
-        metadataMap m_metadata_map; 
-        std::string m_extension;
-		int m_precision;
 		virtual void reportMetadata(std::ofstream& os) const = 0;
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
-template<class T1,class T2>
 class VBReportData1D : public VBReportData
 {
 	public:
-        VBReportData1D(const std::string& name,
+		VBReportData1D(const std::string& nm) 
+		  : VBReportData(nm) {}
+		virtual ~VBReportData1D() {}
+	private:
+		virtual void reportData(std::ofstream& os) const = 0;
+};
+
+template<class T1,class T2>
+class ReportData1D : public VBReportData1D
+{
+	public:
+        ReportData1D(const std::string& name,
             const std::vector<T1>& x, 
             const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                VBReportData(name), m_x(x),m_y(y),
+                VBReportData1D(name), m_x(x),m_y(y),
                 m_xlabel(x_label),m_ylabel(y_label) {} 
-        virtual ~VBReportData1D() {};
+        virtual ~ReportData1D() {};
         const std::vector<T1>& getX() const {return m_x;}
         const std::vector<T2>& getY() const {return m_y;}
 		std::string getLabelX() const {return m_xlabel;}
@@ -98,16 +102,16 @@ class VBReportData1D : public VBReportData
 };
 
 template<class T1>
-class VBReportComplexData1D : public VBReportData1D<T1,dcmplx>
+class ReportComplexData1D : public ReportData1D<T1,dcmplx>
 {
 	public:
-        VBReportComplexData1D(const std::string& name,
+        ReportComplexData1D(const std::string& name,
             const std::vector<T1>& x,const std::vector<dcmplx>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                VBReportData1D<T1,dcmplx>(name,x,y,x_label,y_label),
+                ReportData1D<T1,dcmplx>(name,x,y,x_label,y_label),
                     m_power(false),m_phase(false) {}
-        virtual ~VBReportComplexData1D() {};
+        virtual ~ReportComplexData1D() {};
 		void setPower(bool val) {m_power= val;}  
 		void setPhase(bool val) {m_phase = val;}  
 		bool getPower() const {return m_power;}
