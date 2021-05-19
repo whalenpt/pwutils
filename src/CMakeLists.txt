@@ -26,6 +26,7 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/dat.hpp"
    "${INCL_DIR}/report/json.hpp"
    "${INCL_DIR}/report/vbreportbase.h"
+   "${INCL_DIR}/report/reportbase.h"
    "${INCL_DIR}/report/reporthelper.h"
    "${INCL_DIR}/report/dataio.hpp"
 )

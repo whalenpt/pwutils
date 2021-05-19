@@ -2,7 +2,7 @@
 #ifndef JSON_HPP_
 #define JSON_HPP_ 
 
-#include "pwutils/report/vbreportbase.h"
+#include "pwutils/report/reportbase.h"
 #include "pwutils/report/reporthelper.h"
 #include <complex> 
 #include <string> 
@@ -67,7 +67,7 @@ void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=f
 
 
 template<class T1,class T2>
-class ReportData1D : public pw::ReportData1D<T1,T2>
+class ReportData1D : public pw::VBReportData1D<T1,T2>
 {
     public:
         ReportData1D(const std::string& name,
@@ -75,7 +75,7 @@ class ReportData1D : public pw::ReportData1D<T1,T2>
             const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::ReportData1D<T1,T2>(name,x,y,x_label,y_label) {
+                pw::VBReportData1D<T1,T2>(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
         ~ReportData1D() {};
         void report(std::ofstream& os) const {
@@ -98,7 +98,7 @@ void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
 }
 
 template<class T1>
-class ReportComplexData1D : public pw::ReportComplexData1D<T1>
+class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
 {
 	public :
         ReportComplexData1D(const std::string& name,
@@ -106,7 +106,7 @@ class ReportComplexData1D : public pw::ReportComplexData1D<T1>
             const std::vector<dcmplx>& y,
             std::string x_label="x",
             std::string y_label="y") : 
-                pw::ReportComplexData1D<T1>(name,x,y,x_label,y_label) {
+                pw::VBReportComplexData1D<T1>(name,x,y,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
 		~ReportComplexData1D() {}
         void report(std::ofstream& os) const {
