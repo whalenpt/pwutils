@@ -20,6 +20,12 @@ class DataIO{
         void writeFile(const fs::path& fname,const std::vector<T>& x) const;
         template<typename T1,typename T2>
         void writeFile(const fs::path& fname,const std::vector<T1>& x,const std::vector<T2>& y) const;
+
+        template<typename T>
+        void appendFile(const fs::path& fname,const T& val) const;
+        template<typename T1,typename T2>
+        void appendFile(const fs::path& fname,const T1& val1,const T2& val2) const;
+
         void clearDirectory() { pw::clearDirectory(m_dirpath); }
     private:
         fs::path m_dirpath;
@@ -50,6 +56,29 @@ void DataIO::writeFile(const fs::path& fname,const std::vector<T1>& x,const std:
     }
     fout.close();
 }
+
+template<typename T>
+void DataIO::appendFile(const fs::path& fname,const T& val) const
+{
+    fs::path file_path = m_dirpath / fname;
+    std::ofstream fout(file_path,std::ofstream::out | std::ofstream::app);
+    fout << std::scientific << std::setprecision(pw::REPORT_PRECISION) 
+         << std::setw(pw::REPORT_PRECISION + pw::REPORT_PADING) << val << std::endl;
+    fout.close();
+}
+
+template<typename T1,typename T2>
+void DataIO::appendFile(const fs::path& fname,const T1& val1,const T2& val2) const
+{
+    fs::path file_path = m_dirpath / fname;
+    std::ofstream fout(file_path,std::ofstream::out | std::ofstream::app);
+    fout << std::scientific << std::setprecision(pw::REPORT_PRECISION) 
+         << std::setw(pw::REPORT_PRECISION + pw::REPORT_PADING) << val1 
+         << std::scientific << std::setprecision(pw::REPORT_PRECISION) 
+         << std::setw(pw::REPORT_PRECISION + pw::REPORT_PADING) << val2 << std::endl; 
+    fout.close();
+}
+
 
 
 
