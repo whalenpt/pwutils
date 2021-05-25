@@ -1,5 +1,5 @@
 
-#include "pwutils/pwmath.h"
+#include "pwutils/pwmath.hpp"
 #include <algorithm>
 #include <string>
 #include <sstream>
@@ -10,16 +10,6 @@ namespace pw{
 int factorial(int n) 
 {
   return (n == 1 || n ==0 ) ? 1 : factorial(n-1)*n;
-}
-
-double getMin(const std::vector<double>& vec){
-    auto min_iter = std::min_element(std::begin(vec),std::end(vec));
-    return *min_iter;
-}
-
-double getMax(const std::vector<double>& vec){
-    auto max_iter = std::max_element(std::begin(vec),std::end(vec));
-    return *max_iter;
 }
 
 bool isInteger(const std::string& s)
@@ -51,35 +41,6 @@ bool rowIsDoubles(const std::vector<std::string>& row){
             return false;
     }
     return true;
-}
-
-double getMin(int sz,double* x){
-  double min_val = x[0];
-  for(int i = 1; i < sz; i++){
-      if(x[i] < min_val)
-          min_val = x[i];
-  }
-  return min_val;
-}
-
-double getMax(int sz,double* x){
-  double max_val = x[0];
-  for(int i = 1; i < sz; i++){
-      if(x[i] > max_val)
-          max_val = x[i];
-  }
-  return max_val;
-}
-
-double getMax(const dcmplx* arr,int size)
-{
-    double maxVal = 0.0; 
-    double temp = 0.0; 
-    for(int i = 0; i < size; i++){
-        temp = std::norm(arr[i]);
-        maxVal = std::max(temp,maxVal); 
-    }
-    return maxVal;
 }
 
 

@@ -21,7 +21,7 @@ set(INCLUDE_FILES
    "${INCL_DIR}/pwexcept.h"
    "${INCL_DIR}/pwconstants.h"
    "${INCL_DIR}/pwstrings.h"
-   "${INCL_DIR}/pwmath.h"
+   "${INCL_DIR}/pwmath.hpp"
    "${INCL_DIR}/report/pwdir.h"
    "${INCL_DIR}/report/dat.hpp"
    "${INCL_DIR}/report/json.hpp"
