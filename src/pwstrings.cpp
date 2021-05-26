@@ -99,7 +99,7 @@ std::string joinVector(const std::vector<std::string>& vec,const char delim)
         return vec[0];
 
     std::string str = vec[0];
-    for(int i = 1; i < vec.size(); i++)
+    for(auto i = 1; i < vec.size(); i++)
         str += delim + vec[i]; 
     return str;
 }
@@ -184,18 +184,8 @@ std::string stripFirst(const std::string& str,const char delim)
   if(pos1 == std::string::npos) {
     return "";
   }
-  size_t range = std::string::npos - pos1 - 1;
   return str.substr(0,pos1);
 }
-
-
-
-
-//std::string parseLast(std::string& str,const char delim)
-//{
-//  std::vector<std::string> parsed(parseString(str,delim)); 
-//  str = parsed.back();
-//}
 
 std::vector<std::string> subStrings(const std::string& instr,const char delim1,const char delim2) 
 {
