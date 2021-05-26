@@ -59,6 +59,43 @@ namespace pw{
         return sqrt(sum)/v1_norm;
     }
 
+    template<typename T>
+    auto norm(const std::vector<T>& v) {
+        T squared_sum = std::accumulate(std::begin(v),std::end(v),0.0,\
+                [](auto sum,auto& val) {return sum + pow(val,2);});
+        return sqrt(squared_sum);
+    }
+    template<typename T>
+    auto max(const std::vector<T>& v) {
+        auto itmax = std::max_element<T>(v);
+        return *itmax;
+    }
+    template<typename T>
+    auto argmax(const std::vector<T>& v) {
+        auto itmax = std::max_element<T>(v);
+        return std::distance(std::begin(v),itmax);
+    }
+    template<typename T>
+    auto min(const std::vector<T>& v) {
+        auto itmin = std::min_element<T>(v);
+        return *itmin;
+    }
+    template<typename T>
+    auto argmin(const std::vector<T>& v) {
+        auto itmin = std::min_element<T>(v);
+        return std::distance(std::begin(v),itmin);
+    }
+    template<typename T>
+    auto relative_error(const std::vector<T>& v1,const std::vector<T>& v2){
+        assert(v1.size() == v2.size());
+        auto v1_norm = pw::norm<T>(v1);
+        T sum = 0;
+        for(auto i = 0; i < v1.size(); i++)
+            sum += pow(v1[i]-v2[i],2); 
+        return sqrt(sum)/v1_norm;
+    }
+
+
     int factorial(int);
     bool isInteger(const std::string& s);
     bool rowIsIntegers(const std::vector<std::string>& row);
