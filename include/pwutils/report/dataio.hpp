@@ -36,9 +36,9 @@ void DataIO::writeFile(const fs::path& fname,const std::vector<T>& x) const
 {
     fs::path file_path = m_dirpath / fname;
     std::ofstream fout(file_path);
-    for(int j = 0; j < x.size(); j++)
+    for(auto val : x)
         fout << std::scientific << std::setprecision(pw::REPORT_PRECISION) 
-             << std::setw(pw::REPORT_PRECISION + pw::REPORT_PADING) << x[j] << std::endl;
+             << std::setw(pw::REPORT_PRECISION + pw::REPORT_PADING) << val << std::endl;
     fout.close();
 }
 
@@ -48,7 +48,7 @@ void DataIO::writeFile(const fs::path& fname,const std::vector<T1>& x,const std:
     assert(x.size() == y.size());
     fs::path file_path = m_dirpath / fname;
     std::ofstream fout(file_path);
-    for(int j = 0; j < x.size(); j++){
+    for(auto j = 0; j < x.size(); j++){
         fout << std::scientific << std::setprecision(pw::REPORT_PRECISION) 
             << std::setw(pw::REPORT_PRECISION + pw::REPORT_PADING) << x[j] 
             << std::scientific << std::setprecision(pw::REPORT_PRECISION) 
