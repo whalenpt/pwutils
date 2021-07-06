@@ -3,6 +3,7 @@
 #define JSON_HPP_ 
 
 #include "pwutils/report/reportbase.h"
+#include "pwutils/report/trackbase.h"
 #include "pwutils/report/reporthelper.h"
 #include <complex> 
 #include <string> 
@@ -132,6 +133,39 @@ void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 	} else
 	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
 }
+
+template<class Tdata,class Tout>
+class TrackData : public pw::VBTrackData<Tdata,Tout>
+{
+    public:
+        TrackData(const std::string& name,
+            const std::vector<Tdata>& data, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y") : 
+                pw::VBTrackData<Tdata,Tout>(name,data,x_label,y_label) {
+                    pw::VBReport::setFileExtension("json");}
+        ~TrackData() {};
+        void report(std::ofstream& os) const {
+            os << "{" << std::endl;
+            if(pw::VBReport::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+            os << "}" << std::endl;
+        }
+		void updateTracker(double t) const = 0; // assume time t is a double value (or convert to)
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportData(std::ofstream& os) const; 
+};
+
+template<class Tdata,class Tout>
+void TrackData<Tdata,Tout>::reportData(std::ofstream& os) const 
+{
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+}
+
+
 
 
 /*
