@@ -8,7 +8,8 @@
 #include <map> 
 #include <fstream>
 #include <cassert>
-#include "pwutils/report/reportbase.h"
+#include "pwutils/report/reportbase.hpp"
+#include "pwutils/report/trackbase.hpp"
 #include "pwutils/report/reporthelper.h"
 
 namespace dat{
@@ -46,7 +47,6 @@ void writeDat1D(std::ofstream& os,const std::vector<T1>& x,\
 		   << std::endl;
 	}
 }
-
 
 template<typename T1>
 void writePowerDat1D(std::ofstream& os,const std::vector<T1>& x,\
@@ -161,6 +161,54 @@ void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 	} else
         writeDat1D(os,this->getX(),this->getY(),this->precision());
 }
+
+template<class T>
+class TrackData : public pw::VBTrackData<T>
+{
+    public:
+        TrackData(const std::string& name,
+            pw::TrackType ttype,
+            const std::vector<T>& data, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y") : 
+                pw::VBTrackData<T>(name,ttype,data,x_label,y_label) {
+                    pw::VBReport::setFileExtension("dat");}
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportData(std::ofstream& os) const; 
+};
+
+template<class T>
+void TrackData<T>::reportData(std::ofstream& os) const 
+{
+    writeDat1D(os,this->getX(),this->getY(),this->precision());
+}
+
+class TrackComplexData : public pw::VBTrackComplexData
+{
+    public:
+        TrackComplexData(const std::string& name,
+            pw::TrackType ttype,
+            const std::vector<dcmplx>& data, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y",
+            pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
+                pw::VBTrackComplexData(name,ttype,data,x_label,y_label) {
+                    pw::VBReport::setFileExtension("dat");}
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportData(std::ofstream& os) const; 
+};
+
+void TrackComplexData::reportData(std::ofstream& os) const 
+{
+	if(getComplexOp() == pw::ComplexOp::None)
+        writeDat1D(os,this->getX(),this->getY(),this->precision());
+    else
+        writeDat1D(os,this->getX(),this->getOpY(),this->precision());
+}
+
+
 
 
 /*

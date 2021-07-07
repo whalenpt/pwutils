@@ -2,8 +2,8 @@
 #ifndef JSON_HPP_
 #define JSON_HPP_ 
 
-#include "pwutils/report/reportbase.h"
-#include "pwutils/report/trackbase.h"
+#include "pwutils/report/reportbase.hpp"
+#include "pwutils/report/trackbase.hpp"
 #include "pwutils/report/reporthelper.h"
 #include <complex> 
 #include <string> 
@@ -173,8 +173,9 @@ class TrackComplexData : public pw::VBTrackComplexData
             pw::TrackType ttype,
             const std::vector<dcmplx>& data, 
             const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                pw::VBTrackComplexData(name,ttype,data,x_label,y_label) {
+            const std::string& y_label = "y",
+            pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
+                pw::VBTrackComplexData(name,ttype,data,x_label,y_label,cmplxop) {
                     pw::VBReport::setFileExtension("json");}
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
@@ -191,7 +192,10 @@ class TrackComplexData : public pw::VBTrackComplexData
 void TrackComplexData::reportData(std::ofstream& os) const 
 {
 	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
-    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+	if(getComplexOp() == pw::ComplexOp::None)
+        writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+    else
+        writeJSONVector(os,this->getLabelY(),this->getOpY(),"\t",true,this->precision());
 }
 
 

@@ -9,6 +9,7 @@ set(SRC_FILES
 	report/dat.cpp
 	report/json.cpp
 	report/vbreportbase.cpp
+	report/trackbase.cpp
 	report/reporthelper.cpp
 	report/pwdir.cpp
 	report/dataio.cpp
@@ -26,8 +27,8 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/dat.hpp"
    "${INCL_DIR}/report/json.hpp"
    "${INCL_DIR}/report/vbreportbase.h"
-   "${INCL_DIR}/report/reportbase.h"
-   "${INCL_DIR}/report/trackbase.h"
+   "${INCL_DIR}/report/reportbase.hpp"
+   "${INCL_DIR}/report/trackbase.hpp"
    "${INCL_DIR}/report/reporthelper.h"
    "${INCL_DIR}/report/dataio.hpp"
 )
