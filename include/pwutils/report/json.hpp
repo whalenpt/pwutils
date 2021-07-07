@@ -16,6 +16,7 @@ namespace json{
 
 using pw::dcmplx;         
 
+void streamToJSON(std::ofstream& os,const pw::metadataMap& str_map);
 void writeJSONLabel(std::ofstream& os,const std::string& label,const std::string& indent="\t");
 void writeJSONValue(std::ofstream& os,const std::string& value,
 		const std::string& indent="",bool end_value=false);
@@ -87,7 +88,7 @@ class ReportData1D : public pw::VBReportData1D<T1,T2>
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
@@ -118,7 +119,7 @@ class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
@@ -134,15 +135,16 @@ void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
 }
 
-template<class Tdata,class Tout>
-class TrackData : public pw::VBTrackData<Tdata,Tout>
+template<class T>
+class TrackData : public pw::VBTrackData<T>
 {
     public:
         TrackData(const std::string& name,
-            const std::vector<Tdata>& data, 
+            pw::TrackType ttype,
+            const std::vector<T>& data, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBTrackData<Tdata,Tout>(name,data,x_label,y_label) {
+                pw::VBTrackData<T>(name,ttype,data,x_label,y_label) {
                     pw::VBReport::setFileExtension("json");}
         ~TrackData() {};
         void report(std::ofstream& os) const {
@@ -152,18 +154,46 @@ class TrackData : public pw::VBTrackData<Tdata,Tout>
             reportData(os);
             os << "}" << std::endl;
         }
-		void updateTracker(double t) const = 0; // assume time t is a double value (or convert to)
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
-template<class Tdata,class Tout>
-void TrackData<Tdata,Tout>::reportData(std::ofstream& os) const 
+template<class T>
+void TrackData<T>::reportData(std::ofstream& os) const 
 {
 	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
     writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
 }
+
+class TrackComplexData : public pw::VBTrackComplexData
+{
+    public:
+        TrackComplexData(const std::string& name,
+            pw::TrackType ttype,
+            const std::vector<dcmplx>& data, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y") : 
+                pw::VBTrackComplexData(name,ttype,data,x_label,y_label) {
+                    pw::VBReport::setFileExtension("json");}
+        void report(std::ofstream& os) const {
+            os << "{" << std::endl;
+            if(pw::VBReport::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+            os << "}" << std::endl;
+        }
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
+		void reportData(std::ofstream& os) const; 
+};
+
+void TrackComplexData::reportData(std::ofstream& os) const 
+{
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+}
+
 
 
 

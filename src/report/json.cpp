@@ -47,6 +47,15 @@ void ReportComplexTrackerMax::reportTracker(std::ofstream& os,double t) {
 }
 */
 
+void streamToJSON(std::ofstream& os,const pw::metadataMap& str_map) 
+{
+    pw::metadataMap::const_iterator it;
+    for(it = str_map.begin(); it!= str_map.end(); it++){
+        writeJSONLabel(os,(*it).first);
+        writeJSONValue(os,(*it).second);
+    }
+}
+
 void writeJSONLabel(std::ofstream& os,const std::string& label, const std::string& indent)
 {
 	os << indent << "\"" << label <<  "\" : ";
