@@ -1,5 +1,5 @@
-#ifndef VBREPORTBASE_H
-#define VBREPORTBASE_H
+#ifndef BASEREPORT_H
+#define BASEREPORT_H
 
 #include <string>
 #include <fstream>

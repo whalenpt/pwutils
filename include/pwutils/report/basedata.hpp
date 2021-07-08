@@ -1,5 +1,5 @@
-#ifndef REPORTBASE_H
-#define REPORTBASE_H
+#ifndef BASEDATA_HPP
+#define BASEDATA_HPP
 
 #include <string>
 #include <fstream>

@@ -1,5 +1,5 @@
-#ifndef TRACKBASE_HPP
-#define TRACKBASE_HPP
+#ifndef BASETRACK_HPP
+#define BASETRACK_HPP
 
 #include <string>
 #include <fstream>
