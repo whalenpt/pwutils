@@ -9,6 +9,14 @@
 
 namespace pw{
 
+enum class TrackType { Max,
+    Min
+};
+
+enum class ComplexOp {None,
+    Power
+};
+
 class ReportBase{
 	public:
 		ReportBase(const std::string& nm) 
@@ -56,7 +64,33 @@ class ReportBase{
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
+// Need a non-templated base class for holding all ReportData1D instances in an STL container
+// without specifying a data type (which is dictated by the template subclass)
+class ReportData1D : public ReportBase
+{
+	public:
+		ReportData1D(const std::string& nm) 
+		  : ReportBase(nm) {}
+		virtual ~ReportData1D() {}
+	private:
+		virtual void reportData(std::ofstream& os) const = 0;
+};
 
+
+// Need a non-templated base class for holding all TrackData instances in an STL container
+// without specifying a data type (which is dictated by the template subclass)
+class TrackData : public ReportBase
+{
+	public:
+		TrackData(const std::string& nm,TrackType ttype) 
+		  : ReportBase(nm), m_ttype(ttype) {}
+		virtual ~TrackData() {}
+		virtual void updateTracker(double t) = 0; // assume time t is a double value (or convert to)
+		const TrackType getTrackType() {return m_ttype;}
+		void setTrackType(TrackType ttype) {m_ttype = ttype;}
+    private:
+        TrackType m_ttype;
+};
 
 
 /*

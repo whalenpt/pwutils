@@ -8,29 +8,6 @@
 
 namespace pw{
 
-enum class TrackType { Max,
-    Min
-};
-
-enum class ComplexOp {None,
-    Power
-};
-
-// Need a non-template virtual base class with a generic updateTracker function,
-// Use the TrackData class when including all reporting handlers into an STL container
-class TrackData : public ReportBase
-{
-	public:
-		TrackData(const std::string& nm,TrackType ttype) 
-		  : ReportBase(nm), m_ttype(ttype) {}
-		virtual ~TrackData() {}
-		virtual void updateTracker(double t) = 0; // assume time t is a double value (or convert to)
-		const TrackType getTrackType() {return m_ttype;}
-		void setTrackType(TrackType ttype) {m_ttype = ttype;}
-    private:
-        TrackType m_ttype;
-};
-
 // Templated Base class for TrackData, specialize to data type, i.e., json or whatever else
 // by deriving from this class
 template<class T>

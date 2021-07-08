@@ -7,18 +7,6 @@
 
 namespace pw{
 
-// Need a non-templated base class for holding all ReportData1D instances in an STL container
-// without specifying a data type (which is dictated by the template subclass)
-class ReportData1D : public ReportBase
-{
-	public:
-		ReportData1D(const std::string& nm) 
-		  : ReportBase(nm) {}
-		virtual ~ReportData1D() {}
-	private:
-		virtual void reportData(std::ofstream& os) const = 0;
-};
-
 template<class T1,class T2>
 class ReportDataBase1D : public ReportData1D
 {
