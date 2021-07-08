@@ -17,21 +17,25 @@ namespace pw{
                 [](auto sum,auto& val) {return sum + std::norm(val);});
         return sqrt(squared_sum);
     }
+
     template<typename T>
     auto max_element(const std::vector<std::complex<T>>& v) {
         auto dcmplx_lt = [](auto a,auto b) {return abs(a) < abs(b);};
         return std::max_element(std::begin(v),std::end(v),dcmplx_lt);
     }
+
     template<typename T>
     auto max(const std::vector<std::complex<T>>& v) {
         auto itmax = pw::max_element<T>(v);
         return *itmax;
     }
+
     template<typename T>
     auto argmax(const std::vector<std::complex<T>>& v) {
         auto itmax = pw::max_element<T>(v);
         return std::distance(std::begin(v),itmax);
     }
+
     template<typename T>
     auto min_element(const std::vector<std::complex<T>>& v) {
         auto dcmplx_lt = [](auto a,auto b) {return abs(a) < abs(b);};
@@ -65,26 +69,29 @@ namespace pw{
                 [](auto sum,auto& val) {return sum + pow(val,2);});
         return sqrt(squared_sum);
     }
+
     template<typename T>
     auto max(const std::vector<T>& v) {
-        auto itmax = std::max_element<T>(v);
-        return *itmax;
+        return *std::max_element(std::begin(v),std::end(v));
     }
+
     template<typename T>
     auto argmax(const std::vector<T>& v) {
-        auto itmax = std::max_element<T>(v);
+        auto itmax = std::max_element<T>(std::begin(v),std::end(v));
         return std::distance(std::begin(v),itmax);
     }
+
     template<typename T>
     auto min(const std::vector<T>& v) {
-        auto itmin = std::min_element<T>(v);
-        return *itmin;
+        return *std::min_element(std::begin(v),std::end(v));
     }
+
     template<typename T>
     auto argmin(const std::vector<T>& v) {
-        auto itmin = std::min_element<T>(v);
+        auto itmin = std::min_element<T>(std::begin(v),std::end(v));
         return std::distance(std::begin(v),itmin);
     }
+
     template<typename T>
     auto relative_error(const std::vector<T>& v1,const std::vector<T>& v2){
         assert(v1.size() == v2.size());
