@@ -16,11 +16,13 @@ enum class ComplexOp {None,
     Power
 };
 
-class TrackData : public VBReportData
+// Need a non-template virtual base class with a generic updateTracker function,
+// Use the TrackData class when including all reporting handlers into an STL container
+class TrackData : public ReportBase
 {
 	public:
 		TrackData(const std::string& nm,TrackType ttype) 
-		  : VBReportData(nm), m_ttype(ttype) {}
+		  : ReportBase(nm), m_ttype(ttype) {}
 		virtual ~TrackData() {}
 		virtual void updateTracker(double t) = 0; // assume time t is a double value (or convert to)
 		const TrackType getTrackType() {return m_ttype;}
@@ -29,18 +31,20 @@ class TrackData : public VBReportData
         TrackType m_ttype;
 };
 
+// Templated Base class for TrackData, specialize to data type, i.e., json or whatever else
+// by deriving from this class
 template<class T>
-class VBTrackData : public TrackData
+class TrackDataBase : public TrackData
 {
 	public:
-        VBTrackData(const std::string& name,
+        TrackDataBase(const std::string& name,
             TrackType ttype,
             const std::vector<T>& data, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 TrackData(name,ttype),m_data(data),
                 m_xlabel(x_label),m_ylabel(y_label) {} 
-        virtual ~VBTrackData() {};
+        virtual ~TrackDataBase() {};
         const std::vector<double>& getX() const {return m_x;}
         const std::vector<T>& getY() const {return m_y;}
         const std::vector<T>& getData() const {return m_data;}
@@ -59,7 +63,7 @@ class VBTrackData : public TrackData
 };
 
 template<class T>
-void VBTrackData<T>::updateTracker(double x)
+void TrackDataBase<T>::updateTracker(double x)
 {
     m_x.push_back(x);
     if(getTrackType() == TrackType::Max) {
@@ -69,18 +73,18 @@ void VBTrackData<T>::updateTracker(double x)
     }
 }
 
-class VBTrackComplexData : public VBTrackData<dcmplx>
+class TrackComplexDataBase : public TrackDataBase<dcmplx>
 {
 	public:
-        VBTrackComplexData(const std::string& name,
+        TrackComplexDataBase(const std::string& name,
             TrackType ttype,
             const std::vector<dcmplx>& data, 
             const std::string& x_label = "x",
             const std::string& y_label = "y",
             ComplexOp cmplxop = ComplexOp::None) : 
-                VBTrackData<dcmplx>(name,ttype,data,x_label,y_label),
+                TrackDataBase<dcmplx>(name,ttype,data,x_label,y_label),
                 m_cmplxop(cmplxop) {}
-        virtual ~VBTrackComplexData() {};
+        virtual ~TrackComplexDataBase() {};
         const std::vector<double>& getOpY() const {return m_opy;}
 		void updateTracker(double x); 
 		void setComplexOp(ComplexOp cmplxop) {m_cmplxop=cmplxop;}

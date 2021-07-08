@@ -69,7 +69,7 @@ void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=f
 
 
 template<class T1,class T2>
-class ReportData1D : public pw::VBReportData1D<T1,T2>
+class ReportData1D : public pw::ReportDataBase1D<T1,T2>
 {
     public:
         ReportData1D(const std::string& name,
@@ -77,12 +77,12 @@ class ReportData1D : public pw::VBReportData1D<T1,T2>
             const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBReportData1D<T1,T2>(name,x,y,x_label,y_label) {
-                    pw::VBReport::setFileExtension("json");}
+                pw::ReportDataBase1D<T1,T2>(name,x,y,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("json");}
         ~ReportData1D() {};
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
-            if(pw::VBReport::metadataOn())
+            if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
@@ -100,7 +100,7 @@ void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
 }
 
 template<class T1>
-class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
+class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
 {
 	public :
         ReportComplexData1D(const std::string& name,
@@ -108,12 +108,12 @@ class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
             const std::vector<dcmplx>& y,
             std::string x_label="x",
             std::string y_label="y") : 
-                pw::VBReportComplexData1D<T1>(name,x,y,x_label,y_label) {
-                    pw::VBReport::setFileExtension("json");}
+                pw::ReportComplexDataBase1D<T1>(name,x,y,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("json");}
 		~ReportComplexData1D() {}
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
-            if(pw::VBReportData::metadataOn())
+            if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
@@ -136,7 +136,7 @@ void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 }
 
 template<class T>
-class TrackData : public pw::VBTrackData<T>
+class TrackData : public pw::TrackDataBase<T>
 {
     public:
         TrackData(const std::string& name,
@@ -144,12 +144,12 @@ class TrackData : public pw::VBTrackData<T>
             const std::vector<T>& data, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBTrackData<T>(name,ttype,data,x_label,y_label) {
-                    pw::VBReport::setFileExtension("json");}
+                pw::TrackDataBase<T>(name,ttype,data,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("json");}
         ~TrackData() {};
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
-            if(pw::VBReport::metadataOn())
+            if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
@@ -166,7 +166,7 @@ void TrackData<T>::reportData(std::ofstream& os) const
     writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
 }
 
-class TrackComplexData : public pw::VBTrackComplexData
+class TrackComplexData : public pw::TrackComplexDataBase
 {
     public:
         TrackComplexData(const std::string& name,
@@ -175,11 +175,11 @@ class TrackComplexData : public pw::VBTrackComplexData
             const std::string& x_label = "x",
             const std::string& y_label = "y",
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
-                pw::VBTrackComplexData(name,ttype,data,x_label,y_label,cmplxop) {
-                    pw::VBReport::setFileExtension("json");}
+                pw::TrackComplexDataBase(name,ttype,data,x_label,y_label,cmplxop) {
+                    pw::ReportBase::setFileExtension("json");}
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
-            if(pw::VBReport::metadataOn())
+            if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;

@@ -3,11 +3,11 @@
 
 namespace pw{
 
-void VBTrackComplexData::updateTracker(double x)
+void TrackComplexDataBase::updateTracker(double x)
 {
     TrackType ttype = getTrackType();
     if(m_cmplxop == ComplexOp::None){
-        VBTrackData<dcmplx>::updateTracker(x);
+        TrackDataBase<dcmplx>::updateTracker(x);
         return;
     }
     else if(m_cmplxop == ComplexOp::Power){

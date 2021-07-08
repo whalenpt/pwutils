@@ -7,28 +7,30 @@
 
 namespace pw{
 
-class ReportData1D : public VBReportData
+// Need a non-templated base class for holding all ReportData1D instances in an STL container
+// without specifying a data type (which is dictated by the template subclass)
+class ReportData1D : public ReportBase
 {
 	public:
 		ReportData1D(const std::string& nm) 
-		  : VBReportData(nm) {}
+		  : ReportBase(nm) {}
 		virtual ~ReportData1D() {}
 	private:
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
 template<class T1,class T2>
-class VBReportData1D : public ReportData1D
+class ReportDataBase1D : public ReportData1D
 {
 	public:
-        VBReportData1D(const std::string& name,
+        ReportDataBase1D(const std::string& name,
             const std::vector<T1>& x, 
             const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 ReportData1D(name), m_x(x),m_y(y),
                 m_xlabel(x_label),m_ylabel(y_label) {} 
-        virtual ~VBReportData1D() {};
+        virtual ~ReportDataBase1D() {};
         const std::vector<T1>& getX() const {return m_x;}
         const std::vector<T2>& getY() const {return m_y;}
 		std::string getLabelX() const {return m_xlabel;}
@@ -44,16 +46,16 @@ class VBReportData1D : public ReportData1D
 };
 
 template<class T1>
-class VBReportComplexData1D : public VBReportData1D<T1,dcmplx>
+class ReportComplexDataBase1D : public ReportDataBase1D<T1,dcmplx>
 {
 	public:
-        VBReportComplexData1D(const std::string& name,
+        ReportComplexDataBase1D(const std::string& name,
             const std::vector<T1>& x,const std::vector<dcmplx>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                VBReportData1D<T1,dcmplx>(name,x,y,x_label,y_label),
+                ReportDataBase1D<T1,dcmplx>(name,x,y,x_label,y_label),
                     m_power(false),m_phase(false) {}
-        virtual ~VBReportComplexData1D() {};
+        virtual ~ReportComplexDataBase1D() {};
 		void setPower(bool val) {m_power= val;}  
 		void setPhase(bool val) {m_phase = val;}  
 		bool getPower() const {return m_power;}

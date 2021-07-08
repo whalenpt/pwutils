@@ -112,7 +112,7 @@ void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x,int precision)
 }
 
 template<class T1,class T2>
-class ReportData1D : public pw::VBReportData1D<T1,T2>
+class ReportData1D : public pw::ReportDataBase1D<T1,T2>
 {
     public:
         ReportData1D(const std::string& name,
@@ -120,8 +120,8 @@ class ReportData1D : public pw::VBReportData1D<T1,T2>
             const std::vector<T2>& y, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBReportData1D<T1,T2>(name,x,y,x_label,y_label) {
-                    pw::VBReport::setFileExtension("dat");}
+                pw::ReportDataBase1D<T1,T2>(name,x,y,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("dat");}
         ~ReportData1D() {};
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
@@ -135,7 +135,7 @@ void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
 }
 
 template<class T1>
-class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
+class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
 {
 	public :
         ReportComplexData1D(const std::string& name,
@@ -143,8 +143,8 @@ class ReportComplexData1D : public pw::VBReportComplexData1D<T1>
             const std::vector<dcmplx>& y,
             std::string x_label="x",
             std::string y_label="y") : 
-                pw::VBReportComplexData1D<T1>(name,x,y,x_label,y_label) {
-                    pw::VBReport::setFileExtension("dat");}
+                pw::ReportComplexDataBase1D<T1>(name,x,y,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("dat");}
 		~ReportComplexData1D() {}
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
@@ -163,7 +163,7 @@ void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 }
 
 template<class T>
-class TrackData : public pw::VBTrackData<T>
+class TrackData : public pw::TrackDataBase<T>
 {
     public:
         TrackData(const std::string& name,
@@ -171,8 +171,8 @@ class TrackData : public pw::VBTrackData<T>
             const std::vector<T>& data, 
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
-                pw::VBTrackData<T>(name,ttype,data,x_label,y_label) {
-                    pw::VBReport::setFileExtension("dat");}
+                pw::TrackDataBase<T>(name,ttype,data,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("dat");}
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
@@ -184,7 +184,7 @@ void TrackData<T>::reportData(std::ofstream& os) const
     writeDat1D(os,this->getX(),this->getY(),this->precision());
 }
 
-class TrackComplexData : public pw::VBTrackComplexData
+class TrackComplexData : public pw::TrackComplexDataBase
 {
     public:
         TrackComplexData(const std::string& name,
@@ -193,8 +193,8 @@ class TrackComplexData : public pw::VBTrackComplexData
             const std::string& x_label = "x",
             const std::string& y_label = "y",
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
-                pw::VBTrackComplexData(name,ttype,data,x_label,y_label) {
-                    pw::VBReport::setFileExtension("dat");}
+                pw::TrackComplexDataBase(name,ttype,data,x_label,y_label) {
+                    pw::ReportBase::setFileExtension("dat");}
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
@@ -212,7 +212,7 @@ void TrackComplexData::reportData(std::ofstream& os) const
 
 
 /*
-class ReportRealData2D : public pw::VBReportRealData2D
+class ReportRealData2D : public pw::ReportBaseRealData2D
 {
     public:
         ReportRealData2D(const std::string& name,
@@ -221,16 +221,16 @@ class ReportRealData2D : public pw::VBReportRealData2D
             const std::vector<double>& z,
             std::string x_label = "x",
             std::string y_label = "y",
-            std::string z_label = "z") : pw::VBReportRealData2D(
+            std::string z_label = "z") : pw::ReportBaseRealData2D(
                 name,x,y,z,x_label,y_label,z_label) {
-                    pw::VBReport::setFileExtension("dat"); }
+                    pw::ReportBase::setFileExtension("dat"); }
         ~ReportRealData2D() {}
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
-class ReportComplexData2D : public pw::VBReportComplexData2D
+class ReportComplexData2D : public pw::ReportBaseComplexData2D
 {
     public:
         ReportComplexData2D(const std::string& name,
@@ -239,27 +239,27 @@ class ReportComplexData2D : public pw::VBReportComplexData2D
             const std::vector<dcmplx>& z,
             std::string x_label = "x",
             std::string y_label = "y",
-            std::string z_label = "z") : pw::VBReportComplexData2D(
+            std::string z_label = "z") : pw::ReportBaseComplexData2D(
                 name,x,y,z,x_label,y_label,z_label) {
-                    pw::VBReport::setFileExtension("dat");}
+                    pw::ReportBase::setFileExtension("dat");}
 		~ReportComplexData2D() {}
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
-class ReportTracker : public pw::VBReportTracker {
+class ReportTracker : public pw::ReportBaseTracker {
     public:
         ReportTracker(const std::string& nm,const std::string& tlabel="x") : 
-            pw::VBReportTracker(nm,tlabel) {
-                pw::VBReport::setFileExtension("dat");}
+            pw::ReportBaseTracker(nm,tlabel) {
+                pw::ReportBase::setFileExtension("dat");}
 
         virtual ~ReportTracker() {}
 		void report(std::filesystem::path& filePath,double t){
             std::ofstream os(filePath.string(),std::ios::app);
-		    if(VBReport::metadataOn()){
+		    if(ReportBase::metadataOn()){
 		        reportMetadata(os);
-                VBReport::setReportMetadata(false);
+                ReportBase::setReportMetadata(false);
             }
 		    reportTracker(os,t);
         }

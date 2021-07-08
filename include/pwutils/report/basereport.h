@@ -9,14 +9,26 @@
 
 namespace pw{
 
-class VBReport{
+class ReportBase{
 	public:
-		VBReport(const std::string& nm) 
+		ReportBase(const std::string& nm) 
 		  : m_name(nm),m_report_metadata(true),
 		  m_metadata_map(),
 		  m_extension(),
 		  m_precision(REPORT_PRECISION) {}
-		virtual ~VBReport() {};
+		virtual ~ReportBase() {};
+		virtual void report(std::ofstream& os) const {
+		    if(metadataOn())
+		        reportMetadata(os);
+		    reportData(os);
+        }
+		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){ def.report(os);
+			return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase* def){ def->report(os);
+			return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def){ \
+		    def->report(os); return os; }
+
 		void addItem(const std::string&,const std::string&); 
 		void addItem(const std::string&,double); 
 		void setItem(const std::string& key,double val);
@@ -41,27 +53,6 @@ class VBReport{
         std::string m_extension;
 		int m_precision;
 		virtual void reportMetadata(std::ofstream& os) const = 0;
-};
-
-class VBReportData : public VBReport
-{
-	public:
-		VBReportData(const std::string& nm) 
-		  : VBReport(nm) {}
-		virtual ~VBReportData() {}
-		virtual void report(std::ofstream& os) const {
-		    if(metadataOn())
-		        reportMetadata(os);
-		    reportData(os);
-        }
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData& def){ def.report(os);
-			return os; }
-		friend std::ofstream& operator<<(std::ofstream& os,const VBReportData* def){ def->report(os);
-			return os; }
-		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<VBReportData> def){ def->report(os); 
-		    return os; }
-	private:
-		virtual void reportMetadata(std::ofstream& os) const = 0;
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
@@ -69,11 +60,11 @@ class VBReportData : public VBReport
 
 
 /*
-class VBReportData2D : public VBReportData
+class ReportBaseData2D : public ReportBaseData
 {
 	public:
-        VBReportData2D(const std::string& name) : VBReportData(name) {}
-        virtual ~VBReportData2D() {};
+        ReportBaseData2D(const std::string& name) : ReportBaseData(name) {}
+        virtual ~ReportBaseData2D() {};
 		std::string getLabelX() const {return m_xlabel;}
 		std::string getLabelY() const {return m_ylabel;}
 		std::string getLabelZ() const {return m_zlabel;}
@@ -88,18 +79,18 @@ class VBReportData2D : public VBReportData
 };
 
 
-class VBReportRealData2D : public VBReportData2D
+class ReportBaseRealData2D : public ReportBaseData2D
 {
     public:
-        VBReportRealData2D(const std::string& name,
+        ReportBaseRealData2D(const std::string& name,
             const std::vector<double>& x,
             const std::vector<double>& y,
             const std::vector<double>& z,
             std::string x_label = "x",
             std::string y_label = "y",
-            std::string z_label = "z") : VBReportData2D(name), m_x(x), m_y(y),
+            std::string z_label = "z") : ReportBaseData2D(name), m_x(x), m_y(y),
                 m_z(z) {setLabelX(x_label); setLabelY(y_label); setLabelZ(z_label);}
-        virtual ~VBReportRealData2D() {}
+        virtual ~ReportBaseRealData2D() {}
 		const std::vector<double>& getX() const {return m_x;}
 		const std::vector<double>& getY() const {return m_y;}
 		const std::vector<double>& getZ() const {return m_z;}
@@ -110,19 +101,19 @@ class VBReportRealData2D : public VBReportData2D
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
-class VBReportComplexData2D : public VBReportData2D
+class ReportBaseComplexData2D : public ReportBaseData2D
 {
     public:
-        VBReportComplexData2D(const std::string& name,
+        ReportBaseComplexData2D(const std::string& name,
             const std::vector<double>& x,
             const std::vector<double>& y,
             const std::vector<dcmplx>& z,
             std::string x_label = "x",
             std::string y_label = "y",
-            std::string z_label = "z") : VBReportData2D(name), m_x(x), m_y(y),
+            std::string z_label = "z") : ReportBaseData2D(name), m_x(x), m_y(y),
                 m_z(z),m_power(false),m_phase(false) {
                     setLabelX(x_label); setLabelY(y_label); setLabelZ(z_label);}
-        virtual ~VBReportComplexData2D() {}
+        virtual ~ReportBaseComplexData2D() {}
 		void setPower(bool val) {m_power= val;}  
 		void setPhase(bool val) {m_phase = val;}  
 		bool getPower() const {return m_power;}
@@ -139,12 +130,12 @@ class VBReportComplexData2D : public VBReportData2D
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
-class VBReportTracker : public VBReport
+class ReportBaseTracker : public ReportBase
 {
 	public:
-		VBReportTracker(const std::string& nm,std::string tlabel="x") : 
-		    VBReport(nm), m_tlabel(tlabel) {}
-		virtual ~VBReportTracker() {}
+		ReportBaseTracker(const std::string& nm,std::string tlabel="x") : 
+		    ReportBase(nm), m_tlabel(tlabel) {}
+		virtual ~ReportBaseTracker() {}
 		std::string getLabelT() const {return m_tlabel;}
 		void setLabelT(const std::string& tlabel) {m_tlabel = tlabel;}
 		virtual void report(std::filesystem::path& filePath,double t) = 0; 
