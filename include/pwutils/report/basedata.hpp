@@ -3,7 +3,7 @@
 
 #include <string>
 #include <fstream>
-#include "pwutils/report/vbreportbase.h"
+#include "pwutils/report/basereport.h"
 
 namespace pw{
 

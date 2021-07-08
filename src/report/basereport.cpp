@@ -1,5 +1,5 @@
 
-#include "pwutils/report/vbreportbase.h"
+#include "pwutils/report/basereport.h"
 #include "pwutils/report/reporthelper.h"
 #include <filesystem>
 

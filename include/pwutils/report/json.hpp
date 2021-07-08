@@ -2,8 +2,8 @@
 #ifndef JSON_HPP_
 #define JSON_HPP_ 
 
-#include "pwutils/report/reportbase.hpp"
-#include "pwutils/report/trackbase.hpp"
+#include "pwutils/report/basedata.hpp"
+#include "pwutils/report/basetrack.hpp"
 #include "pwutils/report/reporthelper.h"
 #include <complex> 
 #include <string> 

@@ -8,8 +8,8 @@ set(SRC_FILES
 	pwmath.cpp
 	report/dat.cpp
 	report/json.cpp
-	report/vbreportbase.cpp
-	report/trackbase.cpp
+	report/basereport.cpp
+	report/basetrack.cpp
 	report/reporthelper.cpp
 	report/pwdir.cpp
 	report/dataio.cpp
@@ -24,11 +24,11 @@ set(INCLUDE_FILES
    "${INCL_DIR}/pwstrings.h"
    "${INCL_DIR}/pwmath.hpp"
    "${INCL_DIR}/report/pwdir.h"
+   "${INCL_DIR}/report/basereport.h"
+   "${INCL_DIR}/report/basetrack.hpp"
+   "${INCL_DIR}/report/basedata.hpp"
    "${INCL_DIR}/report/dat.hpp"
    "${INCL_DIR}/report/json.hpp"
-   "${INCL_DIR}/report/vbreportbase.h"
-   "${INCL_DIR}/report/reportbase.hpp"
-   "${INCL_DIR}/report/trackbase.hpp"
    "${INCL_DIR}/report/reporthelper.h"
    "${INCL_DIR}/report/dataio.hpp"
 )
