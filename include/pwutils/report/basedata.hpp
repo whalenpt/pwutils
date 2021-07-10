@@ -17,14 +17,21 @@ class ReportDataBase1D : public ReportData1D
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 ReportData1D(name), m_x(x),m_y(y),
-                m_xlabel(x_label),m_ylabel(y_label) {} 
+                m_xlabel(x_label),m_ylabel(y_label) {
+                    ReportBase::setItem("xlabel",x_label);
+                    ReportBase::setItem("ylabel",y_label);
+                }
         virtual ~ReportDataBase1D() {};
         const std::vector<T1>& getX() const {return m_x;}
         const std::vector<T2>& getY() const {return m_y;}
 		std::string getLabelX() const {return m_xlabel;}
 		std::string getLabelY() const {return m_ylabel;}
-		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;}
-		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;}
+		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
+            ReportBase::setItem("xlabel",xlabel);
+		}
+		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
+            ReportBase::setItem("ylabel",ylabel);
+		}
 	private:
         const std::vector<T1>& m_x;
         const std::vector<T2>& m_y;
