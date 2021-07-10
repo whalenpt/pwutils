@@ -10,6 +10,7 @@ namespace pw{
 
 // Templated Base class for TrackData, specialize to data type, i.e., json or whatever else
 // by deriving from this class
+
 template<class T>
 class TrackDataBase : public TrackData
 {

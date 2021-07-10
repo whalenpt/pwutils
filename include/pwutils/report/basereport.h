@@ -37,9 +37,8 @@ class ReportBase{
 		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def){ \
 		    def->report(os); return os; }
 
-		void addItem(const std::string&,const std::string&); 
-		void addItem(const std::string&,double); 
 		void setItem(const std::string& key,double val);
+		void setItem(const std::string&,const std::string&); 
 		void removeItem(const std::string&); 
 		void setReportMetadata(bool val) {m_report_metadata = val;}
 		void setFileExtension(const std::string& extension) {
@@ -90,6 +89,7 @@ class TrackData : public ReportBase
 		void setTrackType(TrackType ttype) {m_ttype = ttype;}
     private:
         TrackType m_ttype;
+		virtual void reportData(std::ofstream& os) const = 0;
 };
 
 
