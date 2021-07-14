@@ -54,8 +54,7 @@ Examples are built using the cmake compiler option
 ```bash
 cmake -S . -B build -DPWUTILS_EXAMPLES::BOOL=ON
 ```
-A program using pwutils will need to link to the pwutils library pwutils
-(or its static counterpart pwutils_static). 
+A program using pwutils will need to link to the pwutils library 
 
 # License #
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE.txt) file for details

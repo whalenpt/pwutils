@@ -33,55 +33,56 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/dataio.hpp"
 )
 
-add_library(${PWUTILS_LIBNAME} ${SRC_FILES} ${INCLUDE_FILES})
-add_library("pw::${PWUTILS_LIBNAME}" ALIAS ${PWUTILS_LIBNAME})
+add_library(pwutils ${SRC_FILES} ${INCLUDE_FILES})
+add_library(pw::pwutils ALIAS pwutils)
 
-target_include_directories(${PWUTILS_LIBNAME} PUBLIC 
-	$<BUILD_INTERFACE:${pwutils_SOURCE_DIR}/include>
+target_include_directories(pwutils PRIVATE
+	$<BUILD_INTERFACE:${pwutils_SOURCE_DIR}/include/pwutils>
 	$<INSTALL_INTERFACE:include/pwutils>
 )
 
-set_target_properties(${PWUTILS_LIBNAME} PROPERTIES
+target_include_directories(pwutils PUBLIC 
+	$<BUILD_INTERFACE:${pwutils_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>
+)
+
+set_target_properties(pwutils PROPERTIES
 	VERSION ${pwutils_VERSION}
 	SOVERSION 0
 )
 
-install(TARGETS ${PWUTILS_LIBNAME}
+install(TARGETS pwutils
 	EXPORT PWUtilsTargets
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} 
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	LIBRARY DESTINATION lib 
+	ARCHIVE DESTINATION lib 
+	RUNTIME DESTINATION bin
 )
 
 install(DIRECTORY ${INCL_DIR}
-	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	DESTINATION include
+)
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+	PWUtilsConfigVersion.cmake
+	VERSION ${pwutils_VERSION}
+	COMPATIBILITY AnyNewerVersion
 )
 
 install(EXPORT PWUtilsTargets
 	FILE PWUtilsTargets.cmake
 	NAMESPACE pw::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pwutils
+	DESTINATION lib/cmake/pwutils
 )
-
-include(CMakePackageConfigHelpers)
-
-configure_package_config_file(
-	${pwutils_SOURCE_DIR}/cmake/PWUtilsConfig.cmake.in
-	${CMAKE_CURRENT_BINARY_DIR}/cmake/PWUtilsConfig.cmake
-	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pwutils
-	PATH_VARS CMAKE_INSTALL_LIBDIR
-)
-
-write_basic_package_version_file(
-	${CMAKE_CURRENT_BINARY_DIR}/cmake/PWUtilsConfigVersion.cmake
-	VERSION ${pwutils_VERSION}
-	COMPATIBILITY AnyNewerVersion
+configure_file(${pwutils_SOURCE_DIR}/cmake/PWUtilsConfig.cmake.in
+    PWUtilsConfig.cmake @ONLY
 )
 
 install(
-	FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/PWUtilsConfig.cmake
-				${CMAKE_CURRENT_BINARY_DIR}/cmake/PWUtilsConfigVersion.cmake
-				DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pwutils
+	FILES ${CMAKE_CURRENT_BINARY_DIR}/PWUtilsConfig.cmake
+          ${CMAKE_CURRENT_BINARY_DIR}/PWUtilsConfigVersion.cmake
+    DESTINATION lib/cmake/pwutils
 )
 
 

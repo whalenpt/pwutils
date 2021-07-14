@@ -7,7 +7,7 @@ set(Sources
 add_executable(${THIS} ${Sources})
 target_link_libraries(${THIS} PUBLIC
     gtest_main
-    ${PWUTILS_LIBNAME}
+    pwutils
 )
 
 add_test(
