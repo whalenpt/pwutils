@@ -10,10 +10,11 @@ set(SRC_FILES
 	report/json.cpp
 	report/basereport.cpp
 	report/basetrack.cpp
-	report/readdat.cpp
 	report/reporthelper.cpp
 	report/pwdir.cpp
 	report/dataio.cpp
+	read/readdat.cpp
+	read/readfile.cpp
 )
 
 set(INCL_DIR "${pwutils_SOURCE_DIR}/include/pwutils")
@@ -31,8 +32,9 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/dat.hpp"
    "${INCL_DIR}/report/json.hpp"
    "${INCL_DIR}/report/reporthelper.h"
-   "${INCL_DIR}/report/readdat.h"
    "${INCL_DIR}/report/dataio.hpp"
+   "${INCL_DIR}/read/readdat.h"
+   "${INCL_DIR}/read/readfile.h"
 )
 
 add_library(pwutils ${SRC_FILES} ${INCLUDE_FILES})
