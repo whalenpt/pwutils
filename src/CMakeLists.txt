@@ -23,6 +23,7 @@ set(INCLUDE_FILES
    "${INCL_DIR}/pwthreads.h"
    "${INCL_DIR}/pwexcept.h"
    "${INCL_DIR}/pwconstants.h"
+   "${INCL_DIR}/pwdefs.h"
    "${INCL_DIR}/pwstrings.h"
    "${INCL_DIR}/pwmath.hpp"
    "${INCL_DIR}/report/pwdir.h"
