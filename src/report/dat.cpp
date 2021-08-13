@@ -25,7 +25,6 @@ void streamToDat(std::ofstream& os,const pw::metadataMap& str_map)
 }
 
 
-
 /*
 void ReportComplexData2D::reportData(std::ofstream& os) const
 {

@@ -209,8 +209,6 @@ void TrackComplexData::reportData(std::ofstream& os) const
 }
 
 
-
-
 /*
 class ReportRealData2D : public pw::ReportBaseRealData2D
 {
