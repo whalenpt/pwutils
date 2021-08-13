@@ -1,5 +1,6 @@
 
 #include "pwutils/read/readdat.h"
+#include "pwutils/report/reporthelper.h"
 #include "pwutils/pwstrings.h"
 #include "pwutils/pwmath.hpp"
 #include <string>
@@ -34,8 +35,8 @@ pw::metadataMap getHeaderContent(std::ifstream& fin){
 
 pw::DataType dataSignature(std::ifstream& fin) {
     pw::metadataMap meta_map = getHeaderContent(fin);
-    if(meta_map.find("DataType") != header_map.end())
-        return static_cast<pw::DataType>(std::stoi(header_map["DataType"]));
+    if(meta_map.find("DataType") != meta_map.end())
+        return static_cast<pw::DataType>(std::stoi(meta_map["DataType"]));
     else
         return deduceDataType(fin);
 }

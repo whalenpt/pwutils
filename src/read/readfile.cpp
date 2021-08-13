@@ -2,14 +2,17 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <ios>
 #include "pwutils/read/readfile.h"
+#include "pwutils/pwstrings.h"
+#include "pwutils/pwmath.hpp"
 
 namespace pw{
 
     void openFile(const std::string& fname,std::ifstream& fin) {
         fin.open(fname.c_str());
         if(!fin.is_open())
-            throw ios_base::failure(fin.str());
+            throw std::ios_base::failure("Failed to open file: " + fname);
     }
 
     DataFileSignature deduceDataFileType(const std::string& fname){
@@ -17,8 +20,13 @@ namespace pw{
         if(fname_vec.empty()){
             std::ifstream infile;
             openFile(fname,infile);
-            return readDataFileSignature(infile);
-        }
+            return deduceDataFileSignature(infile);
+        } 
+        if(fname_vec.back() == "json")
+            return DataFileSignature::JSON;
+        if(fname_vec.back() == "dat")
+            return DataFileSignature::DAT;
+        return DataFileSignature::UNKNOWN;
     }
 
     DataFileSignature deduceDataFileSignature(std::ifstream& fin)
@@ -33,8 +41,8 @@ namespace pw{
                 return checkJSONSignature(fin,line);
             } else if(line[0] == '#'){
                 std::vector<std::string> line_data;
-                getDatLineOfData(fin,line_data);
-                return checkDatSignature(fin,line_data)
+                getDatLineData(fin,line_data);
+                return checkDatSignature(fin,line_data);
             } else
                 return DataFileSignature::UNKNOWN;
         }
@@ -45,13 +53,13 @@ namespace pw{
         if(!pw::rowIsDoubles(line_data))
             return DataFileSignature::UNKNOWN;
         // found a row of double data
-        getDatLineOfData(fin,line_data);
+        getDatLineData(fin,line_data);
         if(!pw::rowIsDoubles(line_data))
             return DataFileSignature::UNKNOWN;
         return DataFileSignature::DAT;
     }
 
-    void getDatLineOfData(std::ifstream& infile,std::vector<std::string>& line_data)
+    void getDatLineData(std::ifstream& infile,std::vector<std::string>& line_data)
     {
         std::string line_feed;
         while(std::getline(infile,line_feed)){
@@ -75,7 +83,7 @@ namespace pw{
             // Check the first line to see if its in JSON form
             if(!checkJSONline(line))
                 return DataFileSignature::UNKNOWN;
-            if(line.back() == ","){
+            if(&line.back() == std::string(",")){
                 // Check second line
                 if(std::getline(fin,line))
                     if(checkJSONline(line))
@@ -88,7 +96,7 @@ namespace pw{
 
     bool checkJSONline(std::string& line){
         line  = pw::eatWhiteSpace(line);
-        std::vector<std::string> colon_data = pw::parseString(line,":");
+        std::vector<std::string> colon_data = pw::parseString(line,':');
         if(colon_data.size() != 2)
             // Expect one colon per JSON item
             return false;
