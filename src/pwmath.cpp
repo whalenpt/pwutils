@@ -2,8 +2,8 @@
 #include "pwutils/pwmath.hpp"
 #include <algorithm>
 #include <string>
-#include <sstream>
 #include <cmath>
+#include <stdexcept>
 
 namespace pw{
 
@@ -14,10 +14,12 @@ int factorial(int n)
 
 bool isInteger(const std::string& s)
 {
-    try
+    try{
         int val = std::stoi(s);
-    catch(std::exception& e)
+    }
+    catch(std::exception& e){
         return false;
+    }
     return true;
 }
 
@@ -31,10 +33,12 @@ bool rowIsIntegers(const std::vector<std::string>& row){
 }
 
 bool isDouble(const std::string& s){
-    try
+    try{
         double val = std::stod(s);
-    catch(std::exception& e)
+    }
+    catch(std::exception& e){
         return false;
+    }
     return true;
 }
 
