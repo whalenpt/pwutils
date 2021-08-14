@@ -112,7 +112,7 @@ namespace pw{
         else if(file_signature == FileSignature::JSON)
             return json::dataSignature(path);
         else
-            return OperatorSignature::NONE;
+            return DataSignature::UNKNOWN;
     }
 
 
