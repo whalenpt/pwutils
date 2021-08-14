@@ -23,6 +23,16 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
     getLineOfData(fin,first_line);
     getLineOfData(fin,second_line);
     getLineOfData(fin,third_line);
+    std::cout << "FIRST LINE:" << std::endl;
+    for(const auto& item : first_line)
+        std::cout << item << std::endl;
+    std::cout << "SECOND LINE:" << std::endl;
+    for(const auto& item : second_line)
+        std::cout << item << std::endl;
+    std::cout << "THIRD LINE:" << std::endl;
+    for(const auto& item : third_line)
+        std::cout << item << std::endl;
+
     if(first_line.empty() || second_line.empty() || third_line.empty())
         return pw::DataSignature::UNKNOWN;
     if(first_line.size() == second_line.size() == third_line.size()){
