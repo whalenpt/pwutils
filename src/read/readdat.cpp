@@ -34,23 +34,30 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
 //    for(const auto& item : third_line)
 //        std::cout << item << std::endl;
 
+
     if(first_line.empty() || second_line.empty() || third_line.empty()){
         std::cout << "Oh no, at least one line of data is empty. " << std::endl;
         return pw::DataSignature::UNKNOWN;
     }
-    else if(first_line.size() == second_line.size() == third_line.size()){
-        std::cout << "All data is same size :)";
+    auto sz1 = first_line.size();
+    auto sz2 = second_line.size();
+    auto sz3 = third_line.size();
+    if((sz1 == sz2) && (sz2 == sz3)){
+        // Check that sizes are 2 or 3
+        if((sz1 != 2) && (sz1 != 3))
+            return pw::DataSignature::UNKNOWN;
         // Check that all the data is doubles (or perhaps floats, but not ints)
         if(!(pw::rowIsDoubles(first_line) && pw::rowIsDoubles(second_line) && pw::rowIsDoubles(third_line)))
             return pw::DataSignature::UNKNOWN;
         // Assume this is two column data throughout
-        if(first_line.size() == 2)
+        if(sz1 == 2)
             return pw::DataSignature::XY;
         // Assume this is three column data throughout
-        else if(first_line.size() == 3)
+        else if(sz1 == 3)
             return pw::DataSignature::XY_C;
-    } else
+    } else{
         return pw::DataSignature::UNKNOWN;
+    }
 
     return pw::DataSignature::UNKNOWN;
 }
