@@ -78,7 +78,9 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 pw::ReportDataBase1D<T1,T2>(name,x,y,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("json");}
+                    pw::ReportBase::setFileExtension("json");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
+                }
         ~ReportData1D() {};
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
@@ -109,7 +111,9 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
             std::string x_label="x",
             std::string y_label="y") : 
                 pw::ReportComplexDataBase1D<T1>(name,x,y,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("json");}
+                    pw::ReportBase::setFileExtension("json");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
+                }
 		~ReportComplexData1D() {}
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
@@ -145,7 +149,9 @@ class TrackData : public pw::TrackDataBase<T>
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 pw::TrackDataBase<T>(name,ttype,data,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("json");}
+                    pw::ReportBase::setFileExtension("json");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
+                }
         ~TrackData() {};
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
@@ -176,7 +182,9 @@ class TrackComplexData : public pw::TrackComplexDataBase
             const std::string& y_label = "y",
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
                 pw::TrackComplexDataBase(name,ttype,data,x_label,y_label,cmplxop) {
-                    pw::ReportBase::setFileExtension("json");}
+                    pw::ReportBase::setFileExtension("json");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
+                }
         void report(std::ofstream& os) const {
             os << "{" << std::endl;
             if(pw::ReportBase::metadataOn())

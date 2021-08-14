@@ -121,7 +121,9 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 pw::ReportDataBase1D<T1,T2>(name,x,y,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("dat");}
+                    pw::ReportBase::setFileExtension("dat");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
+                }
         ~ReportData1D() {};
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
@@ -144,7 +146,9 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
             std::string x_label="x",
             std::string y_label="y") : 
                 pw::ReportComplexDataBase1D<T1>(name,x,y,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("dat");}
+                    pw::ReportBase::setFileExtension("dat");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
+                }
 		~ReportComplexData1D() {}
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
@@ -172,7 +176,9 @@ class TrackData : public pw::TrackDataBase<T>
             const std::string& x_label = "x",
             const std::string& y_label = "y") : 
                 pw::TrackDataBase<T>(name,ttype,data,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("dat");}
+                    pw::ReportBase::setFileExtension("dat");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
+                }
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 
@@ -194,7 +200,9 @@ class TrackComplexData : public pw::TrackComplexDataBase
             const std::string& y_label = "y",
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
                 pw::TrackComplexDataBase(name,ttype,data,x_label,y_label) {
-                    pw::ReportBase::setFileExtension("dat");}
+                    pw::ReportBase::setFileExtension("dat");
+                    pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
+                }
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
 		void reportData(std::ofstream& os) const; 

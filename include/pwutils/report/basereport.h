@@ -38,6 +38,13 @@ class ReportBase{
 		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def){ \
 		    def->report(os); return os; }
 
+        void setFileSignature(FileSignature file_sig);
+        void setDataSignature(DataSignature data_sig);
+        void setOperatorSignature(OperatorSignature op_sig);
+        FileSignature fileSignature() const;
+        DataSignature dataSignature() const;
+        OperatorSignature operatorSignature() const;
+
 		void setItem(const std::string& key,double val);
 		void setItem(const std::string&,const std::string&); 
 		void removeItem(const std::string&); 
@@ -54,6 +61,7 @@ class ReportBase{
             { return pw::filePath(dir_path,m_name,m_extension);}
         std::filesystem::path filePath(const std::filesystem::path& dir_path,int repNum) const
             { return pw::filePath(dir_path,m_name,repNum,m_extension);}
+
 	private:
 		const std::string m_name;
 		bool m_report_metadata;
