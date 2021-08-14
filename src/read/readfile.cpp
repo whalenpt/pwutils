@@ -3,7 +3,10 @@
 #include <vector>
 #include <string>
 #include <ios>
+#include <filesystem>
 #include "pwutils/read/readfile.h"
+#include "pwutils/read/readdat.h"
+#include "pwutils/read/readjson.h"
 #include "pwutils/pwstrings.h"
 #include "pwutils/pwmath.hpp"
 
@@ -15,54 +18,50 @@ namespace pw{
             throw std::ios_base::failure("Failed to open file: " + fname);
     }
 
-    FileSignature deduceDataFileType(const std::string& fname){
-        std::vector<std::string> fname_vec = pw::parseString(fname,'.');
-        if(fname_vec.empty()){
-            std::ifstream infile;
-            openFile(fname,infile);
-            return deduceFileSignature(infile);
-        } 
-        if(fname_vec.back() == "json")
+    FileSignature fileSignature(const std::filesystem::path& path){
+        std::string file_signature = pw::stringLowerCase(path.extension().string());
+        if(file_signature == ".json")
             return FileSignature::JSON;
-        if(fname_vec.back() == "dat")
+        else if(file_signature == ".dat")
             return FileSignature::DAT;
-        return FileSignature::UNKNOWN;
+        return deduceFileSignature(path);
     }
 
-    FileSignature deduceFileSignature(std::ifstream& fin)
+    FileSignature deduceFileSignature(const std::filesystem::path& path)
     {
+        std::ifstream stream{path};
         std::string line;
-        while(std::getline(fin,line)){
+        while(std::getline(stream,line)){
             line = pw::eatWhiteSpace(line);
             if(line.empty())
                 continue;
             else if(line == "{"){
                 // JSON? check to be sure
-                return checkJSONSignature(fin,line);
+                return checkJSONSignature(stream,line);
             } else if(line[0] == '#'){
                 std::vector<std::string> line_data;
-                getDatLineData(fin,line_data);
-                return checkDatSignature(fin,line_data);
+                getDatLineData(stream,line_data);
+                return checkDatSignature(stream,line_data);
             } else
                 return FileSignature::UNKNOWN;
         }
         return FileSignature::UNKNOWN;
     }
 
-    FileSignature checkDatSignature(std::ifstream& fin,std::vector<std::string>& line_data){
+    FileSignature checkDatSignature(std::ifstream& stream,std::vector<std::string>& line_data){
         if(!pw::rowIsDoubles(line_data))
             return FileSignature::UNKNOWN;
         // found a row of double data
-        getDatLineData(fin,line_data);
+        getDatLineData(stream,line_data);
         if(!pw::rowIsDoubles(line_data))
             return FileSignature::UNKNOWN;
         return FileSignature::DAT;
     }
 
-    void getDatLineData(std::ifstream& infile,std::vector<std::string>& line_data)
+    void getDatLineData(std::ifstream& stream,std::vector<std::string>& line_data)
     {
         std::string line_feed;
-        while(std::getline(infile,line_feed)){
+        while(std::getline(stream,line_feed)){
            line_feed = pw::eatWhiteSpace(line_feed);
            // Ignore empty lines and comment lines
            if(line_feed.empty())
@@ -77,15 +76,15 @@ namespace pw{
         }
     }
 
-    FileSignature checkJSONSignature(std::ifstream& fin,std::string& line){
-        if(std::getline(fin,line)){
+    FileSignature checkJSONSignature(std::ifstream& stream,std::string& line){
+        if(std::getline(stream,line)){
             line  = pw::eatWhiteSpace(line);
             // Check the first line to see if its in JSON form
             if(!checkJSONline(line))
                 return FileSignature::UNKNOWN;
             if(&line.back() == std::string(",")){
                 // Check second line
-                if(std::getline(fin,line))
+                if(std::getline(stream,line))
                     if(checkJSONline(line))
                         return FileSignature::JSON;
             } else
@@ -107,6 +106,16 @@ namespace pw{
     }
 
 
+
+    OperatorSignature operatorSignature(const std::filesystem::path& path,FileSignature file_signature)
+    {
+        if(file_signature == FileSignature::DAT)
+            return dat::operatorSignature(path);
+        else if(file_signature == FileSignature::JSON)
+            return json::operatorSignature(path);
+        else
+            return OperatorSignature::NONE;
+    }
 
 
 

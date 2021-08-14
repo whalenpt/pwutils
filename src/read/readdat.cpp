@@ -1,12 +1,54 @@
 
 #include "pwutils/read/readdat.h"
-#include "pwutils/report/reporthelper.h"
+#include "pwutils/pwdefs.h"
 #include "pwutils/pwstrings.h"
 #include "pwutils/pwmath.hpp"
 #include <string>
 #include <map>
 
 namespace dat{
+
+pw::DataSignature dataSignature(const std::filesystem::path& path) {
+    std::ifstream stream{path};
+    pw::metadataMap meta_map = dat::getHeaderContent(stream);
+    if(meta_map.find("DataSignature") != meta_map.end())
+        return static_cast<pw::DataSignature>(std::stoi(meta_map["DataSignature"]));
+    else
+        return dat::deduceDataSignature(stream);
+}
+
+pw::DataSignature deduceDataSignature(std::ifstream& fin)
+{
+    std::vector<std::string> first_line,second_line,third_line;
+    getLineOfData(fin,first_line);
+    getLineOfData(fin,second_line);
+    getLineOfData(fin,third_line);
+    if(first_line.empty() || second_line.empty() || third_line.empty())
+        return pw::DataSignature::UNKNOWN;
+    if(first_line.size() == second_line.size() == third_line.size()){
+        // Check that all the data is doubles (or perhaps floats, but not ints)
+        if(!(pw::rowIsDoubles(first_line) && pw::rowIsDoubles(second_line) && pw::rowIsDoubles(third_line)))
+            return pw::DataSignature::UNKNOWN;
+        // Assume this is two column data throughout
+        if(first_line.size() == 2)
+            return pw::DataSignature::XY;
+        // Assume this is three column data throughout
+        else if(first_line.size() == 3)
+            return pw::DataSignature::XY_C;
+    }
+    return pw::DataSignature::UNKNOWN;
+}
+
+
+pw::OperatorSignature operatorSignature(const std::filesystem::path& path)
+{
+    std::ifstream stream{path};
+    pw::metadataMap meta_map = getHeaderContent(stream);
+    if(meta_map.find("OperatorSignature") != meta_map.end())
+        return static_cast<pw::OperatorSignature>(std::stoi(meta_map["OperatorSignature"]));
+    else
+        return pw::OperatorSignature::NONE;
+}
 
 pw::metadataMap getHeaderContent(std::ifstream& fin){
     std::map<std::string,std::string> header_map;
@@ -33,14 +75,6 @@ pw::metadataMap getHeaderContent(std::ifstream& fin){
     return header_map;
 }
 
-pw::DataType dataSignature(std::ifstream& fin) {
-    pw::metadataMap meta_map = getHeaderContent(fin);
-    if(meta_map.find("DataType") != meta_map.end())
-        return static_cast<pw::DataType>(std::stoi(meta_map["DataType"]));
-    else
-        return deduceDataType(fin);
-}
-
 void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data)
 {
     std::string line_feed;
@@ -56,28 +90,6 @@ void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data)
        }
     }
     line_data.clear();
-}
-
-pw::DataType deduceDataType(std::ifstream& fin)
-{
-    std::vector<std::string> first_line,second_line,third_line;
-    getLineOfData(fin,first_line);
-    getLineOfData(fin,second_line);
-    getLineOfData(fin,third_line);
-    if(first_line.empty() || second_line.empty() || third_line.empty())
-        return pw::DataType::Unknown;
-    if(first_line.size() == second_line.size() == third_line.size()){
-        // Check that all the data is doubles (or perhaps floats, but not ints)
-        if(!(pw::rowIsDoubles(first_line) && pw::rowIsDoubles(second_line) && pw::rowIsDoubles(third_line)))
-            return pw::DataType::Unknown;
-        // Assume this is two column data throughout
-        if(first_line.size() == 2)
-            return pw::DataType::XY;
-        // Assume this is three column data throughout
-        else if(first_line.size() == 3)
-            return pw::DataType::XYcomplex;
-    }
-    return pw::DataType::Unknown;
 }
 
 

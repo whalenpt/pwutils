@@ -6,12 +6,12 @@
 #include <vector>
 #include <string>
 #include "pwutils/pwdefs.h"
-#include "pwutils/report/reporthelper.h"
 
 namespace dat{
+    pw::DataSignature dataSignature(const std::filesystem::path& path);
+    pw::DataSignature deduceDataSignature(std::ifstream& fin);
+    pw::OperatorSignature operatorSignature(const std::filesystem::path& path);
     pw::metadataMap getHeaderContent(std::ifstream& iss);
-    pw::DataType deduceDataType(std::ifstream& fin);
-    pw::DataType dataSignature(std::ifstream& fin);
     void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data);
 }
 
