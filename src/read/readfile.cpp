@@ -105,6 +105,15 @@ namespace pw{
         return true;
     }
 
+    DataSignature dataSignature(const std::filesystem::path& path,FileSignature file_signature)
+    {
+        if(file_signature == FileSignature::DAT)
+            return dat::dataSignature(path);
+        else if(file_signature == FileSignature::JSON)
+            return json::dataSignature(path);
+        else
+            return OperatorSignature::NONE;
+    }
 
 
     OperatorSignature operatorSignature(const std::filesystem::path& path,FileSignature file_signature)
