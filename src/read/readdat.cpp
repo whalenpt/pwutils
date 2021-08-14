@@ -23,22 +23,8 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
     getLineOfData(fin,first_line);
     getLineOfData(fin,second_line);
     getLineOfData(fin,third_line);
-    // LInes read correctly
-//    std::cout << "FIRST LINE:" << std::endl;
-//    for(const auto& item : first_line)
-//        std::cout << item << std::endl;
-//    std::cout << "SECOND LINE:" << std::endl;
-//    for(const auto& item : second_line)
-//        std::cout << item << std::endl;
-//    std::cout << "THIRD LINE:" << std::endl;
-//    for(const auto& item : third_line)
-//        std::cout << item << std::endl;
-
-
-    if(first_line.empty() || second_line.empty() || third_line.empty()){
-        std::cout << "Oh no, at least one line of data is empty. " << std::endl;
+    if(first_line.empty() || second_line.empty() || third_line.empty())
         return pw::DataSignature::UNKNOWN;
-    }
     auto sz1 = first_line.size();
     auto sz2 = second_line.size();
     auto sz3 = third_line.size();
