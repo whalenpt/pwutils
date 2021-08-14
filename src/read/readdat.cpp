@@ -92,7 +92,49 @@ void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data)
     line_data.clear();
 }
 
-
+pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,\
+        std::vector<double>& y)
+{
+    std::ifstream infile{path};
+    pw::metadataMap metadata = getHeaderContent(infile);
+    while(!infile.eof()){
+        double a,b; 
+        infile >> a >> b;
+        x.push_back(a);
+        y.push_back(b);
+    }
+    return metadata;
+} 
+     
+ pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
+         std::vector<pw::dcmplx>& y)
+{
+    std::ifstream infile{path};
+    pw::metadataMap metadata = getHeaderContent(infile);
+    while(!infile.eof()){
+        double a,b,c; 
+        infile >> a >> b >> c;
+        x.push_back(a);
+        y.push_back(pw::dcmplx(b,c));
+    }
+    return metadata;
+} 
+     
+  pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
+          std::vector<double>& y1,std::vector<double>& y2)
+{
+    std::ifstream infile{path};
+    pw::metadataMap metadata = getHeaderContent(infile);
+    while(!infile.eof()){
+        double a,b,c; 
+        infile >> a >> b >> c;
+        x.push_back(a);
+        y1.push_back(b);
+        y2.push_back(c);
+    }
+    return metadata;
+} 
+ 
 
 
 

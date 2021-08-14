@@ -51,6 +51,34 @@ pw::OperatorSignature operatorSignature(const std::filesystem::path& path)
 //}
 //
 
+pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,\
+        std::vector<double>& y)
+{
+    int N = 20;
+    x.assign(N,0.0);
+    y.assign(N,0.0);
+    return pw::metadataMap({});
+} 
+     
+ pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
+         std::vector<pw::dcmplx>& y)
+{
+    int N = 20;
+    x.assign(N,0.0);
+    y.assign(N,0.0);
+    return pw::metadataMap({});
+} 
+     
+  pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
+          std::vector<double>& y1,std::vector<double>& y2)
+{
+    int N = 20;
+    x.assign(N,0.0);
+    y1.assign(N,0.0);
+    y2.assign(N,0.0);
+    return pw::metadataMap({});
+
+} 
 
 
 
