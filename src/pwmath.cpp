@@ -14,32 +14,36 @@ int factorial(int n)
 
 bool isInteger(const std::string& s)
 {
-    return (s.find_first_not_of("0123456789") == std::string::npos);
+    try
+        int val = std::stoi(s);
+    catch(std::exception& e)
+        return false;
+    return true;
 }
 
 bool rowIsIntegers(const std::vector<std::string>& row){
     if(row.empty())
         return false;
-    for(unsigned int i = 0; i < row.size(); i++){
-        if(!isInteger(row[i]))
+    for(const auto& item : row)
+        if(!isInteger(item))
             return false;
-    }
     return true;
 }
 
 bool isDouble(const std::string& s){
-    std::istringstream iss(s);
-    double d;
-    return iss >> d && !iss.ignore();
+    try
+        double val = std::stod(s);
+    catch(std::exception& e)
+        return false;
+    return true;
 }
 
 bool rowIsDoubles(const std::vector<std::string>& row){
     if(row.empty())
         return false;
-    for(unsigned int i = 0; i < row.size(); i++){
-        if(!isDouble(row[i]))
+    for(const auto& item : row)
+        if(!isDouble(item))
             return false;
-    }
     return true;
 }
 

@@ -23,19 +23,23 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
     getLineOfData(fin,first_line);
     getLineOfData(fin,second_line);
     getLineOfData(fin,third_line);
-    std::cout << "FIRST LINE:" << std::endl;
-    for(const auto& item : first_line)
-        std::cout << item << std::endl;
-    std::cout << "SECOND LINE:" << std::endl;
-    for(const auto& item : second_line)
-        std::cout << item << std::endl;
-    std::cout << "THIRD LINE:" << std::endl;
-    for(const auto& item : third_line)
-        std::cout << item << std::endl;
+    // LInes read correctly
+//    std::cout << "FIRST LINE:" << std::endl;
+//    for(const auto& item : first_line)
+//        std::cout << item << std::endl;
+//    std::cout << "SECOND LINE:" << std::endl;
+//    for(const auto& item : second_line)
+//        std::cout << item << std::endl;
+//    std::cout << "THIRD LINE:" << std::endl;
+//    for(const auto& item : third_line)
+//        std::cout << item << std::endl;
 
-    if(first_line.empty() || second_line.empty() || third_line.empty())
+    if(first_line.empty() || second_line.empty() || third_line.empty()){
+        std::cout << "Oh no, at least one line of data is empty. " << std::endl;
         return pw::DataSignature::UNKNOWN;
-    if(first_line.size() == second_line.size() == third_line.size()){
+    }
+    else if(first_line.size() == second_line.size() == third_line.size()){
+        std::cout << "All data is same size :)";
         // Check that all the data is doubles (or perhaps floats, but not ints)
         if(!(pw::rowIsDoubles(first_line) && pw::rowIsDoubles(second_line) && pw::rowIsDoubles(third_line)))
             return pw::DataSignature::UNKNOWN;
@@ -45,7 +49,9 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
         // Assume this is three column data throughout
         else if(first_line.size() == 3)
             return pw::DataSignature::XY_C;
-    }
+    } else
+        return pw::DataSignature::UNKNOWN;
+
     return pw::DataSignature::UNKNOWN;
 }
 
