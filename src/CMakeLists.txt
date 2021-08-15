@@ -53,12 +53,14 @@ target_include_directories(pwutils PUBLIC
 	$<INSTALL_INTERFACE:include>
 )
 
+target_link_libraries(pwutils PUBLIC json11)
+
 set_target_properties(pwutils PROPERTIES
 	VERSION ${pwutils_VERSION}
 	SOVERSION 0
 )
 
-install(TARGETS pwutils
+install(TARGETS pwutils 
 	EXPORT PWUtilsTargets
 	LIBRARY DESTINATION lib 
 	ARCHIVE DESTINATION lib 

@@ -19,6 +19,12 @@ else()
     message(STATUS "Building static pwutils library")
 endif()
 
+if(NOT TARGET json11)
+    add_subdirectory(external/json11)
+    set(JSON11_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/json11)
+    set(JSON11_LIBRARIES json11)
+endif()
+
 add_subdirectory(src)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
