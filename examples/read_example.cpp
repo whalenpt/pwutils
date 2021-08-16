@@ -18,8 +18,42 @@ void print_file_sig(std::filesystem::path& path)
     else if(file_sig == pw::FileSignature::UNKNOWN)
         std::cout << path.string() << " : " << "format is unknown" << std::endl;
     else
-        std::cout << path.string() << " : " << "no format specified" << std::endl;
+        std::cout << path.string() << " : " << "has no format specified" << std::endl;
 }
+
+void print_data_sig(std::filesystem::path& path,pw::FileSignature file_sig)
+{
+    pw::DataSignature data_sig = pw::dataSignature(path,file_sig);
+    if(data_sig == pw::DataSignature::XY)
+        std::cout << path.string() << " : " << "contains data of type XY" << std::endl;
+    else if(data_sig == pw::DataSignature::XY_C)
+        std::cout << path.string() << " : " << "contains data of type XY_C" << std::endl;
+    else if(data_sig == pw::DataSignature::XYZ)
+        std::cout << path.string() << " : " << "contains data of type XYZ" << std::endl;
+    else if(data_sig == pw::DataSignature::XYZ_C)
+        std::cout << path.string() << " : " << "contains data of type XYZ_C" << std::endl;
+    else if(data_sig == pw::DataSignature::UNKNOWN)
+        std::cout << path.string() << " : " << "contains data of unknown type" << std::endl;
+    else
+        std::cout << path.string() << " : " << "has no data type specified" << std::endl;
+}
+
+void print_op_sig(std::filesystem::path& path,pw::FileSignature file_sig)
+{
+    pw::OperatorSignature op_sig = pw::operatorSignature(path,file_sig);
+    if(op_sig == pw::OperatorSignature::NONE)
+        std::cout << path.string() << " : " << "has data that does not need to be processed with an operation" << std::endl;
+    else if(op_sig == pw::OperatorSignature::LOGX)
+        std::cout << path.string() << " : " << "contains data that needs to be logged in the x-variable" << std::endl;
+    else if(op_sig == pw::OperatorSignature::LOGY)
+        std::cout << path.string() << " : " << "contains data that needs to be logged in the y-variable" << std::endl;
+    else if(op_sig == pw::OperatorSignature::LOGXLOGY)
+        std::cout << path.string() << " : " << "contains data that needs to be logged in both the x-variable and y-variable" << std::endl;
+    else
+        std::cout << path.string() << " : " << "no operation signature specified" << std::endl;
+}
+
+
 
 int main()
 {
@@ -35,7 +69,13 @@ int main()
     print_file_sig(input4);
     print_file_sig(input5);
     print_file_sig(input6);
-
+    std::cout << std::endl << std::endl;
+    print_data_sig(input1,pw::FileSignature::JSON);
+    print_data_sig(input2,pw::FileSignature::JSON);
+    print_data_sig(input3,pw::FileSignature::JSON);
+    print_data_sig(input4,pw::FileSignature::DAT);
+    print_data_sig(input5,pw::FileSignature::DAT);
+    print_data_sig(input6,pw::FileSignature::DAT);
     return 0;
 }
 

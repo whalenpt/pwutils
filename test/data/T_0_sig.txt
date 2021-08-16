@@ -1,5 +1,7 @@
 {
 	"FileSignature" : "1",
+	"DataSignature" : "0",
+	"OperatorSignature" : "0",
 	"legend" : "No Name",
 	"sim_duration" : "0.000000",
 	"title_str" : "z = ",

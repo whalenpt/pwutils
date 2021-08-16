@@ -12,12 +12,6 @@
 
 namespace pw{
 
-    void openFile(const std::string& fname,std::ifstream& fin) {
-        fin.open(fname.c_str());
-        if(!fin.is_open())
-            throw std::ios_base::failure("Failed to open file: " + fname);
-    }
-
     FileSignature fileSignature(const std::filesystem::path& path){
         std::string file_signature = pw::stringLowerCase(path.extension().string());
         if(file_signature == ".json")
