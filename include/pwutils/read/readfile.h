@@ -13,7 +13,7 @@ namespace pw{
     FileSignature deduceFileSignature(const std::filesystem::path& path);
 
     FileSignature checkJSONSignature(std::ifstream& fin,std::string& line);
-    FileSignature checkDatSignature(std::ifstream& fin,std::vector<std::string>& line_data);
+    FileSignature checkDatSignature(std::ifstream& fin,std::string& line);
     bool checkJSONline(std::string& line);
     void getDatLineData(std::ifstream& infile,std::vector<std::string>& line_data);
 

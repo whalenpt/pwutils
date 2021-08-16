@@ -1,5 +1,6 @@
 
 #include "pwutils/pwmath.hpp"
+#include "pwutils/pwstrings.h"
 #include <algorithm>
 #include <string>
 #include <cmath>
@@ -15,7 +16,8 @@ int factorial(int n)
 bool isInteger(const std::string& s)
 {
     try{
-        int val = std::stoi(s);
+        [[maybe_unused]] int val = std::stoi(s);
+        return true;
     }
     catch(std::exception& e){
         return false;
@@ -32,9 +34,22 @@ bool rowIsIntegers(const std::vector<std::string>& row){
     return true;
 }
 
+bool lineIsIntegers(const std::string& s)
+{
+    std::string line = pw::eatWhiteSpace(s);
+    if(line.empty())
+        return false;
+    std::vector<std::string> line_data = pw::parseString(line,' ');
+    for(const auto& item : line_data)
+        if(!isInteger(item))
+            return false;
+    return true;
+}
+
 bool isDouble(const std::string& s){
     try{
-        double val = std::stod(s);
+        [[maybe_unused]] double val = std::stod(s);
+        return true;
     }
     catch(std::exception& e){
         return false;
@@ -51,8 +66,22 @@ bool rowIsDoubles(const std::vector<std::string>& row){
     return true;
 }
 
+bool lineIsDoubles(const std::string& s)
+{
+    std::string line = pw::eatWhiteSpace(s);
+    if(line.empty())
+        return false;
+    std::vector<std::string> line_data = pw::parseString(line,' ');
+    for(const auto& item : line_data)
+        if(!isDouble(item))
+            return false;
+    return true;
+}
+
+
 
 
 }
+
 
 

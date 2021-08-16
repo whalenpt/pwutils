@@ -27,47 +27,73 @@ namespace pw{
         std::string line;
         while(std::getline(stream,line)){
             line = pw::eatWhiteSpace(line);
-            if(line.empty())
+            if(line.empty() || line.front() == '#')
                 continue;
             else if(line == "{"){
                 // JSON? check to be sure
                 return checkJSONSignature(stream,line);
-            } else if(line[0] == '#'){
-                std::vector<std::string> line_data;
-                getDatLineData(stream,line_data);
-                return checkDatSignature(stream,line_data);
-            } else
-                return FileSignature::UNKNOWN;
+            } else if(pw::lineIsIntegers(line) || pw::lineIsDoubles(line)){
+                // DAT? check to be sure
+                return checkDatSignature(stream,line);
+            }
         }
         return FileSignature::UNKNOWN;
     }
 
-    FileSignature checkDatSignature(std::ifstream& stream,std::vector<std::string>& line_data){
+    FileSignature checkDatSignature(std::ifstream& stream,std::string& str){
+        std::string line = pw::eatWhiteSpace(str);
+        std::vector<std::string> line_data = pw::parseString(line,' ');
         if(!pw::rowIsDoubles(line_data))
             return FileSignature::UNKNOWN;
-        // found a row of double data
-        getDatLineData(stream,line_data);
-        if(!pw::rowIsDoubles(line_data))
-            return FileSignature::UNKNOWN;
-        return FileSignature::DAT;
+
+        // Check for next line data
+        if(line_data.size() == 2 && pw::rowIsIntegers(line_data)){
+            int n1 = std::stoi(line_data[0]);
+            int n2 = std::stoi(line_data[1]);
+            getDatLineData(stream,line_data);
+            if(line_data.size() == 1){ // Check that data is XYZ DAT format
+                int count = 0;
+                while(count < (n1+n2) && std::getline(stream,line))
+                    count++;
+                if(stream.eof())
+                    return pw::FileSignature::UNKNOWN;
+                line_data = pw::parseString(line,' ');
+                if(!pw::rowIsDoubles(line_data) || line_data.size() != n1)
+                    return pw::FileSignature::UNKNOWN;
+                return pw::FileSignature::DAT;
+            } else if(line_data.size() == 2) // Assume data is XY format (two-columns)
+                return pw::FileSignature::DAT;
+        } else if(line_data.size() == 2 && pw::rowIsDoubles(line_data)){
+            getDatLineData(stream,line_data);
+            if(line_data.size() == 2 && pw::rowIsDoubles(line_data))
+                return pw::FileSignature::DAT;
+            else 
+                return pw::FileSignature::UNKNOWN;
+        } else if(line_data.size() == 3 && pw::rowIsDoubles(line_data)){
+            getDatLineData(stream,line_data);
+            if(line_data.size() == 3 && pw::rowIsDoubles(line_data))
+                return pw::FileSignature::DAT;
+            else 
+                return pw::FileSignature::UNKNOWN;
+        } 
+        return pw::FileSignature::UNKNOWN;
     }
 
     void getDatLineData(std::ifstream& stream,std::vector<std::string>& line_data)
     {
-        std::string line_feed;
-        while(std::getline(stream,line_feed)){
-           line_feed = pw::eatWhiteSpace(line_feed);
+        std::string line;
+        while(std::getline(stream,line)){
+           line = pw::eatWhiteSpace(line);
            // Ignore empty lines and comment lines
-           if(line_feed.empty())
-               continue;
-           else if(line_feed[0] == '#')
+           if(line.empty() || line.front() == '#')
                continue;
            else{
-               // BINGO
-               line_data = pw::parseString(line_feed,' ');
+               // BINGO - split by empty spaces
+               line_data = pw::parseString(line,' ');
                return;
            }
         }
+        throw std::domain_error("No DAT data found in stream");
     }
 
     FileSignature checkJSONSignature(std::ifstream& stream,std::string& line){

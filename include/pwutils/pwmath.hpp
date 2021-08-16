@@ -106,8 +106,10 @@ namespace pw{
     int factorial(int);
     bool isInteger(const std::string& s);
     bool rowIsIntegers(const std::vector<std::string>& row);
+    bool lineIsIntegers(const std::string& s);
     bool isDouble(const std::string& s);
     bool rowIsDoubles(const std::vector<std::string>& row);
+    bool lineIsDoubles(const std::string& s);
 }
 
 #endif
