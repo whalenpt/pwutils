@@ -10,7 +10,7 @@ namespace dat{
 
 pw::DataSignature dataSignature(const std::filesystem::path& path) {
     std::ifstream stream{path};
-    pw::metadataMap meta_map = dat::getHeaderContent(stream);
+    pw::metadataMap meta_map = getHeaderContent(stream);
     if(meta_map.find("DataSignature") != meta_map.end())
         return static_cast<pw::DataSignature>(std::stoi(meta_map["DataSignature"]));
     else

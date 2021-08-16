@@ -10,6 +10,13 @@
 
 namespace json{
 
+
+pw::metadataMap getMetaData(const std::filesystem::path& path)
+{
+    std::ifstream stream{path};
+    return getMetaData(stream);
+}
+
 pw::metadataMap getMetaData(std::ifstream& iss){
 
     size_t length = 16;
@@ -64,6 +71,25 @@ pw::DataSignature dataSignature(const std::filesystem::path& path) {
         return deduceDataSignature(stream);
 }
 
+void readJSONstring(const std::filesystem::path& path,std::string& str)
+{
+    std::ifstream stream{path};
+    stream.clear();
+    stream.seekg(0,std::ios::end);
+    str.resize(stream.tellg());
+    stream.seekg(0,std::ios::beg);
+    stream.read(&str[0],str.size());
+    stream.close();
+}
+
+void readJsonObject(const std::filesystem::path& path,json11::Json& json_obj)
+{
+    std::string buffer;
+    readJSONstring(path,buffer);
+    std::string err_str;
+    json_obj = json11::Json::parse(buffer,err_str);
+}
+
 pw::DataSignature deduceDataSignature(std::ifstream& fin)
 {
     fin.clear();
@@ -75,8 +101,8 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
     fin.close();
 
     std::string err_str;
-    const auto meta_json = json11::Json::parse(buffer,err_str);
-    const auto& json_map = meta_json.object_items();
+    const auto json_obj = json11::Json::parse(buffer,err_str);
+    const auto& json_map = json_obj.object_items();
 
     // count number of vectors (data elements)
     int numarrs = 0;
@@ -84,29 +110,13 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
         if(item.second.is_array())
             numarrs++;
     }
-
     if(numarrs == 2)
         return pw::DataSignature::XY;
     else if(numarrs == 3)
         return pw::DataSignature::XYZ;
 
     return pw::DataSignature::UNKNOWN;
-
-
-
-//    static int num = 0;
-//    std::filesystem::path path = std::filesystem::current_path();
-//    path /= std::filesystem::path("check_buffer_" + std::to_string(num) + ".txt");
-//    std::ofstream out{path};
-//    out << buffer;
-//    out.close();
-//    std::cout << path << std::endl;
-//    num++;
-
 }
-
-
-
 
 pw::OperatorSignature operatorSignature(const std::filesystem::path& path)
 {
@@ -118,13 +128,67 @@ pw::OperatorSignature operatorSignature(const std::filesystem::path& path)
         return pw::OperatorSignature::NONE;
 }
 
+void readXdata(const json11::Json& json_obj,std::vector<double>& x)
+{
+    if(json_obj["x"].is_array()){
+        const json11::Json::array& json_x = json_obj["x"].array_items();
+        x.resize(json_x.size());
+        for(auto i = 0; i < json_x.size(); i++)
+            x[i] = json_x[i].number_value();
+    } else{
+        if(!json_obj["xlabel"].is_string()){
+            const std::string str("Failed to readXY data: no 'x' data or 'xlabel' \
+                    found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& xlabel = json_obj["xlabel"].string_value();
+        if(!json_obj[xlabel].is_array()){
+            const std::string str("Failed to readXY data: \
+                    no 'x' data or " + xlabel + " data found in Json object.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_x = json_obj[xlabel].array_items();
+        x.resize(json_x.size());
+        for(auto i = 0; i < json_x.size(); i++)
+            x[i] = json_x[i].number_value();
+    }
+}
+
+void readYdata(const json11::Json& json_obj,std::vector<double>& y)
+{
+    if(json_obj["y"].is_array()){
+        const json11::Json::array& json_y = json_obj["y"].array_items();
+        y.resize(json_y.size());
+        for(auto i = 0; i < json_y.size(); i++)
+            y[i] = json_y[i].number_value();
+    } else{
+        if(!json_obj["ylabel"].is_string()){
+            const std::string str("Failed to readXY data: no 'y' data or 'ylabel' \
+                    found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& ylabel = json_obj["ylabel"].string_value();
+        if(!json_obj[ylabel].is_array()){
+            const std::string str("Failed to readXY data: \
+                    no 'y' data or " + ylabel + " data found in Json object.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_y = json_obj[ylabel].array_items();
+        y.resize(json_y.size());
+        for(auto i = 0; i < json_y.size(); i++)
+            y[i] = json_y[i].number_value();
+    }
+}
+
 pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,\
         std::vector<double>& y)
 {
-    int N = 20;
-    x.assign(N,0.0);
-    y.assign(N,0.0);
-    return pw::metadataMap({});
+    pw::metadataMap metadata = getMetaData(path);
+    json11::Json json_obj;
+    readJsonObject(path,json_obj);
+    readXdata(json_obj,x);
+    readYdata(json_obj,y);
+    return metadata;
 } 
      
  pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
@@ -136,7 +200,7 @@ pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,
     return pw::metadataMap({});
 } 
      
-  pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
+pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
           std::vector<double>& y1,std::vector<double>& y2)
 {
     int N = 20;
