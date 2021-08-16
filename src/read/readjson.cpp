@@ -55,7 +55,7 @@ pw::metadataMap getMetaData(std::ifstream& iss){
     const auto meta_json = json11::Json::parse(metastring,err_str);
     const auto& json_map = meta_json.object_items();
     pw::metadataMap metamap;
-    for(const auto item : json_map)
+    for(const auto& item : json_map)
         metamap.insert(std::pair(item.first,item.second.string_value()));
     return metamap;
 }
