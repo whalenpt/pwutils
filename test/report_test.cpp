@@ -67,6 +67,48 @@ TEST(REPORT_TEST,REPORT_JSON){
 }
 
 
+TEST(REPORT_TEST,REPORT_DAT_2D){
+    int N1 = 10;
+    int N2 = 20;
+    std::vector<int> x(N1,0);
+    std::vector<double> y(N2,5.0);
+    std::vector<double> z(N1*N2,1.0);
+
+    dat::ReportData2D<int,double,double> data1("dat2D.dat",x,y,z);
+    data1.setReportMetadata(false);
+    data1.setPrecision(3);
+    std::filesystem::path path1 = data1.filePath(std::filesystem::temp_directory_path());
+    std::ofstream os{path1};
+    os << data1;
+    os.close();
+    EXPECT_TRUE(std::filesystem::exists(path1));
+
+    std::ifstream infile{path1};
+    int nx,ny;
+    infile >> nx >> ny;
+    EXPECT_EQ(nx,N1);
+    EXPECT_EQ(ny,N2);
+    std::vector<int> xin(nx);
+    std::vector<double> yin(ny);
+    std::vector<double> zin(nx*ny);
+    for(auto i = 0; i < nx; i++)
+        infile >> xin[i];
+    for(auto j = 0; j < ny; j++)
+        infile >> yin[j];
+    std::string line;
+    int i = 0;
+    while(std::getline(infile,line)){
+	std::stringstream ss(line);
+	double val;
+        while(ss >> val){ 
+	    zin[i] = val;
+            i++;
+	}
+    }
+    EXPECT_EQ(z.size(),zin.size());
+    EXPECT_DOUBLE_EQ(z[10],1.0);
+}
+
 
 
 

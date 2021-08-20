@@ -48,11 +48,60 @@ void writeDat1D(std::ofstream& os,const std::vector<T1>& x,\
 	}
 }
 
+
+template<typename T1,typename T2,typename T3>
+void writeDat2D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>& y,\
+		const std::vector<T3>& z,int precision=pw::REPORT_PRECISION) 
+{
+    assert (x.size()*y.size() == z.size());
+		// 2D DAT format prints the integer sizes of the x array and y array on the same line
+		os << x.size() << " " << y.size() << std::endl;
+  	for(unsigned int i = 0; i < x.size(); i++)
+		    os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] << std::endl; 
+   	for(unsigned int j = 0; j < y.size(); j++)
+	   	  os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[j] << std::endl;
+
+		for(unsigned int i = 0; i < x.size(); i++){
+			for(unsigned int j = 0; j < y.size(); j++){
+	   	   os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << z[i*y.size()+j];
+			}
+			os << std::endl;
+		}
+}
+
+
+template<typename T1,typename T2>
+void writeDat2D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>& y,\
+    const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION)
+{
+    assert (x.size()*y.size() == z.size());
+		// 2D DAT format prints the integer sizes of the x array and y array on the same line
+		os << x.size() << " " << y.size() << std::endl;
+  	for(unsigned int i = 0; i < x.size(); i++)
+		    os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] << std::endl; 
+   	for(unsigned int j = 0; j < y.size(); j++)
+	   	  os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[j] << std::endl;
+
+		for(unsigned int i = 0; i < x.size(); i++){
+			for(unsigned int j = 0; j < y.size(); j++){
+	   	   os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << z[i*y.size()+j].real();
+			}
+			os << std::endl;
+		}
+
+		for(unsigned int i = 0; i < x.size(); i++){
+			for(unsigned int j = 0; j < y.size(); j++){
+	   	   os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << z[i*y.size()+j].imag();
+			}
+			os << std::endl;
+		}
+}
+
 template<typename T1>
 void writePowerDat1D(std::ofstream& os,const std::vector<T1>& x,\
     const std::vector<dcmplx>& y,int precision=pw::REPORT_PRECISION)
 {
-    assert (x.size() == y.size());
+  assert (x.size() == y.size());
 	for(unsigned int i = 0; i < x.size(); i++){
 		os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] \
 		   << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) \
@@ -73,16 +122,38 @@ void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
 }
 
 
-/*
-void writeDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
-    const std::vector<double>& z,int precision=pw::REPORT_PRECISION); 
-void writeDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
-    const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION); 
-void writePhaseDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
-    const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION); 
-void writePowerDat2D(std::ofstream& os,const std::vector<double>& x,const std::vector<double>& y,
-    const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION); 
-*/
+template<typename T1,typename T2>
+void writePowerDat2D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>& y,\
+    const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION)
+{
+
+    assert (x.size()*y.size() == z.size());
+		// 2D DAT format prints the integer sizes of the x array and y array on the same line
+		os << x.size() << " " << y.size() << std::endl;
+  	for(unsigned int i = 0; i < x.size(); i++)
+		    os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] << std::endl; 
+   	for(unsigned int j = 0; j < y.size(); j++)
+	   	  os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[j] << std::endl;
+
+		for(unsigned int i = 0; i < x.size(); i++){
+			for(unsigned int j = 0; j < y.size(); j++)
+	   	   os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << pow(abs(z[i*y.size()+j]),2);
+			os << std::endl;
+		}
+}
+
+
+template<typename T1,typename T2>
+void writePhaseDat2D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>& y,\
+    const std::vector<dcmplx>& z,int precision=pw::REPORT_PRECISION)
+{
+    assert (x.size()*y.size() == z.size());
+    std::vector<double> phaseVec(z.size());
+    for(unsigned int i=0; i < z.size(); i++)
+        phaseVec[i] = arg(z[i]);
+    pw::AdjustPhase(phaseVec,phaseVec.size());
+    writeDat2D(os,x,phaseVec,precision);
+}
 
 template<typename T1>
 void writeRowVec(std::ofstream& os,const std::vector<T1>& x,int precision=pw::REPORT_PRECISION) {
@@ -165,6 +236,69 @@ void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 	} else
         writeDat1D(os,this->getX(),this->getY(),this->precision());
 }
+
+template<class T1,class T2,class T3>
+class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>
+{
+    public:
+        ReportData2D(const std::string& name,
+            const std::vector<T1>& x, 
+            const std::vector<T2>& y, 
+            const std::vector<T3>& z, 
+            const std::string& x_label = "x",
+            const std::string& y_label = "y",
+            const std::string& z_label = "z") : 
+                pw::ReportDataBase2D<T1,T2,T3>(name,x,y,z,x_label,y_label,z_label) {
+                pw::ReportBase::setFileExtension("dat");
+                pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
+            }
+        ~ReportData2D() {};
+    private:
+        void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+        void reportData(std::ofstream& os) const; 
+};
+
+template<class T1,class T2,class T3>
+void ReportData2D<T1,T2,T3>::reportData(std::ofstream& os) const
+{
+    writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+}
+
+
+template<class T1,class T2>
+class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
+{
+    public :
+        ReportComplexData2D(const std::string& name,
+            const std::vector<T1>& x,
+            const std::vector<T2>& y,
+            const std::vector<dcmplx>& z,
+            std::string x_label="x",
+            std::string y_label="y",
+            std::string z_label="z") : 
+            pw::ReportComplexDataBase2D<T1,T2>(name,x,y,z,x_label,y_label,z_label) {
+                 pw::ReportBase::setFileExtension("dat");
+                 pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
+            }
+	      ~ReportComplexData2D() {}
+    private:
+	    	void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+	    	void reportData(std::ofstream& os) const; 
+};
+
+template<class T1,class T2>
+void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
+{
+    if(this->getPhase())
+    		writePhaseDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+    else if(this->getPower()){
+    		writePowerDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+	} else
+        writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+}
+
+
+
 
 template<class T>
 class TrackData : public pw::TrackDataBase<T>

@@ -102,6 +102,18 @@ class TrackData : public ReportBase
 };
 
 
+// Need a non-templated base class for holding all ReportData1D instances in an STL container
+// without specifying a data type (which is dictated by the template subclass)
+class ReportData2D : public ReportBase
+{
+	public:
+		ReportData2D(const std::string& nm) 
+		  : ReportBase(nm) {}
+		virtual ~ReportData2D() {}
+	private:
+		virtual void reportData(std::ofstream& os) const = 0;
+};
+
 /*
 class ReportBaseData2D : public ReportBaseData
 {

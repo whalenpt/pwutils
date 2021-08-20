@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 
 set(THIS mytests)
 set(SRC_FILES
+    test.cpp
     string_test.cpp
     report_test.cpp
     read_test.cpp
