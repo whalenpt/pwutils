@@ -9,5 +9,8 @@
 *.swo
 *.swp
 *.dat
+*.txt
+*~
+
 
 
