@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <filesystem>
 #include "pwutils/pwdefs.h"
 #include "pwutils/pwconstants.h"
 
