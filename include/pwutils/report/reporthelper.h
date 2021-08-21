@@ -15,7 +15,6 @@ const int REPORT_PADING = 8;
 const std::string DEFAULT_REPORTOUT_DIR("pwout");
 
 namespace fs = std::filesystem;
-fs::path createDirectory(const std::string& dir_name, bool overwrite = true);
 void createDirectory(const std::filesystem::path& dir_path,bool overwrite = true);
 void clearDirectory(const std::filesystem::path& dir_path);
 

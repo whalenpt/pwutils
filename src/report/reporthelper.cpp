@@ -4,13 +4,6 @@
 
 namespace pw{
 
-fs::path createDirectory(const std::string& dir_name, bool overwrite)
-{
-    fs::path dir_path = fs::current_path() / dir_name;
-    createDirectory(dir_path,overwrite);
-    return dir_path;
-}
-
 void createDirectory(const std::filesystem::path& dir_path,bool overwrite)
 {
 	if(overwrite)
@@ -42,8 +35,6 @@ fs::path filePath(const fs::path& dir_path,
 	fs::path full_path = dir_path / local_path;
 	return full_path;
 }
-
-
 
 void AdjustPhase(std::vector<double>& in,int sz)
 {
