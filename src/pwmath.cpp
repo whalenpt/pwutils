@@ -8,6 +8,18 @@
 
 namespace pw{
 
+int intceil(int x,int y)
+{
+    int q = x/y + (x % y != 0);
+    return q;
+}
+
+unsigned int intceil(unsigned int x,unsigned int y)
+{
+    unsigned int q = x/y + (x % y != 0);
+    return q;
+}
+
 int factorial(int n) 
 {
   return (n == 1 || n ==0 ) ? 1 : factorial(n-1)*n;

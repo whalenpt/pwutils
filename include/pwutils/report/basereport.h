@@ -5,6 +5,7 @@
 #include <fstream>
 #include <filesystem>
 #include <memory>
+#include <cassert>
 #include "pwutils/pwdefs.h"
 #include "pwutils/report/reporthelper.h"
 
@@ -159,14 +160,16 @@ class ReportData2D : public ReportBase
             m_zlabel = label;
             ReportBase::setItem("zlabel",label);
         }
-		int strideX() const {return m_strideX;}
-		int strideY() const {return m_strideY;}
-		void setStrideX(int strideX) {m_strideX  = strideX;}
-		void setStrideY(int strideY) {m_strideY  = strideY;}
+		unsigned int getStrideX() const {return m_strideX;}
+		unsigned int getStrideY() const {return m_strideY;}
+		void setStrideX(unsigned int strideX) { assert (strideX >= 1);
+		    m_strideX  = strideX;}
+		void setStrideY(unsigned int strideY) { assert (strideY >= 1);
+		    m_strideY  = strideY;}
 	private:
 		virtual void reportData(std::ofstream& os) const = 0;
-		int m_strideX;
-		int m_strideY;
+		unsigned int m_strideX;
+		unsigned int m_strideY;
         std::string m_xlabel;
         std::string m_ylabel;
         std::string m_zlabel;

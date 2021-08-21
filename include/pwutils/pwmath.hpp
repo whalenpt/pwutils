@@ -110,6 +110,8 @@ namespace pw{
     bool isDouble(const std::string& s);
     bool rowIsDoubles(const std::vector<std::string>& row);
     bool lineIsDoubles(const std::string& s);
+    int intceil(int x,int y);
+    unsigned int intceil(unsigned int x,unsigned int y);
 }
 
 #endif

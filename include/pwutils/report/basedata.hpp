@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <cassert>
 #include "pwutils/report/basereport.h"
 
 namespace pw{
