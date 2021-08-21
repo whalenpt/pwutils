@@ -51,13 +51,25 @@ TEST(REPORT_TEST,REPORT_JSON){
     EXPECT_TRUE(std::filesystem::exists(path1));
 
     json::ReportData1D<double,double> data2("double_vector",double_vec,second_dvec);
+
     data2.setReportMetadata(false);
     data2.setPrecision(3);
     std::filesystem::path path2 = data2.filePath(std::filesystem::temp_directory_path());
-    os.open(data2.filePath(path2));
-    os << data2;
-    os.close();
+    std::ofstream os2(path2);
+    os2.open(data2.filePath(path2));
+    os2 << data2;
+    os2.close();
+//    std::cout << path2 << std::endl;
+//    std::ifstream infile{path2};
+//
+//    while(!infile.eof()){
+//        double a,b;
+//        infile >> a >> b;
+//        std::cout << a << " - " << b << std::endl;
+//    }
+
     EXPECT_TRUE(std::filesystem::exists(path2));
+
 
 //    json::TrackData<double> track_max("double_vector",pw::TrackType::Max,double_vec);
 //    os.open(track_max.filePath(std::filesystem::temp_directory_path()));

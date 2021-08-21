@@ -8,6 +8,7 @@
 #include <map> 
 #include <fstream>
 #include <cassert>
+#include <iostream>
 #include "pwutils/report/basedata.hpp"
 #include "pwutils/report/basetrack.hpp"
 #include "pwutils/report/reporthelper.h"
@@ -54,19 +55,19 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>
 		const std::vector<T3>& z,int precision=pw::REPORT_PRECISION) 
 {
     assert (x.size()*y.size() == z.size());
-		// 2D DAT format prints the integer sizes of the x array and y array on the same line
-		os << x.size() << " " << y.size() << std::endl;
-  	for(unsigned int i = 0; i < x.size(); i++)
-		    os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] << std::endl; 
-   	for(unsigned int j = 0; j < y.size(); j++)
-	   	  os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[j] << std::endl;
-
-		for(unsigned int i = 0; i < x.size(); i++){
-			for(unsigned int j = 0; j < y.size(); j++){
-	   	   os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << z[i*y.size()+j];
-			}
-			os << std::endl;
-		}
+  	// 2D DAT format prints the integer sizes of the x array and y array on the same line
+    os << x.size() << " " << y.size() << std::endl;
+    for(unsigned int i = 0; i < x.size(); i++)
+        os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << x[i] << std::endl; 
+    for(unsigned int j = 0; j < y.size(); j++){
+        os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << y[j] << std::endl;
+    	for(unsigned int i = 0; i < x.size(); i++){
+    		for(unsigned int j = 0; j < y.size(); j++){
+       	        os << std::scientific << std::setprecision(precision) << std::setw(precision+pw::REPORT_PADING) << z[i*y.size()+j];
+    		}
+    		os << std::endl;
+    	}
+    }
 }
 
 
@@ -152,7 +153,7 @@ void writePhaseDat2D(std::ofstream& os,const std::vector<T1>& x,const std::vecto
     for(unsigned int i=0; i < z.size(); i++)
         phaseVec[i] = arg(z[i]);
     pw::AdjustPhase(phaseVec,phaseVec.size());
-    writeDat2D(os,x,phaseVec,precision);
+    writeDat2D(os,x,y,phaseVec,precision);
 }
 
 template<typename T1>
@@ -289,15 +290,16 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
 template<class T1,class T2>
 void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
 {
+    std::cout << "Report Complex Data 2D" << std::endl;
     if(this->getPhase())
     		writePhaseDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
     else if(this->getPower()){
     		writePowerDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
-	} else
+	} else{
+        std::cout << "WriteDat2D" << std::endl;
         writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+    }
 }
-
-
 
 
 template<class T>
