@@ -52,15 +52,17 @@ class ReportBase{
 		void setFileExtension(const std::string& extension) {
 		    m_extension=extension;}
 		void setPrecision(int precision) {m_precision = precision;}
-		int precision() const {return m_precision;}
-		std::string name() const {return m_name;}
-		bool metadataOn() const {return m_report_metadata;}
-		const metadataMap& metadata() const {return m_metadata_map;} 
-		std::string fileExtension() const {return m_extension;}
-        std::filesystem::path filePath(const std::filesystem::path& dir_path) const
+
+		int getPrecision() const {return m_precision;}
+		std::string getName() const {return m_name;}
+		const metadataMap& getMetadata() const {return m_metadata_map;} 
+		std::string getFileExtension() const {return m_extension;}
+
+        std::filesystem::path path(const std::filesystem::path& dir_path) const
             { return pw::filePath(dir_path,m_name,m_extension);}
-        std::filesystem::path filePath(const std::filesystem::path& dir_path,int repNum) const
+        std::filesystem::path path(const std::filesystem::path& dir_path,int repNum) const
             { return pw::filePath(dir_path,m_name,repNum,m_extension);}
+		bool metadataOn() const {return m_report_metadata;}
 
 	private:
 		const std::string m_name;
@@ -78,10 +80,25 @@ class ReportData1D : public ReportBase
 {
 	public:
 		ReportData1D(const std::string& nm) 
-		  : ReportBase(nm) {}
+		  : ReportBase(nm) {
+                setLabelX("x");
+                setLabelY("x");
+            }
 		virtual ~ReportData1D() {}
+		std::string getLabelX() const {return m_xlabel;}
+		std::string getLabelY() const {return m_ylabel;}
+		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
+            ReportBase::setItem("xlabel",xlabel);
+		}
+		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
+            ReportBase::setItem("ylabel",ylabel);
+		}
+
 	private:
 		virtual void reportData(std::ofstream& os) const = 0;
+		std::string m_xlabel;
+		std::string m_ylabel;
+
 };
 
 
@@ -96,9 +113,20 @@ class TrackData : public ReportBase
 		virtual void updateTracker(double t) = 0; // assume time t is a double value (or convert to)
 		const TrackType getTrackType() {return m_ttype;}
 		void setTrackType(TrackType ttype) {m_ttype = ttype;}
+		std::string getLabelX() const {return m_xlabel;}
+		std::string getLabelY() const {return m_ylabel;}
+		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
+            ReportBase::setItem("xlabel",xlabel);
+		}
+		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
+            ReportBase::setItem("ylabel",ylabel);
+		}
     private:
         TrackType m_ttype;
 		virtual void reportData(std::ofstream& os) const = 0;
+		std::string m_xlabel;
+		std::string m_ylabel;
+
 };
 
 
@@ -107,11 +135,41 @@ class TrackData : public ReportBase
 class ReportData2D : public ReportBase
 {
 	public:
-		ReportData2D(const std::string& nm) 
-		  : ReportBase(nm) {}
+		ReportData2D(const std::string& nm) :
+            ReportBase(nm),
+            m_strideX(1), 
+            m_strideY(1) {
+                setLabelX("x");
+                setLabelY("x");
+                setLabelZ("z");
+            }
 		virtual ~ReportData2D() {}
+        std::string getLabelX() const {return m_xlabel;}
+        std::string getLabelY() const {return m_ylabel;}
+        std::string getLabelZ() const {return m_zlabel;}
+        void setLabelX(const std::string& label) {
+            m_xlabel = label;
+            ReportBase::setItem("xlabel",label);
+        }
+        void setLabelY(const std::string& label) {
+            m_ylabel = label;
+            ReportBase::setItem("ylabel",label);
+        }
+        void setLabelZ(const std::string& label) {
+            m_zlabel = label;
+            ReportBase::setItem("zlabel",label);
+        }
+		int strideX() const {return m_strideX;}
+		int strideY() const {return m_strideY;}
+		void setStrideX(int strideX) {m_strideX  = strideX;}
+		void setStrideY(int strideY) {m_strideY  = strideY;}
 	private:
 		virtual void reportData(std::ofstream& os) const = 0;
+		int m_strideX;
+		int m_strideY;
+        std::string m_xlabel;
+        std::string m_ylabel;
+        std::string m_zlabel;
 };
 
 /*

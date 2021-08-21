@@ -13,30 +13,14 @@ class ReportDataBase1D : public ReportData1D
 	public:
         ReportDataBase1D(const std::string& name,
             const std::vector<T1>& x, 
-            const std::vector<T2>& y, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                ReportData1D(name), m_x(x),m_y(y),
-                m_xlabel(x_label),m_ylabel(y_label) {
-                    ReportBase::setItem("xlabel",x_label);
-                    ReportBase::setItem("ylabel",y_label);
-                }
+            const std::vector<T2>& y) :
+                ReportData1D(name), m_x(x),m_y(y) {}
         virtual ~ReportDataBase1D() {};
         const std::vector<T1>& getX() const {return m_x;}
         const std::vector<T2>& getY() const {return m_y;}
-		std::string getLabelX() const {return m_xlabel;}
-		std::string getLabelY() const {return m_ylabel;}
-		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
-            ReportBase::setItem("xlabel",xlabel);
-		}
-		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
-            ReportBase::setItem("ylabel",ylabel);
-		}
 	private:
         const std::vector<T1>& m_x;
         const std::vector<T2>& m_y;
-		std::string m_xlabel;
-		std::string m_ylabel;
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
@@ -45,10 +29,8 @@ class ReportComplexDataBase1D : public ReportDataBase1D<T1,dcmplx>
 {
 	public:
         ReportComplexDataBase1D(const std::string& name,
-            const std::vector<T1>& x,const std::vector<dcmplx>& y, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                ReportDataBase1D<T1,dcmplx>(name,x,y,x_label,y_label),
+            const std::vector<T1>& x,const std::vector<dcmplx>& y) : 
+                ReportDataBase1D<T1,dcmplx>(name,x,y),
                     m_power(false),m_phase(false) {}
         virtual ~ReportComplexDataBase1D() {};
 		void setPower(bool val) {m_power= val;}  
@@ -66,39 +48,19 @@ template<class T1,class T2,class T3>
 class ReportDataBase2D : public ReportData2D
 {
     public:
-	      ReportDataBase2D(const std::string& name,
+        ReportDataBase2D(const std::string& name,
         const std::vector<T1>& x, 
         const std::vector<T2>& y, 
-        const std::vector<T3>& z, 
-        const std::string& x_label = "x",
-        const std::string& y_label = "y",
-        const std::string& z_label = "z") : 
-            ReportData2D(name), m_x(x),m_y(y),m_z(z),
-              m_xlabel(x_label),m_ylabel(y_label),m_zlabel(z_label) {
-                  ReportBase::setItem("xlabel",x_label);
-                  ReportBase::setItem("ylabel",y_label);
-                  ReportBase::setItem("zlabel",z_label);
-              }
+        const std::vector<T3>& z) :
+            ReportData2D(name), m_x(x),m_y(y),m_z(z) {}
         virtual ~ReportDataBase2D() {};
         const std::vector<T1>& getX() const {return m_x;}
         const std::vector<T2>& getY() const {return m_y;}
         const std::vector<T3>& getZ() const {return m_z;}
-	      std::string getLabelX() const {return m_xlabel;}
-	      std::string getLabelY() const {return m_ylabel;}
-	      std::string getLabelZ() const {return m_zlabel;}
-	      void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
-                ReportBase::setItem("xlabel",xlabel); }
-	      void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
-                ReportBase::setItem("ylabel",ylabel); }
-	      void setLabelZ(const std::string& zlabel) {m_zlabel=zlabel;
-                  ReportBase::setItem("zlabel",zlabel); }
     private:
         const std::vector<T1>& m_x;
         const std::vector<T2>& m_y;
         const std::vector<T3>& m_z;
-        std::string m_xlabel;
-        std::string m_ylabel;
-        std::string m_zlabel;
         virtual void reportData(std::ofstream& os) const = 0;
 }; 
 
@@ -109,13 +71,10 @@ class ReportComplexDataBase2D : public ReportDataBase2D<T1,T2,dcmplx>
         ReportComplexDataBase2D(const std::string& name,
             const std::vector<T1>& x,
             const std::vector<T2>& y,
-	    const std::vector<dcmplx>& z, 
-            const std::string& x_label = "x",
-	    const std::string& y_label = "y",
-            const std::string& z_label = "z") : 
-                ReportDataBase2D<T1,T2,dcmplx>(name,x,y,z,x_label,y_label,z_label),
+	        const std::vector<dcmplx>& z) :
+                ReportDataBase2D<T1,T2,dcmplx>(name,x,y,z),
                     m_power(false),m_phase(false) {}
-	virtual ~ReportComplexDataBase2D() {};
+        virtual ~ReportComplexDataBase2D() {};
         void setPower(bool val) {m_power= val;}  
         void setPhase(bool val) {m_phase = val;}  
         bool getPower() const {return m_power;}

@@ -74,10 +74,8 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
     public:
         ReportData1D(const std::string& name,
             const std::vector<T1>& x, 
-            const std::vector<T2>& y, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                pw::ReportDataBase1D<T1,T2>(name,x,y,x_label,y_label) {
+            const std::vector<T2>& y) :
+                pw::ReportDataBase1D<T1,T2>(name,x,y) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -90,15 +88,15 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 template<class T1,class T2>
 void ReportData1D<T1,T2>::reportData(std::ofstream& os) const 
 {
-	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
-    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
 }
 
 template<class T1>
@@ -107,10 +105,8 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
 	public :
         ReportComplexData1D(const std::string& name,
             const std::vector<T1>& x,
-            const std::vector<dcmplx>& y,
-            std::string x_label="x",
-            std::string y_label="y") : 
-                pw::ReportComplexDataBase1D<T1>(name,x,y,x_label,y_label) {
+            const std::vector<dcmplx>& y) :
+                pw::ReportComplexDataBase1D<T1>(name,x,y) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -123,20 +119,20 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 template<class T1>
 void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 {
-    writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
+    writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
 	if(this->getPhase())
-		writeJSONPhaseVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+		writeJSONPhaseVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
     else if(this->getPower()){
-	    writeJSONPowerVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+	    writeJSONPowerVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
 	} else
-	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
 }
 
 template<class T>
@@ -145,10 +141,8 @@ class TrackData : public pw::TrackDataBase<T>
     public:
         TrackData(const std::string& name,
             pw::TrackType ttype,
-            const std::vector<T>& data, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                pw::TrackDataBase<T>(name,ttype,data,x_label,y_label) {
+            const std::vector<T>& data) :
+                pw::TrackDataBase<T>(name,ttype,data) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -161,15 +155,15 @@ class TrackData : public pw::TrackDataBase<T>
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 template<class T>
 void TrackData<T>::reportData(std::ofstream& os) const 
 {
-	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
-    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
 }
 
 class TrackComplexData : public pw::TrackComplexDataBase
@@ -178,10 +172,8 @@ class TrackComplexData : public pw::TrackComplexDataBase
         TrackComplexData(const std::string& name,
             pw::TrackType ttype,
             const std::vector<dcmplx>& data, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y",
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
-                pw::TrackComplexDataBase(name,ttype,data,x_label,y_label,cmplxop) {
+                pw::TrackComplexDataBase(name,ttype,data,cmplxop) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -193,17 +185,17 @@ class TrackComplexData : public pw::TrackComplexDataBase
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 void TrackComplexData::reportData(std::ofstream& os) const 
 {
-	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->precision());
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
 	if(getComplexOp() == pw::ComplexOp::None)
-        writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->precision());
+        writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
     else
-        writeJSONVector(os,this->getLabelY(),this->getOpY(),"\t",true,this->precision());
+        writeJSONVector(os,this->getLabelY(),this->getOpY(),"\t",true,this->getPrecision());
 }
 
 
@@ -233,7 +225,7 @@ class ReportRealData2D : public pw::VBReportRealData2D
         }
 
     private:
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->metadata(),false);}
+		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->getMetadata(),false);}
         void reportData(std::ofstream& os) const;
 };
 
@@ -258,7 +250,7 @@ class ReportComplexData2D : public pw::VBReportComplexData2D
             os << "}" << std::endl;
         }
     private:
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->metadata(),false);}
+		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->getMetadata(),false);}
         void reportData(std::ofstream& os) const;
 
 };
@@ -281,7 +273,7 @@ class ReportTracker : public pw::VBReportTracker {
         }
     private:
         std::vector<double> m_t;
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->metadata(),false);}
+		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->getMetadata(),false);}
 		virtual void reportTracker(std::ofstream& os,double t) = 0;
 };
 

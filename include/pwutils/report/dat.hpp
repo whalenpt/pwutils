@@ -189,23 +189,21 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
     public:
         ReportData1D(const std::string& name,
             const std::vector<T1>& x, 
-            const std::vector<T2>& y, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                pw::ReportDataBase1D<T1,T2>(name,x,y,x_label,y_label) {
+            const std::vector<T2>& y) :
+                pw::ReportDataBase1D<T1,T2>(name,x,y) {
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
         ~ReportData1D() {};
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 template<class T1,class T2>
 void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
 {
-    writeDat1D(os,this->getX(),this->getY(),this->precision());
+    writeDat1D(os,this->getX(),this->getY(),this->getPrecision());
 }
 
 template<class T1>
@@ -214,16 +212,14 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
 	public :
         ReportComplexData1D(const std::string& name,
             const std::vector<T1>& x,
-            const std::vector<dcmplx>& y,
-            std::string x_label="x",
-            std::string y_label="y") : 
-                pw::ReportComplexDataBase1D<T1>(name,x,y,x_label,y_label) {
+            const std::vector<dcmplx>& y) :
+                pw::ReportComplexDataBase1D<T1>(name,x,y) {
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
 		~ReportComplexData1D() {}
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
@@ -231,11 +227,11 @@ template<class T1>
 void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 {
     if(this->getPhase())
-		writePhaseDat1D(os,this->getX(),this->getY(),this->precision());
+		writePhaseDat1D(os,this->getX(),this->getY(),this->getPrecision());
     else if(this->getPower()){
-		writePowerDat1D(os,this->getX(),this->getY(),this->precision());
+		writePowerDat1D(os,this->getX(),this->getY(),this->getPrecision());
 	} else
-        writeDat1D(os,this->getX(),this->getY(),this->precision());
+        writeDat1D(os,this->getX(),this->getY(),this->getPrecision());
 }
 
 template<class T1,class T2,class T3>
@@ -245,24 +241,21 @@ class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>
         ReportData2D(const std::string& name,
             const std::vector<T1>& x, 
             const std::vector<T2>& y, 
-            const std::vector<T3>& z, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y",
-            const std::string& z_label = "z") : 
-                pw::ReportDataBase2D<T1,T2,T3>(name,x,y,z,x_label,y_label,z_label) {
+            const std::vector<T3>& z) :
+                pw::ReportDataBase2D<T1,T2,T3>(name,x,y,z) {
                 pw::ReportBase::setFileExtension("dat");
                 pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
             }
         ~ReportData2D() {};
     private:
-        void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+        void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
         void reportData(std::ofstream& os) const; 
 };
 
 template<class T1,class T2,class T3>
 void ReportData2D<T1,T2,T3>::reportData(std::ofstream& os) const
 {
-    writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+    writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->getPrecision());
 }
 
 
@@ -273,17 +266,14 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
         ReportComplexData2D(const std::string& name,
             const std::vector<T1>& x,
             const std::vector<T2>& y,
-            const std::vector<dcmplx>& z,
-            std::string x_label="x",
-            std::string y_label="y",
-            std::string z_label="z") : 
-            pw::ReportComplexDataBase2D<T1,T2>(name,x,y,z,x_label,y_label,z_label) {
+            const std::vector<dcmplx>& z) :
+            pw::ReportComplexDataBase2D<T1,T2>(name,x,y,z) {
                  pw::ReportBase::setFileExtension("dat");
                  pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
             }
 	      ~ReportComplexData2D() {}
     private:
-	    	void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+	    	void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 	    	void reportData(std::ofstream& os) const; 
 };
 
@@ -292,12 +282,12 @@ void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
 {
     std::cout << "Report Complex Data 2D" << std::endl;
     if(this->getPhase())
-    		writePhaseDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+    		writePhaseDat2D(os,this->getX(),this->getY(),this->getZ(),this->getPrecision());
     else if(this->getPower()){
-    		writePowerDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+    		writePowerDat2D(os,this->getX(),this->getY(),this->getZ(),this->getPrecision());
 	} else{
         std::cout << "WriteDat2D" << std::endl;
-        writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->precision());
+        writeDat2D(os,this->getX(),this->getY(),this->getZ(),this->getPrecision());
     }
 }
 
@@ -308,22 +298,20 @@ class TrackData : public pw::TrackDataBase<T>
     public:
         TrackData(const std::string& name,
             pw::TrackType ttype,
-            const std::vector<T>& data, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y") : 
-                pw::TrackDataBase<T>(name,ttype,data,x_label,y_label) {
+            const std::vector<T>& data) :
+                pw::TrackDataBase<T>(name,ttype,data) {
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 template<class T>
 void TrackData<T>::reportData(std::ofstream& os) const 
 {
-    writeDat1D(os,this->getX(),this->getY(),this->precision());
+    writeDat1D(os,this->getX(),this->getY(),this->getPrecision());
 }
 
 class TrackComplexData : public pw::TrackComplexDataBase
@@ -331,25 +319,23 @@ class TrackComplexData : public pw::TrackComplexDataBase
     public:
         TrackComplexData(const std::string& name,
             pw::TrackType ttype,
-            const std::vector<dcmplx>& data, 
-            const std::string& x_label = "x",
-            const std::string& y_label = "y",
+            const std::vector<dcmplx>& data,
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
-                pw::TrackComplexDataBase(name,ttype,data,x_label,y_label) {
+                pw::TrackComplexDataBase(name,ttype,data) {
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
 void TrackComplexData::reportData(std::ofstream& os) const 
 {
 	if(getComplexOp() == pw::ComplexOp::None)
-        writeDat1D(os,this->getX(),this->getY(),this->precision());
+        writeDat1D(os,this->getX(),this->getY(),this->getPrecision());
     else
-        writeDat1D(os,this->getX(),this->getOpY(),this->precision());
+        writeDat1D(os,this->getX(),this->getOpY(),this->getPrecision());
 }
 
 
@@ -368,7 +354,7 @@ class ReportRealData2D : public pw::ReportBaseRealData2D
                     pw::ReportBase::setFileExtension("dat"); }
         ~ReportRealData2D() {}
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
@@ -386,7 +372,7 @@ class ReportComplexData2D : public pw::ReportBaseComplexData2D
                     pw::ReportBase::setFileExtension("dat");}
 		~ReportComplexData2D() {}
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
 };
 
@@ -406,7 +392,7 @@ class ReportTracker : public pw::ReportBaseTracker {
 		    reportTracker(os,t);
         }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->metadata());}
+		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		virtual void reportTracker(std::ofstream& os,double t) = 0;
 };
 
