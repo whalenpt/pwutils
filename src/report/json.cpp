@@ -69,25 +69,25 @@ void writeJSONValue(std::ofstream& os,const std::string& value,
 }
 
 void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
-		const std::string& indent,bool end_value,int precision)
+		const std::string& indent,bool end_value)
 {
     writeJSONLabel(os,label,indent);
 	os << "[";
 	for(unsigned int i = 0; i < v.size()-1; i++){
-        os << std::scientific << std::setprecision(precision) << pow(abs(v[i]),2) << ", ";
+        os << pow(abs(v[i]),2) << ", ";
 	}
 	std::string end_string = end_value ?  "]" : "],"; 
 	os << pow(abs(v.back()),2) << end_string << std::endl;
 }
 
 void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
-		const std::string& indent,bool end_value,int precision)
+		const std::string& indent,bool end_value)
 {
 		std::vector<double> phaseVec(v.size());
 		for(unsigned int i=0; i < v.size(); i++)
             phaseVec[i] = arg(v[i]);
 		pw::AdjustPhase(phaseVec,v.size());
-		writeJSONVector(os,label,phaseVec,indent,end_value,precision);
+		writeJSONVector(os,label,phaseVec,indent,end_value);
 }
 
 void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value) 

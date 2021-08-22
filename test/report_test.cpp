@@ -11,7 +11,6 @@ TEST(REPORT_TEST,REPORT_DAT){
 
     dat::ReportData1D<int,double> data1("test1.json",int_vec,double_vec);
     data1.setReportMetadata(false);
-    data1.setPrecision(3);
     std::filesystem::path path1 = data1.path(std::filesystem::temp_directory_path());
     std::ofstream os{path1};
     os << data1;
@@ -20,7 +19,6 @@ TEST(REPORT_TEST,REPORT_DAT){
 
     dat::ReportData1D<double,double> data2("double_vector",double_vec,second_dvec);
     data2.setReportMetadata(false);
-    data2.setPrecision(3);
     std::filesystem::path path2 = data2.path(std::filesystem::temp_directory_path());
     os.open(path2);
     os << data2;
@@ -43,9 +41,9 @@ TEST(REPORT_TEST,REPORT_JSON){
 
     json::ReportData1D<int,double> data1("test1.json",int_vec,double_vec);
     data1.setReportMetadata(false);
-    data1.setPrecision(3);
     std::filesystem::path path1 = data1.path(std::filesystem::temp_directory_path());
     std::ofstream os(path1);
+    os << std::fixed << std::setprecision(4);
     os << data1;
     os.close();
     EXPECT_TRUE(std::filesystem::exists(path1));
@@ -53,9 +51,9 @@ TEST(REPORT_TEST,REPORT_JSON){
     json::ReportData1D<double,double> data2("double_vector",double_vec,second_dvec);
 
     data2.setReportMetadata(false);
-    data2.setPrecision(3);
     std::filesystem::path path2 = data2.path(std::filesystem::temp_directory_path());
     std::ofstream os2(path2);
+    os2 << std::scientific << std::setprecision(4);
     os2.open(data2.path(path2));
     os2 << data2;
     os2.close();
@@ -88,7 +86,6 @@ TEST(REPORT_TEST,REPORT_DAT_2D){
 
     dat::ReportData2D<int,double,double> data1("dat2D.dat",x,y,z);
     data1.setReportMetadata(false);
-    data1.setPrecision(3);
     std::filesystem::path path1 = data1.path(std::filesystem::temp_directory_path());
     std::ofstream os{path1};
     os << data1;

@@ -23,12 +23,12 @@ void writeJSONValue(std::ofstream& os,const std::string& value,
 
 template<typename T>
 void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<T>& v,
-		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION)
+		const std::string& indent="\t",bool end_value=false)
 {
 	writeJSONLabel(os,label,indent);
 	os << "[";
 	for(unsigned int i = 0; i < v.size()-1; i++){
-		os << std::scientific << std::setprecision(precision) << v[i] << ", ";
+		os << v[i] << ", ";
 	}
 	std::string end_string = end_value ?  "]" : "],"; 
 	os << v.back() << end_string << std::endl;
@@ -37,7 +37,7 @@ void writeJSONVector(std::ofstream& os,const std::string& label,const std::vecto
 // Complex value specialization of writeJSONVector
 template<>
 void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
-		const std::string& indent,bool end_value,int precision)
+		const std::string& indent,bool end_value)
 {
 	std::string two_indent = indent + indent;
     writeJSONLabel(os,label,indent);
@@ -47,13 +47,13 @@ void writeJSONVector(std::ofstream& os,const std::string& label,const std::vecto
 	writeJSONLabel(os,"real",two_indent);
 	os << "[";
 	for(unsigned int i = 0; i < v.size()-1; i++){
-		os << std::scientific << std::setprecision(precision) << v[i].real() << ", ";
+		os << v[i].real() << ", ";
 	}
 	os << v.back().real() << "]," << std::endl;
 	writeJSONLabel(os,"imag",two_indent);
 	os << "[";
 	for(unsigned int i = 0; i < v.size()-1; i++){
-		os << std::scientific << std::setprecision(precision) << v[i].imag() << ", ";
+		os << v[i].imag() << ", ";
 	}
 	os << v.back().imag() << "]" << std::endl;
 	std::string end_string = end_value ?  "}" : "},"; 
@@ -62,9 +62,9 @@ void writeJSONVector(std::ofstream& os,const std::string& label,const std::vecto
 
 
 void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
-		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION);
+		const std::string& indent="\t",bool end_value=false);
 void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,
-		const std::string& indent="\t",bool end_value=false,int precision=pw::REPORT_PRECISION);
+		const std::string& indent="\t",bool end_value=false);
 void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=false);
 
 
@@ -95,8 +95,8 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
 template<class T1,class T2>
 void ReportData1D<T1,T2>::reportData(std::ofstream& os) const 
 {
-	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
-    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false);
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true);
 }
 
 template<class T1>
@@ -126,13 +126,13 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
 template<class T1>
 void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
 {
-    writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
+    writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false);
 	if(this->getPhase())
-		writeJSONPhaseVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
+		writeJSONPhaseVector(os,this->getLabelY(),this->getY(),"\t",true);
     else if(this->getPower()){
-	    writeJSONPowerVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
+	    writeJSONPowerVector(os,this->getLabelY(),this->getY(),"\t",true);
 	} else
-	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
+	   writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true);
 }
 
 template<class T>
@@ -162,8 +162,8 @@ class TrackData : public pw::TrackDataBase<T>
 template<class T>
 void TrackData<T>::reportData(std::ofstream& os) const 
 {
-	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
-    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false);
+    writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true);
 }
 
 class TrackComplexData : public pw::TrackComplexDataBase
@@ -191,11 +191,11 @@ class TrackComplexData : public pw::TrackComplexDataBase
 
 void TrackComplexData::reportData(std::ofstream& os) const 
 {
-	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false,this->getPrecision());
+	writeJSONVector(os,this->getLabelX(),this->getX(),"\t",false);
 	if(getComplexOp() == pw::ComplexOp::None)
-        writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true,this->getPrecision());
+        writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true);
     else
-        writeJSONVector(os,this->getLabelY(),this->getOpY(),"\t",true,this->getPrecision());
+        writeJSONVector(os,this->getLabelY(),this->getOpY(),"\t",true);
 }
 
 
