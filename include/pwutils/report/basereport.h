@@ -24,19 +24,17 @@ class ReportBase{
 		ReportBase(const std::string& nm) 
 		  : m_name(nm),m_report_metadata(true),
 		  m_metadata_map(),
-		  m_extension() {}
+		  m_extension(),
+	      m_dirpath("outfolder") {}
 		virtual ~ReportBase() {};
 		virtual void report(std::ofstream& os) const {
 		    if(metadataOn())
 		        reportMetadata(os);
 		    reportData(os);
         }
-		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){ def.report(os);
-			return os; }
-		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase* def){ def->report(os);
-			return os; }
-		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def){ \
-		    def->report(os); return os; }
+		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase& def);
+		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase* def);
+		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def);
 
         void setFileSignature(FileSignature file_sig);
         void setDataSignature(DataSignature data_sig);
@@ -51,15 +49,19 @@ class ReportBase{
 		void setReportMetadata(bool val) {m_report_metadata = val;}
 		void setFileExtension(const std::string& extension) {
 		    m_extension=extension;}
+		void setDirPath(const std::filesystem::path& dirpath) {
+		    m_dirpath = dirpath;}
 
 		std::string getName() const {return m_name;}
 		const metadataMap& getMetadata() const {return m_metadata_map;} 
 		std::string getFileExtension() const {return m_extension;}
+        std::filesystem::path getDirPath() const {return m_dirpath;}
 
         std::filesystem::path path(const std::filesystem::path& dir_path) const
             { return pw::filePath(dir_path,m_name,m_extension);}
         std::filesystem::path path(const std::filesystem::path& dir_path,int repNum) const
             { return pw::filePath(dir_path,m_name,repNum,m_extension);}
+
 		bool metadataOn() const {return m_report_metadata;}
 
 	private:
@@ -69,6 +71,8 @@ class ReportBase{
         std::string m_extension;
 		virtual void reportMetadata(std::ofstream& os) const = 0;
 		virtual void reportData(std::ofstream& os) const = 0;
+        std::filesystem::path m_dirpath;
+		bool open(std::ofstream& os) const;
 };
 
 // Need a non-templated base class for holding all ReportData1D instances in an STL container

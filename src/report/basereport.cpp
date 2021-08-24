@@ -1,9 +1,40 @@
 
 #include "pwutils/report/basereport.h"
+#include "pwutils/report/reporthelper.h"
 #include <string>
 #include <map>
+#include <fstream>
 
 namespace pw{
+
+bool ReportBase::open(std::ofstream& os) const{
+    if(os.is_open())
+        return true;
+    // ofstream os is not open try to open with class settings
+    os.open(pw::filePath(m_dirpath,m_name,m_extension));
+    if(!os.is_open())
+        return false;
+    return true;
+}
+
+std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){
+    if(def.open(os))
+        def.report(os);
+    return os; 
+}
+
+std::ofstream& operator<<(std::ofstream& os,const ReportBase* def){ 
+    if(def->open(os))
+        def->report(os);
+    return os; 
+}
+
+std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def)
+{ 
+    if(def->open(os))
+        def->report(os);
+    return os; 
+}
 
 void ReportBase::setItem(const std::string& key,double val) {
     std::string strVal = std::to_string(val);
