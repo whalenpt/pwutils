@@ -72,7 +72,7 @@ class ReportBase{
 		virtual void reportMetadata(std::ofstream& os) const = 0;
 		virtual void reportData(std::ofstream& os) const = 0;
         std::filesystem::path m_dirpath;
-		bool open(std::ofstream& os) const;
+		void internalFileHandle(std::ofstream& os) const;
 };
 
 // Need a non-templated base class for holding all ReportData1D instances in an STL container

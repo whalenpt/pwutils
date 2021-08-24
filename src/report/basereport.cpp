@@ -4,36 +4,44 @@
 #include <string>
 #include <map>
 #include <fstream>
+#include <stdexcept>
 
 namespace pw{
 
-bool ReportBase::open(std::ofstream& os) const{
-    if(os.is_open())
-        return true;
-    // ofstream os is not open try to open with class settings
+void ReportBase::internalFileHandle(std::ofstream& os) const
+{
+    pw::createDirectory(m_dirpath,false);
     os.open(pw::filePath(m_dirpath,m_name,m_extension));
     if(!os.is_open())
-        return false;
-    return true;
+        throw std::runtime_error("Failed to open data file for output stream");
+    report(os);
+    os.close();
 }
 
 std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){
-    if(def.open(os))
+    // If ofstream os is not open, try to open and output
+    if(!os.is_open())
+        def.internalFileHandle(os);
+    else
         def.report(os);
-    return os; 
+    return os;
 }
 
 std::ofstream& operator<<(std::ofstream& os,const ReportBase* def){ 
-    if(def->open(os))
+    if(!os.is_open())
+        def->internalFileHandle(os);
+    else
         def->report(os);
-    return os; 
+    return os;
 }
 
 std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def)
 { 
-    if(def->open(os))
+    if(!os.is_open())
+        def->internalFileHandle(os);
+    else
         def->report(os);
-    return os; 
+    return os;
 }
 
 void ReportBase::setItem(const std::string& key,double val) {
