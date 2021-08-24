@@ -8,29 +8,27 @@ TEST(REPORT_TEST,REPORT_DAT){
     std::vector<int> int_vec(N,0);
     std::vector<double> double_vec(N,1.);
     std::vector<double> second_dvec(N,2.);
+    std::ofstream os;
 
     dat::ReportData1D<int,double> data1("test1.json",int_vec,double_vec);
     data1.setReportMetadata(false);
-    std::filesystem::path path1 = data1.path(std::filesystem::temp_directory_path());
-    std::ofstream os{path1};
+    data1.setDirPath(std::filesystem::temp_directory_path());
+
     os << data1;
-    os.close();
-    EXPECT_TRUE(std::filesystem::exists(path1));
+    EXPECT_TRUE(std::filesystem::exists(data1.path()));
 
     dat::ReportData1D<double,double> data2("double_vector",double_vec,second_dvec);
     data2.setReportMetadata(false);
-    std::filesystem::path path2 = data2.path(std::filesystem::temp_directory_path());
-    os.open(path2);
+    data2.setDirPath(std::filesystem::temp_directory_path());
+
     os << data2;
-    os.close();
-    EXPECT_TRUE(std::filesystem::exists(path2));
+    EXPECT_TRUE(std::filesystem::exists(data2.path()));
 
     dat::TrackData<double> track_max("double_vector",pw::TrackType::Max,double_vec);
-    std::filesystem::path path3 = track_max.path(std::filesystem::temp_directory_path());
-    os.open(path3);
+    track_max.setDirPath(std::filesystem::temp_directory_path());
+
     os << track_max;
-    os.close();
-    EXPECT_TRUE(std::filesystem::exists(path3));
+    EXPECT_TRUE(std::filesystem::exists(track_max.path()));
 }
 
 TEST(REPORT_TEST,REPORT_JSON){
@@ -38,36 +36,21 @@ TEST(REPORT_TEST,REPORT_JSON){
     std::vector<int> int_vec(N,0);
     std::vector<double> double_vec(N,1.);
     std::vector<double> second_dvec(N,2.);
+    std::ofstream os;
 
-    json::ReportData1D<int,double> data1("test1.json",int_vec,double_vec);
+    json::ReportData1D<int,double> data1("test1",int_vec,double_vec);
     data1.setReportMetadata(false);
-    std::filesystem::path path1 = data1.path(std::filesystem::temp_directory_path());
-    std::ofstream os(path1);
+    data1.setDirPath(std::filesystem::temp_directory_path());
     os << std::fixed << std::setprecision(4);
     os << data1;
-    os.close();
-    EXPECT_TRUE(std::filesystem::exists(path1));
+    EXPECT_TRUE(std::filesystem::exists(data1.path()));
 
     json::ReportData1D<double,double> data2("double_vector",double_vec,second_dvec);
-
     data2.setReportMetadata(false);
-    std::filesystem::path path2 = data2.path(std::filesystem::temp_directory_path());
-    std::ofstream os2(path2);
-    os2 << std::scientific << std::setprecision(4);
-    os2.open(data2.path(path2));
-    os2 << data2;
-    os2.close();
-//    std::cout << path2 << std::endl;
-//    std::ifstream infile{path2};
-//
-//    while(!infile.eof()){
-//        double a,b;
-//        infile >> a >> b;
-//        std::cout << a << " - " << b << std::endl;
-//    }
-
-    EXPECT_TRUE(std::filesystem::exists(path2));
-
+    data2.setDirPath(std::filesystem::temp_directory_path());
+    os << std::scientific << std::setprecision(4);
+    os << data2;
+    EXPECT_TRUE(std::filesystem::exists(data2.path()));
 
 //    json::TrackData<double> track_max("double_vector",pw::TrackType::Max,double_vec);
 //    os.open(track_max.filePath(std::filesystem::temp_directory_path()));
@@ -83,16 +66,15 @@ TEST(REPORT_TEST,REPORT_DAT_2D){
     std::vector<int> x(N1,0);
     std::vector<double> y(N2,5.0);
     std::vector<double> z(N1*N2,1.0);
+    std::ofstream os;
 
     dat::ReportData2D<int,double,double> data1("dat2D.dat",x,y,z);
     data1.setReportMetadata(false);
-    std::filesystem::path path1 = data1.path(std::filesystem::temp_directory_path());
-    std::ofstream os{path1};
+    data1.setDirPath(std::filesystem::temp_directory_path());
     os << data1;
-    os.close();
-    EXPECT_TRUE(std::filesystem::exists(path1));
+    EXPECT_TRUE(std::filesystem::exists(data1.path()));
 
-    std::ifstream infile{path1};
+    std::ifstream infile{data1.path()};
     int nx,ny;
     infile >> nx >> ny;
     EXPECT_EQ(nx,N1);
@@ -107,12 +89,12 @@ TEST(REPORT_TEST,REPORT_DAT_2D){
     std::string line;
     int i = 0;
     while(std::getline(infile,line)){
-	std::stringstream ss(line);
-	double val;
+        std::stringstream ss(line);
+        double val;
         while(ss >> val){ 
-	    zin[i] = val;
+    	    zin[i] = val;
             i++;
-	}
+        }
     }
     EXPECT_EQ(z.size(),zin.size());
     EXPECT_DOUBLE_EQ(z[10],1.0);

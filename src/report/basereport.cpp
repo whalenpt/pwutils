@@ -5,42 +5,41 @@
 #include <map>
 #include <fstream>
 #include <stdexcept>
+#include <iostream>
 
 namespace pw{
 
-void ReportBase::internalFileHandle(std::ofstream& os) const
+void ReportBase::internalFileHandleReport(std::ofstream& os) const
 {
     pw::createDirectory(m_dirpath,false);
-    os.open(pw::filePath(m_dirpath,m_name,m_extension));
+    os.open(ReportBase::path());
     if(!os.is_open())
         throw std::runtime_error("Failed to open data file for output stream");
-    report(os);
+    reportImplement(os);
     os.close();
 }
 
-std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){
-    // If ofstream os is not open, try to open and output
+void ReportBase::externalFileHandleReport(std::ofstream& os) const
+{
     if(!os.is_open())
-        def.internalFileHandle(os);
-    else
-        def.report(os);
+        throw std::runtime_error("Failed to open data file for output stream");
+    reportImplement(os);
+}
+
+
+std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){
+    def.report(os);
     return os;
 }
 
 std::ofstream& operator<<(std::ofstream& os,const ReportBase* def){ 
-    if(!os.is_open())
-        def->internalFileHandle(os);
-    else
-        def->report(os);
+    def->report(os);
     return os;
 }
 
 std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def)
 { 
-    if(!os.is_open())
-        def->internalFileHandle(os);
-    else
-        def->report(os);
+    def->report(os);
     return os;
 }
 

@@ -187,6 +187,11 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
+		void reportImplement(std::ofstream& os) const {
+            if(pw::ReportBase::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+        }
 };
 
 template<class T1,class T2>
@@ -210,6 +215,12 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
+		void reportImplement(std::ofstream& os) const {
+            if(pw::ReportBase::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+        }
+
 };
 
 template<class T1>
@@ -239,6 +250,12 @@ class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>
     private:
         void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
         void reportData(std::ofstream& os) const; 
+		void reportImplement(std::ofstream& os) const {
+            if(pw::ReportBase::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+        }
+
 };
 
 template<class T1,class T2,class T3>
@@ -261,10 +278,15 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
                  pw::ReportBase::setFileExtension("dat");
                  pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
             }
-	      ~ReportComplexData2D() {}
+        ~ReportComplexData2D() {}
     private:
-	    	void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-	    	void reportData(std::ofstream& os) const; 
+    	void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
+    	void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
+            if(pw::ReportBase::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+        }
 };
 
 template<class T1,class T2>
@@ -299,6 +321,11 @@ class TrackData : public pw::TrackDataBase<T>
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
+            if(pw::ReportBase::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+        }
 };
 
 template<class T>
@@ -321,6 +348,11 @@ class TrackComplexData : public pw::TrackComplexDataBase
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
+            if(pw::ReportBase::metadataOn())
+                reportMetadata(os);
+            reportData(os);
+        }
 };
 
 void TrackComplexData::reportData(std::ofstream& os) const 

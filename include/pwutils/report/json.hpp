@@ -80,16 +80,17 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
         ~ReportData1D() {};
-        void report(std::ofstream& os) const {
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
             os << "{" << std::endl;
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
         }
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
+
 };
 
 template<class T1,class T2>
@@ -111,16 +112,16 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
 		~ReportComplexData1D() {}
-        void report(std::ofstream& os) const {
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
             os << "{" << std::endl;
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
         }
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
 };
 
 template<class T1>
@@ -147,16 +148,17 @@ class TrackData : public pw::TrackDataBase<T>
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
         ~TrackData() {};
-        void report(std::ofstream& os) const {
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
             os << "{" << std::endl;
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
         }
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
+
 };
 
 template<class T>
@@ -177,16 +179,17 @@ class TrackComplexData : public pw::TrackComplexDataBase
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
-        void report(std::ofstream& os) const {
+    private:
+		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const; 
+        void reportImplement(std::ofstream& os) const {
             os << "{" << std::endl;
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
             os << "}" << std::endl;
         }
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
+
 };
 
 void TrackComplexData::reportData(std::ofstream& os) const 
