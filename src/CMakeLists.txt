@@ -27,6 +27,7 @@ set(INCLUDE_FILES
    "${INCL_DIR}/pwdefs.h"
    "${INCL_DIR}/pwstrings.h"
    "${INCL_DIR}/pwmath.hpp"
+   "${INCL_DIR}/pwindexing.hpp"
    "${INCL_DIR}/report/pwdir.h"
    "${INCL_DIR}/report/basereport.h"
    "${INCL_DIR}/report/basetrack.hpp"
