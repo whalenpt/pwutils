@@ -37,6 +37,8 @@ class DataIO{
         void appendFile(const fs::path& fname,const T1& val1,const T2& val2) const;
 
         void clearDirectory() { pw::clearDirectory(m_dirpath); }
+        void checkExistence(const fs::path& filepath) const;
+        void checkOpens(const fs::path& filepath) const;
     private:
         fs::path m_dirpath;
 };
@@ -93,6 +95,8 @@ template<typename T>
 void DataIO::readFile(const fs::path& fname,std::vector<T>&x) const
 {
     fs::path file_path = m_dirpath / fname;
+    checkExistence(file_path);
+    checkOpens(file_path);
     std::ifstream fin(file_path);
     T val;
     while(fin >> val)
@@ -104,6 +108,8 @@ template<typename T1,typename T2>
 void DataIO::readFile(const fs::path& fname,std::vector<T1>&x,std::vector<T2>&y) const
 {
     fs::path file_path = m_dirpath / fname;
+    checkExistence(file_path);
+    checkOpens(file_path);
     std::ifstream fin(file_path);
     T1 val1; T2 val2;
     while(fin >> val1 >> val2){
@@ -117,6 +123,8 @@ template<typename T1,typename T2,typename T3>
 void DataIO::readFile(const fs::path& fname,std::vector<T1>&x,std::vector<T2>&y,std::vector<T3>&z) const
 {
     fs::path file_path = m_dirpath / fname;
+    checkExistence(file_path);
+    checkOpens(file_path);
     std::ifstream fin(file_path);
     T1 val1; T2 val2; T3 val3;
     while(fin >> val1 >> val2 >> val3){

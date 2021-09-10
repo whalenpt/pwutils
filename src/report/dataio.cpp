@@ -3,6 +3,7 @@
 #include "pwutils/report/reporthelper.h"
 #include "pwutils/pwexcept.h"
 #include <filesystem>
+#include <stdexcept>
 #include <fstream>
 
 namespace pw{
@@ -22,6 +23,20 @@ void DataIO::setDirectoryPath(const fs::path& dirpath)
         throw pw::Exception(str);
     }
 }
+
+void DataIO::checkExistence(const fs::path& filepath) const{
+    if(!fs::exists(filepath))
+        throw std::runtime_error("Filepath of " + filepath.string() + " does not exist");
+}
+
+void DataIO::checkOpens(const fs::path& filepath) const{
+    std::ifstream fin;
+    fin.open(filepath);
+    if(!fin.is_open())
+        throw std::runtime_error("Could not open file: " + filepath.string());
+    fin.close();
+}
+
 
 
 
