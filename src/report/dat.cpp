@@ -17,6 +17,22 @@ void streamToDat(std::ofstream& os,const pw::metadataMap& str_map)
     }
 }
 
+template<>
+void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x)
+{
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << x[i].real() << " " <<  x[i].imag() << std::endl;
+	}
+}
+
+void TrackComplexData::reportData(std::ofstream& os) const 
+{
+	if(getComplexOp() == pw::ComplexOp::None)
+        writeDat1D(os,this->getX(),this->getY());
+    else
+        writeDat1D(os,this->getX(),this->getOpY());
+}
+
 
 
 }

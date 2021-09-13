@@ -100,6 +100,16 @@ void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value)
 	}
 }
 
+void TrackComplexData::reportData(std::ofstream& os) const 
+{
+	writeJSONVector(os,this->getLabelX(),this->getX(),1,"\t",false);
+	if(getComplexOp() == pw::ComplexOp::None)
+        writeJSONVector(os,this->getLabelY(),this->getY(),1,"\t",true);
+    else
+        writeJSONVector(os,this->getLabelY(),this->getOpY(),1,"\t",true);
+}
+
+
 
 /*
 

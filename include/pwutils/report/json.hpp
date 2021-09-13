@@ -22,6 +22,13 @@ void writeJSONLabel(std::ofstream& os,const std::string& label,const std::string
 void writeJSONValue(std::ofstream& os,const std::string& value,
 		const std::string& indent="",bool end_value=false);
 
+void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
+        unsigned int stride=1,const std::string& indent="\t",bool end_value = false);
+void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
+        unsigned int stride=1,const std::string& indent="\t",bool end_value=false);
+void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=false);
+
+
 template<typename T>
 void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<T>& v,\
         unsigned int stride=1,const std::string& indent="\t",bool end_value=false)
@@ -165,12 +172,6 @@ void writeJSONPhase2D(std::ofstream& os,\
     os << "]" << std::endl;
 }
 
-void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
-        unsigned int stride=1,const std::string& indent="\t",bool end_value = false);
-void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
-        unsigned int stride=1,const std::string& indent="\t",bool end_value=false);
-void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=false);
-
 
 template<class T1,class T2>
 class ReportData1D : public pw::ReportDataBase1D<T1,T2>
@@ -295,16 +296,6 @@ class TrackComplexData : public pw::TrackComplexDataBase
         }
 
 };
-
-void TrackComplexData::reportData(std::ofstream& os) const 
-{
-	writeJSONVector(os,this->getLabelX(),this->getX(),1,"\t",false);
-	if(getComplexOp() == pw::ComplexOp::None)
-        writeJSONVector(os,this->getLabelY(),this->getY(),1,"\t",true);
-    else
-        writeJSONVector(os,this->getLabelY(),this->getOpY(),1,"\t",true);
-}
-
 
 template<class T1,class T2,class T3>
 class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>

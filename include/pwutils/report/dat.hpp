@@ -161,14 +161,8 @@ void writeColVec(std::ofstream& os,const std::vector<T1>& x)
 		os << x[i] << std::endl; 
     }
 }
-
 template<>
-void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x)
-{
-	for(unsigned int i = 0; i < x.size(); i++){
-		os << x[i].real() << " " <<  x[i].imag() << std::endl;
-	}
-}
+void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x);
 
 template<class T1,class T2>
 class ReportData1D : public pw::ReportDataBase1D<T1,T2>
@@ -351,105 +345,6 @@ class TrackComplexData : public pw::TrackComplexDataBase
             reportData(os);
         }
 };
-
-void TrackComplexData::reportData(std::ofstream& os) const 
-{
-	if(getComplexOp() == pw::ComplexOp::None)
-        writeDat1D(os,this->getX(),this->getY());
-    else
-        writeDat1D(os,this->getX(),this->getOpY());
-}
-
-
-/*
-class ReportRealData2D : public pw::ReportBaseRealData2D
-{
-    public:
-        ReportRealData2D(const std::string& name,
-            const std::vector<double>& x,
-            const std::vector<double>& y,
-            const std::vector<double>& z,
-            std::string x_label = "x",
-            std::string y_label = "y",
-            std::string z_label = "z") : pw::ReportBaseRealData2D(
-                name,x,y,z,x_label,y_label,z_label) {
-                    pw::ReportBase::setFileExtension("dat"); }
-        ~ReportRealData2D() {}
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
-};
-
-class ReportComplexData2D : public pw::ReportBaseComplexData2D
-{
-    public:
-        ReportComplexData2D(const std::string& name,
-            const std::vector<double>& x,
-            const std::vector<double>& y,
-            const std::vector<dcmplx>& z,
-            std::string x_label = "x",
-            std::string y_label = "y",
-            std::string z_label = "z") : pw::ReportBaseComplexData2D(
-                name,x,y,z,x_label,y_label,z_label) {
-                    pw::ReportBase::setFileExtension("dat");}
-		~ReportComplexData2D() {}
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
-};
-
-class ReportTracker : public pw::ReportBaseTracker {
-    public:
-        ReportTracker(const std::string& nm,const std::string& tlabel="x") : 
-            pw::ReportBaseTracker(nm,tlabel) {
-                pw::ReportBase::setFileExtension("dat");}
-
-        virtual ~ReportTracker() {}
-		void report(std::filesystem::path& filePath,double t){
-            std::ofstream os(filePath.string(),std::ios::app);
-		    if(ReportBase::metadataOn()){
-		        reportMetadata(os);
-                ReportBase::setReportMetadata(false);
-            }
-		    reportTracker(os,t);
-        }
-    private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-		virtual void reportTracker(std::ofstream& os,double t) = 0;
-};
-
-class ReportRealTrackerMax : public ReportTracker
-{
-    public:
-        ReportRealTrackerMax(const std::string& nm,const std::vector<double>& v,
-                const std::string& tlabel = "x", const std::string& ylabel="y") :
-            ReportTracker(nm,tlabel), m_v(v),m_ylabel(ylabel) {}
-        ~ReportRealTrackerMax() {}
-    private:
-        const std::vector<double>& m_v;
-        std::string m_ylabel;
-		void reportTracker(std::ofstream& os,double t) const;
-};
-
-class ReportComplexTrackerMax : public ReportTracker
-{
-    public:
-        ReportComplexTrackerMax(const std::string& nm,const std::vector<dcmplx>& v,
-                const std::string& tlabel = "x", const std::string& ylabel="y") :
-            ReportTracker(nm,tlabel), m_v(v),m_ylabel(ylabel) {}
-        ~ReportComplexTrackerMax() {}
-    private:
-        const std::vector<dcmplx>& m_v;
-        std::string m_ylabel;
-		void reportTracker(std::ofstream& os,double t) const;
-};
-
-*/
-
-
-
-
-
 
 }
 
