@@ -8,6 +8,34 @@
 
 namespace json{
 
+// Complex value specialization of writeJSONVector
+template<>
+void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
+        unsigned int stride,const std::string& indent,bool end_value)
+{
+    std::string two_indent = indent + indent;
+    writeJSONLabel(os,label,indent);
+    os << "{" << std::endl;
+    writeJSONLabel(os,"dtype",two_indent);
+    writeJSONValue(os,"complex128");
+
+    unsigned int i;
+    writeJSONLabel(os,"real",two_indent);
+    os << "[";
+    for(i=0; i < v.size()-stride; i+=stride)
+    	os << v[i].real() << ", ";
+    os << v[i].real() << "]," << std::endl;
+
+    writeJSONLabel(os,"imag",two_indent);
+    os << "[";
+    for(i = 0; i < v.size()-stride; i+=stride)
+    	os << v[i].imag() << ", ";
+    os << v[i].imag() << "]" << std::endl;
+
+    std::string end_string = end_value ? "}" : "},";
+    os << indent << end_string << std::endl;
+}
+
 
 void streamToJSON(std::ofstream& os,const pw::metadataMap& str_map) 
 {
@@ -71,6 +99,7 @@ void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value)
 			writeJSONValue(os,(*it).second,"",false);
 	}
 }
+
 
 /*
 
