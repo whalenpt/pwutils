@@ -81,6 +81,21 @@ int main()
     rp_2DC.report(os);
     os.close();
 
+    json::ReportData2D<double,double,double> jrp_2D("XY2D",x,y,z);
+    jrp_2D.setReportMetadata(false);
+    // set file output directory
+    jrp_2D.setDirPath("outfolder2D");
+    os << std::scientific << std::setprecision(8);
+    jrp_2D.report(os);
+
+    // Report 2D complex
+    json::ReportComplexData2D<double,double> jrp_2DC("XY2DC",x,y,z2);
+    // set file output directory
+    jrp_2DC.setDirPath("outfolder2D");
+    jrp_2DC.report(os);
+    os.close();
+
+
     return 0;
 
 }
