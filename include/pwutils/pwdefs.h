@@ -9,7 +9,7 @@ namespace pw{
     using metadataPair = std::pair<std::string,std::string>;
     enum class FileSignature{DAT,JSON,UNKNOWN};
     enum class DataSignature{XY,XY_C,XYZ,XYZ_C,UNKNOWN};
-    enum class OperatorSignature{NONE,LOGX,LOGY,LOGXLOGY};
+    enum class OperatorSignature{NONE,LOGX,LOGY,LOGXLOGY,LOGZ};
 }
 
 #endif
