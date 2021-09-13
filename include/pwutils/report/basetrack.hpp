@@ -1,5 +1,5 @@
-#ifndef BASETRACK_HPP
-#define BASETRACK_HPP
+// basetrack.hpp
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -66,6 +66,3 @@ class TrackComplexDataBase : public TrackDataBase<dcmplx>
 }
 
 
-
-
-#endif

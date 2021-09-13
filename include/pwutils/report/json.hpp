@@ -1,6 +1,5 @@
-
-#ifndef JSON_HPP_
-#define JSON_HPP_ 
+// json.hpp
+#pragma once
 
 #include "pwutils/report/basedata.hpp"
 #include "pwutils/report/basetrack.hpp"
@@ -389,7 +388,6 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
         }
 };
 
-using namespace std;
 template<class T1,class T2>
 void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
 {
@@ -410,128 +408,9 @@ void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
 }
 
 
-//void writeJSON2D(std::ofstream& os,\
-//        const std::string& xlabel,const std::vector<T1>& x,unsigned int strideX,\
-//        const std::string& ylabel,const std::vector<T2>& y,unsigned int strideY,\
-//        const std::string& zlabel,const std::vector<T3>& z,\
-//        const std::string& indent="\t")
-//{
-//
-
-
-/*
-class ReportRealData2D : public pw::VBReportRealData2D
-{
-    public:
-        ReportRealData2D(const std::string& name,
-            const std::vector<double>& x,
-            const std::vector<double>& y,
-            const std::vector<double>& z,
-            std::string x_label = "x",
-            std::string y_label = "y",
-            std::string z_label = "z") : pw::VBReportRealData2D(
-                name,x,y,z,x_label,y_label,z_label) {
-                    pw::VBReport::setFileExtension("json"); }
-        ~ReportRealData2D() {}
-        void report(std::ofstream& os) const {
-            os << "{" << std::endl;
-            if(VBReportData::metadataOn())
-                reportMetadata(os);
-            reportData(os);
-            os << "}" << std::endl;
-        }
-
-    private:
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->getMetadata(),false);}
-        void reportData(std::ofstream& os) const;
-};
-
-class ReportComplexData2D : public pw::VBReportComplexData2D
-{
-    public:
-        ReportComplexData2D(const std::string& name,
-            const std::vector<double>& x,
-            const std::vector<double>& y,
-            const std::vector<dcmplx>& z,
-            std::string x_label = "x",
-            std::string y_label = "y",
-            std::string z_label = "z") : pw::VBReportComplexData2D(
-                name,x,y,z,x_label,y_label,z_label) {
-                    pw::VBReport::setFileExtension("json");}
-		~ReportComplexData2D() {}
-        void report(std::ofstream& os) const {
-            os << "{" << std::endl;
-            if(VBReportData::metadataOn())
-                reportMetadata(os);
-            reportData(os);
-            os << "}" << std::endl;
-        }
-    private:
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->getMetadata(),false);}
-        void reportData(std::ofstream& os) const;
-
-};
-
-class ReportTracker : public pw::VBReportTracker {
-    public:
-        ReportTracker(const std::string& nm, const std::string& tlabel="x") : 
-            pw::VBReportTracker(nm,tlabel), m_t() {
-                pw::VBReport::setFileExtension("json");}
-        virtual ~ReportTracker() {}
-        std::vector<double>& getT() {return m_t;}
-		void report(std::filesystem::path& filePath,double t){
-            std::ofstream os(filePath.string(),std::ios::trunc);
-            os << "{" << std::endl;
-		    if(VBReport::metadataOn()){
-                reportMetadata(os);
-            }
-		    reportTracker(os,t);
-            os << "}" << std::endl;
-        }
-    private:
-        std::vector<double> m_t;
-		void reportMetadata(std::ofstream& os) const {mapToJSON(os,this->getMetadata(),false);}
-		virtual void reportTracker(std::ofstream& os,double t) = 0;
-};
-
-class ReportRealTrackerMax : public ReportTracker
-{
-    public:
-        ReportRealTrackerMax(const std::string& nm,const std::vector<double>& v,
-                const std::string& tlabel = "x",const std::string& ylabel="y") :
-            ReportTracker(nm,tlabel), m_v(v),m_ylabel(ylabel) {}
-        ~ReportRealTrackerMax() {}
-        std::string getLabelY() const {return m_ylabel;}
-    private:
-        const std::vector<double>& m_v;
-        std::string m_ylabel;
-        std::vector<double> m_y;
-		void reportTracker(std::ofstream& os,double t);
-};
-
-class ReportComplexTrackerMax : public ReportTracker
-{
-    public:
-        ReportComplexTrackerMax(const std::string& nm,const std::vector<dcmplx>& v,
-                const std::string& tlabel = "x", const std::string& ylabel="y") :
-            ReportTracker(nm,tlabel), m_v(v),m_ylabel(ylabel) {}
-        ~ReportComplexTrackerMax() {}
-        std::string getLabelY() const {return m_ylabel;}
-    private:
-        const std::vector<dcmplx>& m_v;
-        std::string m_ylabel;
-        std::vector<double> m_y;
-		void reportTracker(std::ofstream& os,double t);
-};
-
-*/
-
-
-
 
 
 }
 
-#endif
 
 

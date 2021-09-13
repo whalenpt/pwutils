@@ -1,6 +1,5 @@
 
-#ifndef DAT_HPP_
-#define DAT_HPP_ 
+#pragma once
 
 #include <complex> 
 #include <string> 
@@ -8,7 +7,6 @@
 #include <map> 
 #include <fstream>
 #include <cassert>
-#include <iostream>
 #include "pwutils/report/basedata.hpp"
 #include "pwutils/report/basetrack.hpp"
 #include "pwutils/report/reporthelper.h"
@@ -455,6 +453,5 @@ class ReportComplexTrackerMax : public ReportTracker
 
 }
 
-#endif
 
 
