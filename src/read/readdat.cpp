@@ -180,10 +180,9 @@ void readXY3D(std::ifstream& fin,std::vector<double>& x,std::vector<double>& y)
     fin >> nx >> ny;
     x.resize(nx);
     y.resize(ny);
-    double val;
-    for(auto i = 0; i << nx; i++)
+    for(auto i = 0; i < nx; i++)
         fin >> x[i];
-    for(auto i = 0; i << ny; i++)
+    for(auto i = 0; i < ny; i++)
         fin >> y[i];
 }
 
