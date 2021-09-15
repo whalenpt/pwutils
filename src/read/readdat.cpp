@@ -40,11 +40,38 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
             return pw::DataSignature::XY;
         // Assume this is three column data throughout
         else if(sz1 == 3)
-            return pw::DataSignature::XY_C;
+            return pw::DataSignature::XCVY;
     } else{
+        // Check for XYZ data (first_line has format [nx ny], next nx+ny lines are size 1
+        if(sz1 != 2 || sz2 != 1 || sz3 != 1)
+            return pw::DataSignature::UNKNOWN;
+        int nx,ny;
+        try{
+            nx = std::stoi(first_line[0]);
+            ny = std::stoi(first_line[1]);
+        } catch(...) {
+            return pw::DataSignature::UNKNOWN;
+        }
+        std::vector<std::string> line;
+        for(auto i = 0; i < (nx+ny-2); i++){
+            getLineOfData(fin,line);
+            if(line.size() != 1)
+                return pw::DataSignature::UNKNOWN;
+        }
+        getLineOfData(fin,line);
+        if(line.size() < 2)
+            return pw::DataSignature::UNKNOWN;
+        int count = 1;
+        while(fin){
+            getLineOfData(fin,line);
+            count++;
+        }
+        if(count == nx)
+            return pw::DataSignature::XYZ;
+        else if(count == 2*nx)
+            return pw::DataSignature::XYCVZ;
         return pw::DataSignature::UNKNOWN;
     }
-
     return pw::DataSignature::UNKNOWN;
 }
 

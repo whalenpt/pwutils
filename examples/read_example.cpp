@@ -26,11 +26,11 @@ void print_data_sig(std::filesystem::path& path,pw::FileSignature file_sig)
     pw::DataSignature data_sig = pw::dataSignature(path,file_sig);
     if(data_sig == pw::DataSignature::XY)
         std::cout << path.filename().string() << " : " << "contains data of type XY" << std::endl;
-    else if(data_sig == pw::DataSignature::XY_C)
+    else if(data_sig == pw::DataSignature::XCVY)
         std::cout << path.filename().string() << " : " << "contains data of type XY_C" << std::endl;
     else if(data_sig == pw::DataSignature::XYZ)
         std::cout << path.filename().string() << " : " << "contains data of type XYZ" << std::endl;
-    else if(data_sig == pw::DataSignature::XYZ_C)
+    else if(data_sig == pw::DataSignature::XYCVZ)
         std::cout << path.filename().string() << " : " << "contains data of type XYZ_C" << std::endl;
     else if(data_sig == pw::DataSignature::UNKNOWN)
         std::cout << path.filename().string() << " : " << "contains data of unknown type" << std::endl;
