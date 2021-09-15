@@ -61,16 +61,12 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
         getLineOfData(fin,line);
         if(line.size() < 2)
             return pw::DataSignature::UNKNOWN;
-        int count = 1;
-        while(fin){
-            getLineOfData(fin,line);
-            count++;
-        }
-        if(count == nx)
+        else if(line.size() == ny)
             return pw::DataSignature::XYZ;
-        else if(count == 2*nx)
+        else if(line.size() == 2*ny)
             return pw::DataSignature::XYCVZ;
-        return pw::DataSignature::UNKNOWN;
+        else
+            return pw::DataSignature::UNKNOWN;
     }
     return pw::DataSignature::UNKNOWN;
 }
@@ -208,18 +204,14 @@ pw::metadataMap readXYCVZ(const std::filesystem::path& path,std::vector<double>&
     std::ifstream infile{path};
     pw::metadataMap metadata = getHeaderContent(infile);
     readXY3D(infile,x,y);
-    std::vector<double> zdata;
-    zdata.reserve(2*x.size()*y.size());
+    z.resize(x.size()*y.size());
     std::string line;
     while(std::getline(infile,line)){
-        double val;
+        double real_val, imag_val;
         std::stringstream ss(line);
-        while(ss >> val)
-            zdata.push_back(val);
+        while(ss >> real_val >> imag_val)
+            z.push_back(dcmplx(real_val,imag_val));
     }
-    z.resize(x.size()*y.size());
-    for(auto i = 0; i < x.size()*y.size(); i++)
-        z[i] = dcmplx(zdata[i],zdata[i+x.size()*y.size()]);
     return metadata;
 } 
  
