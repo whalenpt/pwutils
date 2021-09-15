@@ -1,6 +1,5 @@
-
-#ifndef READDAT_H_
-#define READDAT_H_ 
+// readdat.h
+#pragma once
 
 #include <fstream>
 #include <vector>
@@ -10,6 +9,7 @@
 #include "pwutils/pwconstants.h"
 
 namespace dat{
+    using pw::dcmplx;
     pw::DataSignature dataSignature(const std::filesystem::path& path);
     pw::DataSignature deduceDataSignature(std::ifstream& fin);
 
@@ -18,12 +18,16 @@ namespace dat{
     void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data);
     pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,
             std::vector<double>& y);
-    pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,
-            std::vector<pw::dcmplx>& y);
-    pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,
+    pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,
+            std::vector<dcmplx>& y);
+    pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,
+            std::vector<double>& yreal,std::vector<double>& yimag);
+    pw::metadataMap readXYZ(const std::filesystem::path& path,std::vector<double>& x,
             std::vector<double>& y,std::vector<double>& z);
+    pw::metadataMap readXYCVZ(const std::filesystem::path& path,std::vector<double>& x,
+            std::vector<double>& y,std::vector<dcmplx>& z);
+    void readXY3D(std::ifstream& fin,std::vector<double>& x,std::vector<double>& y);
 }
 
-#endif
 
 

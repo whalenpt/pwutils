@@ -115,8 +115,8 @@ pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,
     return metadata;
 } 
      
- pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
-         std::vector<pw::dcmplx>& y)
+pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,\
+         std::vector<dcmplx>& y)
 {
     std::ifstream infile{path};
     pw::metadataMap metadata = getHeaderContent(infile);
@@ -124,13 +124,13 @@ pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,
         double a,b,c; 
         infile >> a >> b >> c;
         x.push_back(a);
-        y.push_back(pw::dcmplx(b,c));
+        y.push_back(dcmplx(b,c));
     }
     return metadata;
 } 
      
-  pw::metadataMap readXY_C(const std::filesystem::path& path,std::vector<double>& x,\
-          std::vector<double>& y1,std::vector<double>& y2)
+pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,\
+          std::vector<double>& yreal,std::vector<double>& yimag)
 {
     std::ifstream infile{path};
     pw::metadataMap metadata = getHeaderContent(infile);
@@ -138,15 +138,64 @@ pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,
         double a,b,c; 
         infile >> a >> b >> c;
         x.push_back(a);
-        y1.push_back(b);
-        y2.push_back(c);
+        yreal.push_back(b);
+        yimag.push_back(c);
+    }
+    return metadata;
+} 
+ 
+void readXY3D(std::ifstream& fin,std::vector<double>& x,std::vector<double>& y)
+{
+    unsigned int nx,ny;
+    fin >> nx >> ny;
+    x.resize(nx);
+    y.resize(ny);
+    double val;
+    for(auto i = 0; i << nx; i++)
+        fin >> x[i];
+    for(auto i = 0; i << ny; i++)
+        fin >> y[i];
+}
+
+pw::metadataMap readXYZ(const std::filesystem::path& path,std::vector<double>& x,\
+        std::vector<double>& y,std::vector<double>& z)
+{
+    std::ifstream infile{path};
+    pw::metadataMap metadata = getHeaderContent(infile);
+    readXY3D(infile,x,y);
+    z.reserve(x.size()*y.size());
+    std::string line;
+    while(std::getline(infile,line)){
+        double val;
+        std::stringstream ss(line);
+        while(ss >> val)
+            z.push_back(val);
     }
     return metadata;
 } 
  
 
-
-
+pw::metadataMap readXYCVZ(const std::filesystem::path& path,std::vector<double>& x,\
+        std::vector<double>& y,std::vector<dcmplx>& z)
+{
+    std::ifstream infile{path};
+    pw::metadataMap metadata = getHeaderContent(infile);
+    readXY3D(infile,x,y);
+    std::vector<double> zdata;
+    zdata.reserve(2*x.size()*y.size());
+    std::string line;
+    while(std::getline(infile,line)){
+        double val;
+        std::stringstream ss(line);
+        while(ss >> val)
+            zdata.push_back(val);
+    }
+    z.resize(x.size()*y.size());
+    for(auto i = 0; i < x.size()*y.size(); i++)
+        z[i] = dcmplx(zdata[i],zdata[i+x.size()*y.size()]);
+    return metadata;
+} 
+ 
 
 
 
