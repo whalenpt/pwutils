@@ -42,16 +42,20 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
         else if(sz1 == 3)
             return pw::DataSignature::XCVY;
     } else{
+        std::cout << "Reading dat data (2D?)" << std::endl;
         // Check for XYZ data (first_line has format [nx ny], next nx+ny lines are size 1
         if(sz1 != 2 || sz2 != 1 || sz3 != 1)
             return pw::DataSignature::UNKNOWN;
         int nx,ny;
+        std::cout << "Reading nx and ny" << std::endl;
         try{
             nx = std::stoi(first_line[0]);
             ny = std::stoi(first_line[1]);
         } catch(...) {
             return pw::DataSignature::UNKNOWN;
         }
+        std::cout << "nx " << std::to_string(nx) << std::endl;
+        std::cout << "ny " << std::to_string(ny) << std::endl;
         std::vector<std::string> line;
         for(auto i = 0; i < (nx+ny-2); i++){
             getLineOfData(fin,line);
@@ -59,6 +63,9 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
                 return pw::DataSignature::UNKNOWN;
         }
         getLineOfData(fin,line);
+        for(const auto& val : line)
+            std::cout << "data line value: " << val << std::endl;
+        std::cout << "line size: " << line.size() << std::endl;
         if(line.size() < 2)
             return pw::DataSignature::UNKNOWN;
         else if(line.size() == ny)
