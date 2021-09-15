@@ -70,6 +70,7 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,
     }
 }
 
+// dat 2D format (real,imaginary,real,imaginary)
 template<typename T1,typename T2>
 void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,\
         const std::vector<T2>& y,unsigned int strideY,\
@@ -79,13 +80,7 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,
     writeDat2D_xy(os,x,strideX,y,strideY);
     for(unsigned int i = 0; i < x.size(); i+=strideX){
     	for(unsigned int j = 0; j < y.size(); j+=strideY){
-            os << z[i*y.size()+j].real() << " ";
-    	}
-    	os << std::endl;
-    }
-    for(unsigned int i = 0; i < x.size(); i+=strideX){
-    	for(unsigned int j = 0; j < y.size(); j+=strideY){
-            os << z[i*y.size()+j].imag() << " ";
+            os << z[i*y.size()+j].real() << " " << z[i*y.size()+j].imag() << " ";
     	}
     	os << std::endl;
     }
