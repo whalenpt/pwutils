@@ -1,5 +1,5 @@
 
-#include "pwutils/read/readdat.h"
+#include "pwutils/read/readdat.hpp"
 #include "pwutils/pwdefs.h"
 #include "pwutils/pwstrings.h"
 #include "pwutils/pwmath.hpp"
@@ -131,98 +131,7 @@ void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data)
     line_data.clear();
 }
 
-pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,\
-        std::vector<double>& y)
-{
-    std::ifstream infile{path};
-    pw::metadataMap metadata = getHeaderContent(infile);
-    while(!infile.eof()){
-        double a,b; 
-        infile >> a >> b;
-        x.push_back(a);
-        y.push_back(b);
-    }
-    return metadata;
-} 
-     
-pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,\
-         std::vector<dcmplx>& y)
-{
-    std::ifstream infile{path};
-    pw::metadataMap metadata = getHeaderContent(infile);
-    while(!infile.eof()){
-        double a,b,c; 
-        infile >> a >> b >> c;
-        x.push_back(a);
-        y.push_back(dcmplx(b,c));
-    }
-    return metadata;
-} 
-     
-pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,\
-          std::vector<double>& yreal,std::vector<double>& yimag)
-{
-    std::ifstream infile{path};
-    pw::metadataMap metadata = getHeaderContent(infile);
-    while(!infile.eof()){
-        double a,b,c; 
-        infile >> a >> b >> c;
-        x.push_back(a);
-        yreal.push_back(b);
-        yimag.push_back(c);
-    }
-    return metadata;
-} 
- 
-void readXY3D(std::ifstream& fin,std::vector<double>& x,std::vector<double>& y)
-{
-    unsigned int nx,ny;
-    fin >> nx >> ny;
-    x.resize(nx);
-    y.resize(ny);
-    for(auto i = 0; i < nx; i++)
-        fin >> x[i];
-    for(auto i = 0; i < ny; i++)
-        fin >> y[i];
-}
-
-pw::metadataMap readXYZ(const std::filesystem::path& path,std::vector<double>& x,\
-        std::vector<double>& y,std::vector<double>& z)
-{
-    std::ifstream infile{path};
-    pw::metadataMap metadata = getHeaderContent(infile);
-    readXY3D(infile,x,y);
-    z.reserve(x.size()*y.size());
-    std::string line;
-    while(std::getline(infile,line)){
-        double val;
-        std::stringstream ss(line);
-        while(ss >> val)
-            z.push_back(val);
-    }
-    return metadata;
-} 
- 
-
-pw::metadataMap readXYCVZ(const std::filesystem::path& path,std::vector<double>& x,\
-        std::vector<double>& y,std::vector<dcmplx>& z)
-{
-    std::ifstream infile{path};
-    pw::metadataMap metadata = getHeaderContent(infile);
-    readXY3D(infile,x,y);
-    z.resize(x.size()*y.size());
-    std::string line;
-    while(std::getline(infile,line)){
-        double real_val, imag_val;
-        std::stringstream ss(line);
-        while(ss >> real_val >> imag_val)
-            z.push_back(dcmplx(real_val,imag_val));
-    }
-    return metadata;
-} 
- 
-
-
+    
 
 }
 

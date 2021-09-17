@@ -1,5 +1,5 @@
 
-#include "pwutils/read/readjson.h"
+#include "pwutils/read/readjson.hpp"
 #include "pwutils/pwstrings.h"
 #include "pwutils/pwmath.hpp"
 #include <fstream>
@@ -159,63 +159,98 @@ void readVecData(const json11::Json& json_obj,std::vector<double>& vec,\
     }
 }
 
-pw::metadataMap readXY(const std::filesystem::path& path,std::vector<double>& x,\
-        std::vector<double>& y)
+void readVecData(const json11::Json& json_obj,std::vector<float>& vec,\
+        const std::string& id, std::string id_label)
 {
-    pw::metadataMap metadata = getMetaData(path);
-    json11::Json json_obj;
-    readJsonObject(path,json_obj);
-    readVecData(json_obj,x,"x","xlabel");
-    readVecData(json_obj,y,"y","ylabel");
-    return metadata;
-} 
-     
- pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,\
-         std::vector<pw::dcmplx>& y)
-{
-    // Stub implementation
-    int N = 20;
-    x.assign(N,0.0);
-    y.assign(N,0.0);
-    return pw::metadataMap({});
-} 
-     
-pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<double>& x,\
-          std::vector<double>& y1,std::vector<double>& y2)
-{
-    // Stub implementation
-    int N = 20;
-    x.assign(N,0.0);
-    y1.assign(N,0.0);
-    y2.assign(N,0.0);
-    return pw::metadataMap({});
+    if(json_obj[id].is_array()){
+        const json11::Json::array& json_arr = json_obj[id].array_items();
+        vec.resize(json_arr.size());
+        for(auto i = 0; i < json_arr.size(); i++)
+            vec[i] = static_cast<float>(json_arr[i].number_value());
+    } else if(!id_label.empty()){
+        if(!json_obj[id_label].is_string()){
+            const std::string str("Error in readVecData: id_label " \
+                    + id_label + " not found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& label = json_obj[id_label].string_value();
+        if(!json_obj[label].is_array()){
+            const std::string str("Error in readVecData: id label " + id_label\
+                    + " found in json but no " + label + " data supplied.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_arr = json_obj[label].array_items();
+        vec.resize(json_arr.size());
+        for(auto i = 0; i < json_arr.size(); i++)
+            vec[i] = static_cast<float>(json_arr[i].number_value());
+    } else{
+        const std::string str("Error in readVecData: neither id "\
+                + id + " nor id_label " + id_label + " were found in the json object"); 
+                throw std::domain_error(str);
+    }
+}
 
-} 
-
-pw::metadataMap readXYZ(const std::filesystem::path& path,std::vector<double>& x,\
-        std::vector<double>& y,std::vector<double>& z)
+void readVecData(const json11::Json& json_obj,std::vector<int>& vec,\
+        const std::string& id, std::string id_label)
 {
-    pw::metadataMap metadata = getMetaData(path);
-    json11::Json json_obj;
-    readJsonObject(path,json_obj);
-    readVecData(json_obj,x,"x","xlabel");
-    readVecData(json_obj,y,"y","ylabel");
-    readVecData(json_obj,z,"z","zlabel");
-    return metadata;
-} 
- 
+    if(json_obj[id].is_array()){
+        const json11::Json::array& json_arr = json_obj[id].array_items();
+        vec.resize(json_arr.size());
+        for(auto i = 0; i < json_arr.size(); i++)
+            vec[i] = json_arr[i].int_value();
+    } else if(!id_label.empty()){
+        if(!json_obj[id_label].is_string()){
+            const std::string str("Error in readVecData: id_label " \
+                    + id_label + " not found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& label = json_obj[id_label].string_value();
+        if(!json_obj[label].is_array()){
+            const std::string str("Error in readVecData: id label " + id_label\
+                    + " found in json but no " + label + " data supplied.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_arr = json_obj[label].array_items();
+        vec.resize(json_arr.size());
+        for(auto i = 0; i < json_arr.size(); i++)
+            vec[i] = json_arr[i].int_value();
+    } else{
+        const std::string str("Error in readVecData: neither id "\
+                + id + " nor id_label " + id_label + " were found in the json object"); 
+                throw std::domain_error(str);
+    }
+}
 
-pw::metadataMap readXYCVZ(const std::filesystem::path& path,std::vector<double>& x,\
-         std::vector<double>& y,std::vector<pw::dcmplx>& z)
+void readVecData(const json11::Json& json_obj,std::vector<std::string>& vec,\
+        const std::string& id, std::string id_label)
 {
-    // Stub implementation
-    int N = 20;
-    x.assign(N,0.0);
-    y.assign(N,0.0);
-    z.assign(N*N,0.0);
-    return pw::metadataMap({});
-} 
- 
+    if(json_obj[id].is_array()){
+        const json11::Json::array& json_arr = json_obj[id].array_items();
+        vec.resize(json_arr.size());
+        for(auto i = 0; i < json_arr.size(); i++)
+            vec[i] = json_arr[i].string_value();
+    } else if(!id_label.empty()){
+        if(!json_obj[id_label].is_string()){
+            const std::string str("Error in readVecData: id_label " \
+                    + id_label + " not found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& label = json_obj[id_label].string_value();
+        if(!json_obj[label].is_array()){
+            const std::string str("Error in readVecData: id label " + id_label\
+                    + " found in json but no " + label + " data supplied.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_arr = json_obj[label].array_items();
+        vec.resize(json_arr.size());
+        for(auto i = 0; i < json_arr.size(); i++)
+            vec[i] = json_arr[i].string_value();
+    } else{
+        const std::string str("Error in readVecData: neither id "\
+                + id + " nor id_label " + id_label + " were found in the json object"); 
+                throw std::domain_error(str);
+    }
+}
 
 
 }

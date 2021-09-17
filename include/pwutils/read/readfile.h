@@ -1,6 +1,5 @@
-
-#ifndef READFILE_H_
-#define READFILE_H_ 
+//readfile.h
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -11,7 +10,6 @@
 namespace pw{
     FileSignature fileSignature(const std::filesystem::path& path);
     FileSignature deduceFileSignature(const std::filesystem::path& path);
-
     FileSignature checkJSONSignature(std::ifstream& fin,std::string& line);
     FileSignature checkDatSignature(std::ifstream& fin,std::string& line);
     bool checkJSONline(std::string& line);
@@ -21,7 +19,6 @@ namespace pw{
     OperatorSignature operatorSignature(const std::filesystem::path& path,FileSignature file_signature);
 }
 
-#endif
 
 
 

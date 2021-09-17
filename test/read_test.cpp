@@ -2,8 +2,8 @@
 #include <gtest/gtest.h>
 #include <filesystem>
 #include <pwutils/pwdefs.h>
-#include <pwutils/read/readdat.h>
-#include <pwutils/read/readjson.h>
+#include <pwutils/read/readdat.hpp>
+#include <pwutils/read/readjson.hpp>
 #include <pwutils/read/readfile.h>
 
 TEST(READ_JSON_TEST,FILE_EXTENSION_TEST){
@@ -80,6 +80,46 @@ TEST(READ_JSON_TEST,XY_READ_TEST){
 	EXPECT_NEAR(y.back(),5.2898010255919104e+01,1e-12);
 }
 
+
+TEST(READ_JSON_TEST,XY_READ_FLOATTEST){
+    std::filesystem::path input("data/T_0.json");
+    std::vector<float> x;
+    std::vector<float> y;
+    json::readXY(input,x,y);
+	EXPECT_NEAR(x.front(),-4e-14,1e-5);
+	EXPECT_NEAR(x[1],-3.9843444227005873e-14,1e-5);
+	EXPECT_NEAR(x.back(),4e-14,1e-5);
+	EXPECT_NEAR(y.front(),5.2898010358161471e+01,1e-5);
+	EXPECT_NEAR(y[1],5.2685011178082547e+01,1e-5);
+	EXPECT_NEAR(y.back(),5.2898010255919104e+01,1e-5);
+}
+
+TEST(READ_DAT_TEST,XY_READ_TEST){
+    std::filesystem::path input("data/SQ_T_0.dat");
+    std::vector<double> x;
+    std::vector<double> y;
+    dat::readXY(input,x,y);
+	EXPECT_NEAR(x.front(),-4e-14,1e-12);
+	EXPECT_NEAR(x[1],-3.9843444227005873e-14,1e-12);
+	EXPECT_NEAR(x.back(),4e-14,1e-12);
+	EXPECT_NEAR(y.front(),9.2964478363121172e-01,1e-12);
+	EXPECT_NEAR(y[1],9.2964478711409881e-01,1e-12);
+	EXPECT_NEAR(y.back(),9.2968830170842287e-01,1e-12);
+}
+
+
+TEST(READ_DAT_TEST,XY_READ_FLOATTEST){
+    std::filesystem::path input("data/SQ_T_0.dat");
+    std::vector<float> x;
+    std::vector<float> y;
+    dat::readXY(input,x,y);
+	EXPECT_NEAR(x.front(),-4e-14,1e-5);
+	EXPECT_NEAR(x[1],-3.9843444227005873e-14,1e-5);
+	EXPECT_NEAR(x.back(),4e-14,1e-12);
+	EXPECT_NEAR(y.front(),9.2964478363121172e-01,1e-5);
+	EXPECT_NEAR(y[1],9.2964478711409881e-01,1e-5);
+	EXPECT_NEAR(y.back(),9.2968830170842287e-01,1e-5);
+}
 
 
 

@@ -36,8 +36,8 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/json.hpp"
    "${INCL_DIR}/report/reporthelper.h"
    "${INCL_DIR}/report/dataio.hpp"
-   "${INCL_DIR}/read/readdat.h"
-   "${INCL_DIR}/read/readjson.h"
+   "${INCL_DIR}/read/readdat.hpp"
+   "${INCL_DIR}/read/readjson.hpp"
    "${INCL_DIR}/read/readfile.h"
 )
 

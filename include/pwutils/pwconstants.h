@@ -1,6 +1,5 @@
 
-#ifndef PWCONSTANTS_H_ 
-#define PWCONSTANTS_H_
+#pragma once
 
 #include <complex>
 #include <vector>
@@ -11,5 +10,4 @@ namespace pw{
     const double PI = 3.141592653589793238462643383279502884197;
 }
 
-#endif
 
