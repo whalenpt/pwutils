@@ -5,7 +5,7 @@
 #include <map>
 #include <fstream>
 #include <stdexcept>
-#include <iostream>
+#include <sstream>
 
 namespace pw{
 
@@ -44,17 +44,26 @@ std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> de
 }
 
 void ReportBase::setItem(const std::string& key,double val) {
-    std::string strVal = std::to_string(val);
-    m_metadata_map[key] = strVal;
+    std::ostringstream oss;
+    oss << std::setprecision(12) << val;
+    m_metadata_map[key] = oss.str();
 }
 
-void ReportBase::setItem(const std::string& key,const std::string& nm) {
-  m_metadata_map[key] = nm;
+void ReportBase::setItem(const std::string& key,float val) {
+    std::ostringstream oss;
+    oss << std::setprecision(6) << val;
+    m_metadata_map[key] = oss.str();
 }
 
-void ReportBase::removeItem(const std::string& key) {
-  m_metadata_map.erase(key);
+void ReportBase::setItem(const std::string& key,int val) {
+    std::ostringstream oss;
+    oss << std::setprecision(12) << val;
+    m_metadata_map[key] = oss.str();
 }
+
+
+void ReportBase::setItem(const std::string& key,const std::string& nm) { m_metadata_map[key] = nm; }
+void ReportBase::removeItem(const std::string& key) { m_metadata_map.erase(key); }
 
 void ReportBase::setFileSignature(FileSignature file_sig) {
     m_metadata_map["FileSignature"] = std::to_string(static_cast<int>(file_sig));

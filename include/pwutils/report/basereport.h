@@ -47,7 +47,9 @@ class ReportBase{
         OperatorSignature operatorSignature() const;
 
 		void setItem(const std::string& key,double val);
-		void setItem(const std::string&,const std::string&); 
+		void setItem(const std::string& key,float val);
+		void setItem(const std::string& key,int val);
+		void setItem(const std::string& key,const std::string&); 
 		void removeItem(const std::string&); 
 		void setReportMetadata(bool val) {m_report_metadata = val;}
 		void setFileExtension(const std::string& extension) {
