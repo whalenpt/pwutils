@@ -4,8 +4,9 @@ C++ helper functions and classes for repetitive tasks
 
 # Dependencies #
 
-The pwutils library only depends on standard c++ libraries (STL). 
-Its built with c++17 by default and may need adjustments
+json11 (header library for reading json files)
+
+pwutils is built with c++17 by default and may need adjustments
 to work with earlier c++ versions.
 
 Testing is done with the googletest library using the
