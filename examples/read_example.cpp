@@ -2,8 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <pwutils/read/readdat.hpp>
-#include <pwutils/read/readjson.hpp>
+#include <pwutils/read/dat.hpp>
+#include <pwutils/read/json.hpp>
 #include <pwutils/read/readfile.h>
 #include <pwutils/pwdefs.h>
 #include <filesystem>

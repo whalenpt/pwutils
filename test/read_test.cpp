@@ -2,8 +2,8 @@
 #include <gtest/gtest.h>
 #include <filesystem>
 #include <pwutils/pwdefs.h>
-#include <pwutils/read/readdat.hpp>
-#include <pwutils/read/readjson.hpp>
+#include <pwutils/read/dat.hpp>
+#include <pwutils/read/json.hpp>
 #include <pwutils/read/readfile.h>
 
 TEST(READ_JSON_TEST,FILE_EXTENSION_TEST){

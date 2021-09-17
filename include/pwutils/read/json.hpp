@@ -1,4 +1,4 @@
-// readjson.hpp
+// json.hpp
 #pragma once 
 
 #include <fstream>
@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <json11/json11.hpp>
 #include "pwutils/pwdefs.h"
-#include "pwutils/pwconstants.h"
 
 namespace json11{
     class Json;

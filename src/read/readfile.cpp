@@ -5,8 +5,8 @@
 #include <ios>
 #include <filesystem>
 #include "pwutils/read/readfile.h"
-#include "pwutils/read/readdat.hpp"
-#include "pwutils/read/readjson.hpp"
+#include "pwutils/read/dat.hpp"
+#include "pwutils/read/json.hpp"
 #include "pwutils/pwstrings.h"
 #include "pwutils/pwmath.hpp"
 

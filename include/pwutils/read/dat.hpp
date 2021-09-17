@@ -1,4 +1,4 @@
-// readdat.hpp
+// dat.hpp
 #pragma once
 
 #include <fstream>
@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <complex>
 #include "pwutils/pwdefs.h"
-#include "pwutils/pwconstants.h"
 
 namespace dat{
     using pw::dcmplx;

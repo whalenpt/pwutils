@@ -13,8 +13,8 @@ set(SRC_FILES
 	report/reporthelper.cpp
 	report/pwdir.cpp
 	report/dataio.cpp
-	read/readdat.cpp
-	read/readjson.cpp
+	read/dat.cpp
+	read/json.cpp
 	read/readfile.cpp
 )
 
@@ -36,8 +36,8 @@ set(INCLUDE_FILES
    "${INCL_DIR}/report/json.hpp"
    "${INCL_DIR}/report/reporthelper.h"
    "${INCL_DIR}/report/dataio.hpp"
-   "${INCL_DIR}/read/readdat.hpp"
-   "${INCL_DIR}/read/readjson.hpp"
+   "${INCL_DIR}/read/dat.hpp"
+   "${INCL_DIR}/read/json.hpp"
    "${INCL_DIR}/read/readfile.h"
 )
 
