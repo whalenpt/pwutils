@@ -49,6 +49,19 @@ namespace dat{
         }
         return metadata;
     } 
+
+    template<typename T1,typename T2>
+    void readXY3D(std::ifstream& fin,std::vector<T1>& x,std::vector<T2>& y)
+    {
+        unsigned int nx,ny;
+        fin >> nx >> ny;
+        x.resize(nx);
+        y.resize(ny);
+        for(auto i = 0; i < nx; i++)
+            fin >> x[i];
+        for(auto i = 0; i < ny; i++)
+            fin >> y[i];
+    }
      
     template<typename T1,typename T2,typename T3>
     pw::metadataMap readXYZ(const std::filesystem::path& path,std::vector<T1>& x,\
@@ -56,7 +69,7 @@ namespace dat{
     {
         std::ifstream infile{path};
         pw::metadataMap metadata = getHeaderContent(infile);
-        readXY3D(infile,x,y);
+        readXY3D<T1,T2>(infile,x,y);
         z.reserve(x.size()*y.size());
         std::string line;
         while(std::getline(infile,line)){
@@ -77,7 +90,7 @@ namespace dat{
     {
         std::ifstream infile{path};
         pw::metadataMap metadata = getHeaderContent(infile);
-        readXY3D(infile,x,y);
+        readXY3D<T1,T2>(infile,x,y);
         z.resize(x.size()*y.size());
         std::string line;
         while(std::getline(infile,line)){
@@ -89,18 +102,6 @@ namespace dat{
         return metadata;
     }
 
-    template<typename T1,typename T2>
-    void readXY3D(std::ifstream& fin,std::vector<T1>& x,std::vector<T2>& y)
-    {
-        unsigned int nx,ny;
-        fin >> nx >> ny;
-        x.resize(nx);
-        y.resize(ny);
-        for(auto i = 0; i < nx; i++)
-            fin >> x[i];
-        for(auto i = 0; i < ny; i++)
-            fin >> y[i];
-    }
 
 }
 
