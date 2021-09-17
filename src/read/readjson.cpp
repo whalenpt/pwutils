@@ -253,6 +253,115 @@ void readVecData(const json11::Json& json_obj,std::vector<std::string>& vec,\
 }
 
 
+void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<double>>& vec,\
+        const std::string& id, std::string id_label)
+{
+    if(json_obj[id].is_array()){
+        const json11::Json::array& json_arr = json_obj[id].array_items();
+        if(json_arr.size() % 2 != 0)
+            throw std::domain_error("readComplexVecData requires an even number of components in the json array");
+        vec.resize(json_arr.size()/2);
+        for(auto i = 0; i < json_arr.size()/2;i++)
+            vec[i] = std::complex<double>(json_arr[2*i].number_value(),json_arr[2*i+1].number_value());
+    } else if(!id_label.empty()){
+        if(!json_obj[id_label].is_string()){
+            const std::string str("Error in readComplexVecData: id_label " \
+                    + id_label + " not found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& label = json_obj[id_label].string_value();
+        if(!json_obj[label].is_array()){
+            const std::string str("Error in readComplexVecData: id label " + id_label\
+                    + " found in json but no " + label + " data supplied.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_arr = json_obj[label].array_items();
+        if(json_arr.size() % 2 != 0)
+            throw std::domain_error("readComplexVecData requires an even number of components in the json array");
+        vec.resize(json_arr.size()/2);
+        for(auto i = 0; i < json_arr.size()/2;i++)
+            vec[i] = std::complex<double>(json_arr[2*i].number_value(),json_arr[2*i+1].number_value());
+    } else{
+        const std::string str("Error in readComplexVecData: neither id "\
+                + id + " nor id_label " + id_label + " were found in the json object"); 
+                throw std::domain_error(str);
+    }
+}
+
+void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<float>>& vec,\
+        const std::string& id, std::string id_label)
+{
+    if(json_obj[id].is_array()){
+        const json11::Json::array& json_arr = json_obj[id].array_items();
+        if(json_arr.size() % 2 != 0)
+            throw std::domain_error("readComplexVecData requires an even number of components in the json array");
+        vec.resize(json_arr.size()/2);
+        for(auto i = 0; i < json_arr.size()/2;i++)
+            vec[i] = std::complex<float>(static_cast<float>(json_arr[2*i].number_value()),\
+                    static_cast<float>(json_arr[2*i+1].number_value()));
+    } else if(!id_label.empty()){
+        if(!json_obj[id_label].is_string()){
+            const std::string str("Error in readComplexVecData: id_label " \
+                    + id_label + " not found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& label = json_obj[id_label].string_value();
+        if(!json_obj[label].is_array()){
+            const std::string str("Error in readComplexVecData: id label " + id_label\
+                    + " found in json but no " + label + " data supplied.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_arr = json_obj[label].array_items();
+        if(json_arr.size() % 2 != 0)
+            throw std::domain_error("readComplexVecData requires an even number of components in the json array");
+        vec.resize(json_arr.size()/2);
+        for(auto i = 0; i < json_arr.size()/2;i++)
+            vec[i] = std::complex<float>(static_cast<float>(json_arr[2*i].number_value()),\
+                    static_cast<float>(json_arr[2*i+1].number_value()));
+    } else{
+        const std::string str("Error in readComplexVecData: neither id "\
+                + id + " nor id_label " + id_label + " were found in the json object"); 
+                throw std::domain_error(str);
+    }
+}
+
+void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& vec,\
+        const std::string& id, std::string id_label)
+{
+    if(json_obj[id].is_array()){
+        const json11::Json::array& json_arr = json_obj[id].array_items();
+        if(json_arr.size() % 2 != 0)
+            throw std::domain_error("readComplexVecData requires an even number of components in the json array");
+        vec.resize(json_arr.size()/2);
+        for(auto i = 0; i < json_arr.size()/2;i++)
+            vec[i] = std::complex<int>(json_arr[2*i].int_value(),json_arr[2*i+1].int_value());
+    } else if(!id_label.empty()){
+        if(!json_obj[id_label].is_string()){
+            const std::string str("Error in readComplexVecData: id_label " \
+                    + id_label + " not found in Json object.");
+            throw std::domain_error(str);
+        }
+        const std::string& label = json_obj[id_label].string_value();
+        if(!json_obj[label].is_array()){
+            const std::string str("Error in readComplexVecData: id label " + id_label\
+                    + " found in json but no " + label + " data supplied.");
+            throw std::domain_error(str);
+        }
+        const json11::Json::array& json_arr = json_obj[label].array_items();
+        if(json_arr.size() % 2 != 0)
+            throw std::domain_error("readComplexVecData requires an even number of components in the json array");
+        vec.resize(json_arr.size()/2);
+        for(auto i = 0; i < json_arr.size()/2;i++)
+            vec[i] = std::complex<int>(json_arr[2*i].int_value(),json_arr[2*i+1].int_value());
+    } else{
+        const std::string str("Error in readComplexVecData: neither id "\
+                + id + " nor id_label " + id_label + " were found in the json object"); 
+                throw std::domain_error(str);
+    }
+}
+
+
+
 }
 
 

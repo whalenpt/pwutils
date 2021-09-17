@@ -14,8 +14,6 @@
 
 namespace dat{
 
-using pw::dcmplx;
-
 void streamToDat(std::ofstream& os,const pw::metadataMap& str_map);
 
 template<typename T1,typename T2>
@@ -33,9 +31,9 @@ void writeDat1D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>
 	}
 }
 
-template<typename T1>
+template<typename T1,typename T2>
 void writeDat1D(std::ofstream& os,const std::vector<T1>& x,\
-    const std::vector<dcmplx>& y)
+    const std::vector<std::complex<T2>>& y)
 {
     assert (x.size() == y.size());
 	for(unsigned int i = 0; i < x.size(); i++)
@@ -71,10 +69,10 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,
 }
 
 // dat 2D format (real,imaginary,real,imaginary)
-template<typename T1,typename T2>
+template<typename T1,typename T2,typename T3>
 void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,\
         const std::vector<T2>& y,unsigned int strideY,\
-    const std::vector<dcmplx>& z)
+    const std::vector<std::complex<T3>>& z)
 {
     assert (x.size()*y.size() == z.size());
     writeDat2D_xy(os,x,strideX,y,strideY);
@@ -86,10 +84,10 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,
     }
 }
 
-template<typename T1,typename T2>
+template<typename T1,typename T2,typename T3>
 void writePowerDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,\
         const std::vector<T2>& y,unsigned int strideY,\
-        const std::vector<dcmplx>& z)
+        const std::vector<std::complex<T3>>& z)
 {
     assert (x.size()*y.size() == z.size());
 
@@ -103,10 +101,10 @@ void writePowerDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int str
     }
 }
 
-template<typename T1,typename T2>
+template<typename T1,typename T2,typename T3>
 void writePhaseDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,\
         const std::vector<T2>& y,unsigned int strideY,\
-        const std::vector<dcmplx>& z)
+        const std::vector<std::complex<T3>>& z)
 {
     assert (x.size()*y.size() == z.size());
     writeDat2D_xy(os,x,strideX,y,strideY);
@@ -118,9 +116,9 @@ void writePhaseDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int str
     }
 }
 
-template<typename T1>
+template<typename T1,typename T2>
 void writePowerDat1D(std::ofstream& os,const std::vector<T1>& x,\
-    const std::vector<dcmplx>& y)
+    const std::vector<std::complex<T2>>& y)
 {
   assert (x.size() == y.size());
 	for(unsigned int i = 0; i < x.size(); i++){
@@ -128,9 +126,9 @@ void writePowerDat1D(std::ofstream& os,const std::vector<T1>& x,\
 	}
 }
 
-template<typename T1>
+template<typename T1,typename T2>
 void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
-        const std::vector<dcmplx>& y)
+        const std::vector<std::complex<T2>>& y)
 {
     assert (x.size() == y.size());
     std::vector<double> phaseVec(y.size());
@@ -141,23 +139,29 @@ void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
 }
 
 
-template<typename T1>
-void writeRowVec(std::ofstream& os,const std::vector<T1>& x) {
+template<typename T>
+void writeRowVec(std::ofstream& os,const std::vector<T>& x) {
 	for(unsigned int i = 0; i < x.size(); i++){
 		os << x[i] << " "; 
     }
 	os << std::endl;
 }
 
-template<typename T1>
-void writeColVec(std::ofstream& os,const std::vector<T1>& x)
+template<typename T>
+void writeColVec(std::ofstream& os,const std::vector<T>& x)
 {
 	for(unsigned int i = 0; i < x.size(); i++){
 		os << x[i] << std::endl; 
     }
 }
-template<>
-void writeColVec(std::ofstream& os,const std::vector<dcmplx>& x);
+
+template<typename T>
+void writeColVec(std::ofstream& os,const std::vector<std::complex<T>>& x)
+{
+	for(unsigned int i = 0; i < x.size(); i++){
+		os << x[i].real() << " " <<  x[i].imag() << std::endl;
+	}
+}
 
 template<class T1,class T2>
 class ReportData1D : public pw::ReportDataBase1D<T1,T2>
@@ -187,14 +191,14 @@ void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
     writeDat1D(os,this->getX(),this->getY());
 }
 
-template<class T1>
-class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
+template<class T1,class T2>
+class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1,T2>
 {
 	public :
         ReportComplexData1D(const std::string& name,
             const std::vector<T1>& x,
-            const std::vector<dcmplx>& y) :
-                pw::ReportComplexDataBase1D<T1>(name,x,y) {
+            const std::vector<std::complex<T2>>& y) :
+                pw::ReportComplexDataBase1D<T1,T2>(name,x,y) {
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
@@ -210,8 +214,8 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
 
 };
 
-template<class T1>
-void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
+template<class T1,class T2>
+void ReportComplexData1D<T1,T2>::reportData(std::ofstream& os) const
 {
     if(this->getPhase())
 		writePhaseDat1D(os,this->getX(),this->getY());
@@ -253,15 +257,15 @@ void ReportData2D<T1,T2,T3>::reportData(std::ofstream& os) const
 }
 
 
-template<class T1,class T2>
-class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
+template<class T1,class T2,class T3>
+class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2,T3>
 {
     public :
         ReportComplexData2D(const std::string& name,
             const std::vector<T1>& x,
             const std::vector<T2>& y,
-            const std::vector<dcmplx>& z) :
-            pw::ReportComplexDataBase2D<T1,T2>(name,x,y,z) {
+            const std::vector<std::complex<T3>>& z) :
+            pw::ReportComplexDataBase2D<T1,T2,T3>(name,x,y,z) {
                  pw::ReportBase::setFileExtension("dat");
                  pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
             }
@@ -276,8 +280,8 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
         }
 };
 
-template<class T1,class T2>
-void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
+template<class T1,class T2,class T3>
+void ReportComplexData2D<T1,T2,T3>::reportData(std::ofstream& os) const
 {
     if(this->getPhase()){
     		writePhaseDat2D(os,this->getX(),this->getStrideX(),\
@@ -320,14 +324,15 @@ void TrackData<T>::reportData(std::ofstream& os) const
     writeDat1D(os,this->getX(),this->getY());
 }
 
-class TrackComplexData : public pw::TrackComplexDataBase
+template<class T>
+class TrackComplexData : public pw::TrackComplexDataBase<T>
 {
     public:
         TrackComplexData(const std::string& name,
             pw::TrackType ttype,
-            const std::vector<dcmplx>& data,
+            const std::vector<std::complex<T>>& data,
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
-                pw::TrackComplexDataBase(name,ttype,data) {
+                pw::TrackComplexDataBase<T>(name,ttype,data) {
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
@@ -340,6 +345,19 @@ class TrackComplexData : public pw::TrackComplexDataBase
             reportData(os);
         }
 };
+
+template<class T>
+void TrackComplexData<T>::reportData(std::ofstream& os) const 
+{
+
+	if(pw::TrackComplexDataBase<T>::getComplexOp() == pw::ComplexOp::None)
+        writeDat1D(os,this->getX(),this->getY());
+    else
+        writeDat1D(os,this->getX(),this->getOpY());
+}
+
+
+
 
 }
 

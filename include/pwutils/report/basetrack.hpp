@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <complex>
 #include "pwutils/report/basereport.h"
 #include "pwutils/pwmath.hpp"
 
@@ -35,32 +36,54 @@ template<class T>
 void TrackDataBase<T>::updateTracker(double x)
 {
     m_x.push_back(x);
-    if(getTrackType() == TrackType::Max) {
+    if(TrackData::getTrackType() == TrackType::Max) {
         m_y.push_back(pw::max(m_data));
-    } else if(getTrackType() == TrackType::Min){
+    } else if(TrackData::getTrackType() == TrackType::Min){
         m_y.push_back(pw::min(m_data));
     }
 }
 
-class TrackComplexDataBase : public TrackDataBase<dcmplx>
+template<class T>
+class TrackComplexDataBase : public TrackDataBase<std::complex<T>>
 {
 	public:
         TrackComplexDataBase(const std::string& name,
             TrackType ttype,
-            const std::vector<dcmplx>& data, 
+            const std::vector<std::complex<T>>& data, 
             ComplexOp cmplxop = ComplexOp::None) : 
-                TrackDataBase<dcmplx>(name,ttype,data),
+                TrackDataBase<std::complex<T>>(name,ttype,data),
                 m_cmplxop(cmplxop) {}
         virtual ~TrackComplexDataBase() {};
-        const std::vector<double>& getOpY() const {return m_opy;}
+        const std::vector<T>& getOpY() const {return m_opy;}
 		void updateTracker(double x); 
 		void setComplexOp(ComplexOp cmplxop) {m_cmplxop=cmplxop;}
 		ComplexOp getComplexOp() const {return m_cmplxop;}
 	private:
 	    ComplexOp m_cmplxop;
-        std::vector<double> m_opy;
+        std::vector<T> m_opy;
 		virtual void reportData(std::ofstream& os) const = 0;
 };
+
+template<class T>
+void TrackComplexDataBase<T>::updateTracker(double x)
+{
+    TrackType ttype = TrackData::getTrackType();
+    if(m_cmplxop == ComplexOp::None){
+        TrackDataBase<std::complex<T>>::updateTracker(x);
+        return;
+    }
+    else if(m_cmplxop == ComplexOp::Power){
+        if(ttype == TrackType::Max){
+            T val = pw::max(TrackDataBase<std::complex<T>>::getData());
+            m_opy.push_back(std::norm(val));
+        }
+        else if(ttype == TrackType::Min){
+            T val = pw::min(TrackDataBase<std::complex<T>>::getData());
+            m_opy.push_back(std::norm(val));
+        }
+    }
+}
+
 
 
 }

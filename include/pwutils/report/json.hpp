@@ -15,19 +15,11 @@
 
 namespace json{
 
-using pw::dcmplx;         
-
 void streamToJSON(std::ofstream& os,const pw::metadataMap& str_map);
 void writeJSONLabel(std::ofstream& os,const std::string& label,const std::string& indent="\t");
 void writeJSONValue(std::ofstream& os,const std::string& value,
 		const std::string& indent="",bool end_value=false);
-
-void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
-        unsigned int stride=1,const std::string& indent="\t",bool end_value = false);
-void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
-        unsigned int stride=1,const std::string& indent="\t",bool end_value=false);
 void mapToJSON(std::ofstream& os,const pw::metadataMap& str_map,bool end_value=false);
-
 
 template<typename T>
 void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<T>& v,\
@@ -43,10 +35,58 @@ void writeJSONVector(std::ofstream& os,const std::string& label,const std::vecto
     os << v[i] << end_string << std::endl;
 }
 
-// Complex value specialization of writeJSONVector
-template<>
-void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<dcmplx>& v,\
-        unsigned int stride,const std::string& indent,bool end_value);
+template<typename T>
+void writeJSONVector(std::ofstream& os,const std::string& label,const std::vector<std::complex<T>>& v,\
+        unsigned int stride,const std::string& indent,bool end_value)
+{
+    writeJSONLabel(os,label,indent);
+    os << "[";
+    unsigned int i;
+    for(i = 0; i < v.size()-stride; i+=stride){
+    	os << v[i].real() << ", " << v[i].imag() << ", ";
+    }
+    std::string end_string = end_value ? "]" : "],";
+    os << v[i].real() << ", " << v[i].imag() << end_string << std::endl;
+
+}
+
+template<typename T>
+void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::vector<std::complex<T>>& v,\
+        unsigned int stride=1,const std::string& indent="\t",bool end_value = false)
+{
+    writeJSONLabel(os,label,indent);
+	os << "[";
+    unsigned int i;
+	for(i=0; i < v.size()-stride; i+=stride){
+        os << pow(abs(v[i]),2) << ", ";
+	}
+    std::string end_string = end_value ? "]" : "],";
+	os << pow(abs(v[i]),2) << end_string << std::endl;
+}
+
+
+
+template<typename T>
+void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::vector<std::complex<T>>& v,\
+        unsigned int stride=1,const std::string& indent="\t",bool end_value=false)
+{
+		std::vector<T> phaseVec(v.size(),0.0);
+        unsigned int count = 0;
+        unsigned int i;
+		for(i = 0; i < v.size(); i+=stride){
+            phaseVec[count] = arg(v[i]);
+            count++;
+        }
+        phaseVec[count] = arg(v[i]);
+        count++;
+        phaseVec.resize(count);
+//		pw::AdjustPhase(phaseVec,count);
+		writeJSONVector<T>(os,label,phaseVec,1,indent,end_value);
+}
+
+
+
+
 
 template<typename T1,typename T2>
 void writeJSON2D_xy(std::ofstream& os,\
@@ -82,53 +122,35 @@ void writeJSON2D(std::ofstream& os,\
     os << "]" << std::endl;
 }
 
-template<typename T1,typename T2>
+template<typename T1,typename T2,typename T3>
 void writeJSON2D(std::ofstream& os,\
         const std::string& xlabel,const std::vector<T1>& x,unsigned int strideX,\
         const std::string& ylabel,const std::vector<T2>& y,unsigned int strideY,\
-        const std::string& zlabel,const std::vector<dcmplx>& z,\
+        const std::string& zlabel,const std::vector<std::complex<T3>>& z,\
         const std::string& indent="\t")
 {
     assert (x.size()*y.size() == z.size());
     writeJSON2D_xy(os,xlabel,x,strideX,ylabel,y,strideY,indent);
-    std::string two_indent = indent + indent;
     writeJSONLabel(os,zlabel,indent);
-    os << "{" << std::endl;
-    writeJSONLabel(os,"dtype",two_indent);
-    writeJSONValue(os,"complex128");
-
-    writeJSONLabel(os,"real",two_indent);
-    os << "[";
-    unsigned int i;
-	for(i=0; i < x.size()-strideX; i+=strideX){
+	os << "[";
+    unsigned int i = 0;
+	for(i = 0; i < x.size()-strideX; i+=strideX){
 	    for(unsigned int j=0; j < y.size(); j+=strideY){
-            os << z[i*y.size()+j].real() << ", ";
+            os << z[i*y.size()+j].real() << ", " << z[i*y.size()+j].imag() << ", ";
         }
 	}
     unsigned int j;
-	for(j=0; j < y.size()-strideY; j++)
-        os << z[i*y.size()+j].real() << ", ";
-    os << z[i*y.size()+j].real() << "]," << std::endl;
-
-
-    writeJSONLabel(os,"imag",two_indent);
-    os << "[";
-	for(i = 0; i < x.size()-strideX; i+=strideX){
-	    for(unsigned int j=0; j < y.size(); j+=strideY){
-            os << z[i*y.size()+j].imag() << ", ";
-        }
-	}
 	for(j = 0; j < y.size()-strideY; j++)
-        os << z[i*y.size()+j].imag() << ", ";
-    os << z[i*y.size()+j].imag() << "]" << std::endl;
-    os << indent << "}" << std::endl;
+        os << z[i*y.size()+j].real() << ", " << z[i*y.size()+j].imag() << ", ";
+    os << z[i*y.size()+j].real() << ", " << z[i*y.size()+j].imag();
+    os << "]" << std::endl;
 }
 
-template<typename T1,typename T2>
+template<typename T1,typename T2,typename T3>
 void writeJSONPower2D(std::ofstream& os,\
         const std::string& xlabel,const std::vector<T1>& x,unsigned int strideX,\
         const std::string& ylabel,const std::vector<T2>& y,unsigned int strideY,\
-        const std::string& zlabel,const std::vector<dcmplx>& z,\
+        const std::string& zlabel,const std::vector<std::complex<T3>>& z,\
         const std::string& indent="\t")
 {
     assert (x.size()*y.size() == z.size());
@@ -148,11 +170,11 @@ void writeJSONPower2D(std::ofstream& os,\
     os << "]" << std::endl;
 }
 
-template<typename T1,typename T2>
+template<typename T1,typename T2,typename T3>
 void writeJSONPhase2D(std::ofstream& os,\
         const std::string& xlabel,const std::vector<T1>& x,unsigned int strideX,\
         const std::string& ylabel,const std::vector<T2>& y,unsigned int strideY,\
-        const std::string& zlabel,const std::vector<dcmplx>& z,\
+        const std::string& zlabel,const std::vector<std::complex<T3>>& z,\
         const std::string& indent="\t")
 {
     assert (x.size()*y.size() == z.size());
@@ -205,14 +227,14 @@ void ReportData1D<T1,T2>::reportData(std::ofstream& os) const
     writeJSONVector(os,this->getLabelY(),this->getY(),1,"\t",true);
 }
 
-template<class T1>
-class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
+template<class T1,class T2>
+class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1,T2>
 {
 	public :
         ReportComplexData1D(const std::string& name,
             const std::vector<T1>& x,
-            const std::vector<dcmplx>& y) :
-                pw::ReportComplexDataBase1D<T1>(name,x,y) {
+            const std::vector<std::complex<T2>>& y) :
+                pw::ReportComplexDataBase1D<T1,T2>(name,x,y) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -229,8 +251,8 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1>
         }
 };
 
-template<class T1>
-void ReportComplexData1D<T1>::reportData(std::ofstream& os) const
+template<class T1,class T2>
+void ReportComplexData1D<T1,T2>::reportData(std::ofstream& os) const
 {
     writeJSONVector(os,this->getLabelX(),this->getX(),1,"\t",false);
 	if(this->getPhase())
@@ -273,14 +295,15 @@ void TrackData<T>::reportData(std::ofstream& os) const
     writeJSONVector(os,this->getLabelY(),this->getY(),"\t",true);
 }
 
-class TrackComplexData : public pw::TrackComplexDataBase
+template<class T>
+class TrackComplexData : public pw::TrackComplexDataBase<T>
 {
     public:
         TrackComplexData(const std::string& name,
             pw::TrackType ttype,
-            const std::vector<dcmplx>& data, 
+            const std::vector<std::complex<T>>& data, 
             pw::ComplexOp cmplxop = pw::ComplexOp::None) : 
-                pw::TrackComplexDataBase(name,ttype,data,cmplxop) {
+                pw::TrackComplexDataBase<T>(name,ttype,data,cmplxop) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -296,6 +319,17 @@ class TrackComplexData : public pw::TrackComplexDataBase
         }
 
 };
+
+template<class T>
+void TrackComplexData<T>::reportData(std::ofstream& os) const 
+{
+	writeJSONVector(os,this->getLabelX(),this->getX(),1,"\t",false);
+	if(pw::TrackComplexDataBase<T>::getComplexOp() == pw::ComplexOp::None)
+        writeJSONVector(os,this->getLabelY(),this->getY(),1,"\t",true);
+    else
+        writeJSONVector(os,this->getLabelY(),this->getOpY(),1,"\t",true);
+}
+
 
 template<class T1,class T2,class T3>
 class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>
@@ -331,15 +365,15 @@ void ReportData2D<T1,T2,T3>::reportData(std::ofstream& os) const
             this->getLabelZ(),this->getZ(),"\t");
 }
 
-template<class T1,class T2>
-class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
+template<class T1,class T2,class T3>
+class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2,T3>
 {
 	public :
         ReportComplexData2D(const std::string& name,
             const std::vector<T1>& x,
             const std::vector<T2>& y,
-            const std::vector<dcmplx>& z) :
-                pw::ReportComplexDataBase2D<T1,T2>(name,x,y,z) {
+            const std::vector<std::complex<T3>>& z) :
+                pw::ReportComplexDataBase2D<T1,T2,T3>(name,x,y,z) {
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
@@ -356,8 +390,8 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2>
         }
 };
 
-template<class T1,class T2>
-void ReportComplexData2D<T1,T2>::reportData(std::ofstream& os) const
+template<class T1,class T2,class T3>
+void ReportComplexData2D<T1,T2,T3>::reportData(std::ofstream& os) const
 {
     if(this->getPhase()){
         writeJSONPower2D(os,this->getLabelX(),this->getX(),this->getStrideX(),\

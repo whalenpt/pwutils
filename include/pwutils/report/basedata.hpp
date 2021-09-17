@@ -1,5 +1,5 @@
-#ifndef BASEDATA_HPP
-#define BASEDATA_HPP
+// basedata.hpp
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -25,13 +25,13 @@ class ReportDataBase1D : public ReportData1D
 		virtual void reportData(std::ofstream& os) const = 0;
 };
 
-template<class T1>
-class ReportComplexDataBase1D : public ReportDataBase1D<T1,dcmplx>
+template<class T1,class T2>
+class ReportComplexDataBase1D : public ReportDataBase1D<T1,std::complex<T2>>
 {
 	public:
         ReportComplexDataBase1D(const std::string& name,
-            const std::vector<T1>& x,const std::vector<dcmplx>& y) : 
-                ReportDataBase1D<T1,dcmplx>(name,x,y),
+            const std::vector<T1>& x,const std::vector<std::complex<T2>>& y) : 
+                ReportDataBase1D<T1,std::complex<T2>>(name,x,y),
                     m_power(false),m_phase(false) {}
         virtual ~ReportComplexDataBase1D() {};
 		void setPower(bool val) {m_power= val;}  
@@ -65,15 +65,15 @@ class ReportDataBase2D : public ReportData2D
         virtual void reportData(std::ofstream& os) const = 0;
 }; 
 
-template<class T1,class T2>
-class ReportComplexDataBase2D : public ReportDataBase2D<T1,T2,dcmplx>
+template<class T1,class T2,class T3>
+class ReportComplexDataBase2D : public ReportDataBase2D<T1,T2,std::complex<T3>>
 {
     public:
         ReportComplexDataBase2D(const std::string& name,
             const std::vector<T1>& x,
             const std::vector<T2>& y,
-	        const std::vector<dcmplx>& z) :
-                ReportDataBase2D<T1,T2,dcmplx>(name,x,y,z),
+	        const std::vector<std::complex<T3>>& z) :
+                ReportDataBase2D<T1,T2,std::complex<T3>>(name,x,y,z),
                     m_power(false),m_phase(false) {}
         virtual ~ReportComplexDataBase2D() {};
         void setPower(bool val) {m_power= val;}  
@@ -92,4 +92,3 @@ class ReportComplexDataBase2D : public ReportDataBase2D<T1,T2,dcmplx>
 
 
 
-#endif

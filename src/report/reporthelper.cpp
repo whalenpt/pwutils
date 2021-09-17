@@ -1,5 +1,6 @@
 
 #include <vector>
+#include <cmath>
 #include "pwutils/report/reporthelper.h"
 
 namespace pw{
@@ -35,6 +36,7 @@ fs::path filePath(const fs::path& dir_path,
 	fs::path full_path = dir_path / local_path;
 	return full_path;
 }
+
 
 void AdjustPhase(std::vector<double>& in,int sz)
 {

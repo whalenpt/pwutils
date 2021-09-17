@@ -31,6 +31,14 @@ namespace json{
     void readVecData(const json11::Json& json_obj,std::vector<std::string>& vec,\
             const std::string& id,std::string id_label="");
 
+    void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<double>>& vec,\
+            const std::string& id,std::string id_label="");
+    void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<float>>& vec,\
+            const std::string& id,std::string id_label="");
+    void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& vec,\
+            const std::string& id,std::string id_label="");
+
+
     pw::OperatorSignature operatorSignature(const std::filesystem::path& path);
 
     template<typename T1,typename T2>
@@ -49,11 +57,12 @@ namespace json{
     pw::metadataMap readXCVY(const std::filesystem::path& path,std::vector<T1>& x,\
              std::vector<std::complex<T2>>& y)
     {
-        // Stub implementation
-        unsigned int N = 20;
-        x.assign(N,0.0);
-        y.assign(N,0.0);
-        return pw::metadataMap({});
+        pw::metadataMap metadata = getMetaData(path);
+        json11::Json json_obj;
+        readJsonObject(path,json_obj);
+        readVecData(json_obj,x,"x","xlabel");
+        readComplexVecData(json_obj,y,"y","ylabel");
+        return metadata;
     } 
      
 
@@ -74,12 +83,13 @@ namespace json{
     pw::metadataMap readXYCVZ(const std::filesystem::path& path,std::vector<double>& x,\
              std::vector<double>& y,std::vector<std::complex<T3>>& z)
     {
-        // Stub implementation
-        int N = 20;
-        x.assign(N,0.0);
-        y.assign(N,0.0);
-        z.assign(N*N,0.0);
-        return pw::metadataMap({});
+        pw::metadataMap metadata = getMetaData(path);
+        json11::Json json_obj;
+        readJsonObject(path,json_obj);
+        readVecData(json_obj,x,"x","xlabel");
+        readVecData(json_obj,y,"y","ylabel");
+        readComplexVecData(json_obj,z,"z","zlabel");
+        return metadata;
     } 
  
 }

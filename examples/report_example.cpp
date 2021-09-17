@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <pwutils/pwdefs.h>
 #include <pwutils/report/dat.hpp>
 #include <pwutils/report/json.hpp>
 #include <pwutils/report/dataio.hpp>
@@ -18,6 +19,7 @@ int main()
     std::vector<double> double_vec(N,1.);
     dataio.writeFile("double_vec.dat",double_vec);
     std::vector<pw::dcmplx> cplx_vec(N,0.);
+    std::vector<std::complex<float>> cplx_fvec(N,0.);
     dataio.writeFile("complex_vec.dat",cplx_vec);
     std::vector<double> double_vec2(N,5.0);
     dataio.writeFile("two_double_vecs.dat",double_vec,double_vec2);
@@ -30,10 +32,16 @@ int main()
     os << data1D;
 
     // Use ReportComplexData1D for data reporting with x, and y when y is complex
-    dat::ReportComplexData1D<int> report_def("complex_data",int_vec,cplx_vec);
+    dat::ReportComplexData1D<int,double> report_def("complex_data",int_vec,cplx_vec);
     report_def.setReportMetadata(false);
     os << std::fixed << std::setprecision(2);
     os << report_def;
+
+    // Use ReportComplexData1D for data reporting with x, and y when y is a float complex
+    dat::ReportComplexData1D<int,float> report_fdef("complex_float_data",int_vec,cplx_fvec);
+    report_fdef.setReportMetadata(false);
+    os << std::fixed << std::setprecision(2);
+    os << report_fdef;
 
     // Report doubles
     dat::ReportData1D<double,double> report_real("real_data",double_vec,double_vec);
@@ -48,10 +56,16 @@ int main()
     os << jdata1D;
 
     // Use ReportComplexData1D for data reporting with x, and y when y is complex
-    json::ReportComplexData1D<int> jreport_def("complex_data",int_vec,cplx_vec);
+    json::ReportComplexData1D<int,double> jreport_def("complex_data",int_vec,cplx_vec);
     jreport_def.setReportMetadata(false);
     os << std::scientific << std::setprecision(3);
     os << jreport_def;
+
+    // Use ReportComplexData1D for data reporting with x, and y when y is complex
+    json::ReportComplexData1D<int,float> jreport_fdef("complex_float_data",int_vec,cplx_fvec);
+    jreport_fdef.setReportMetadata(false);
+    os << std::scientific << std::setprecision(3);
+    os << jreport_fdef;
 
     // Report doubles
     json::ReportData1D<double,double> jreport_real("real_data",double_vec,double_vec);
@@ -74,8 +88,8 @@ int main()
     rp_2D.report(os);
 
     // Report 2D complex
-    std::vector<dat::dcmplx> z2(nx*ny,dat::dcmplx(1.0,2.0));
-    dat::ReportComplexData2D<double,double> rp_2DC("XY2DC",x,y,z2);
+    std::vector<pw::dcmplx> z2(nx*ny,pw::dcmplx(1.0,2.0));
+    dat::ReportComplexData2D<double,double,double> rp_2DC("XY2DC",x,y,z2);
     // set file output directory
     rp_2DC.setDirPath("outfolder2D");
     rp_2DC.report(os);
@@ -89,7 +103,7 @@ int main()
     jrp_2D.report(os);
 
     // Report 2D complex
-    json::ReportComplexData2D<double,double> jrp_2DC("XY2DC",x,y,z2);
+    json::ReportComplexData2D<double,double,double> jrp_2DC("XY2DC",x,y,z2);
     // set file output directory
     jrp_2DC.setDirPath("outfolder2D");
     jrp_2DC.report(os);
