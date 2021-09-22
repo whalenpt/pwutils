@@ -1,6 +1,5 @@
-#ifndef PWTHREADS_H
-#define PWTHREADS_H
-
+//pwthreads.h
+#pragma once
 #include <vector>
 
 namespace pw{
@@ -8,18 +7,17 @@ namespace pw{
 class ThreadManager{
 
     public:
-        explicit ThreadManager(unsigned int cnum_threads);  
-        std::vector<unsigned int> getBounds(unsigned int size);
-        void setNumThreads(unsigned int cnum_threads);
-        unsigned int getNumThreads() {return num_threads;}
+        explicit ThreadManager(unsigned num_threads);  
+        std::vector<unsigned> getBounds(unsigned size) const;
+        void setNumThreads(unsigned num_threads);
+        unsigned getNumThreads() const {return m_num_threads;}
     private:
-        unsigned int num_threads;
+        unsigned m_num_threads;
 };
 
 
 }
 
-#endif
 
 
 
