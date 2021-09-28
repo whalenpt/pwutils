@@ -55,6 +55,7 @@ class ReportBase{
 		void setFileExtension(const std::string& extension) {
 		    m_extension=extension;}
 		void setDirPath(const std::filesystem::path& dirpath) {
+            pw::createDirectory(dirpath,false);
 		    m_dirpath = dirpath;}
 
 		std::string getName() const {return m_name;}
