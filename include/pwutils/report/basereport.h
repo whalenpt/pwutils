@@ -1,5 +1,5 @@
-#ifndef BASEREPORT_H
-#define BASEREPORT_H
+// basereport.h
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -46,6 +46,7 @@ class ReportBase{
         DataSignature dataSignature() const;
         OperatorSignature operatorSignature() const;
 
+		void setName(const std::string& nm) {m_name = nm;}
 		void setItem(const std::string& key,double val);
 		void setItem(const std::string& key,float val);
 		void setItem(const std::string& key,int val);
@@ -76,7 +77,7 @@ class ReportBase{
 		bool metadataOn() const {return m_report_metadata;}
 
 	private:
-		const std::string m_name;
+		std::string m_name;
 		bool m_report_metadata;
         metadataMap m_metadata_map; 
         std::string m_extension;
@@ -194,4 +195,3 @@ class ReportData2D : public ReportBase
 
 
 
-#endif
