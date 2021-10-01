@@ -2,7 +2,6 @@
 .DS_Store
 *.sh
 [Bb]uild*
-*.json
 *.bat
 *.swap
 .cache
@@ -11,6 +10,7 @@
 *.dat
 *.txt
 *~
+compile_commands*
 
 
 
