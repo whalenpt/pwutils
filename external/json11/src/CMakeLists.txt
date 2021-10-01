@@ -4,8 +4,12 @@ cmake_minimum_required(VERSION 3.19)
 
 set(INCL_DIR "${json11_SOURCE_DIR}/include/json11")
 add_library(json11 json11.cpp ${INCL_DIR}/json11.hpp)
-target_compile_options(json11
-  PRIVATE -fPIC -fno-rtti -fno-exceptions -Wall)
+set_target_properties(json11 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+if(NOT WIN32)
+    target_compile_options(json11
+      PRIVATE -fno-rtti -fno-exceptions -Wall)
+endif()
 
 target_include_directories(json11 PRIVATE
 	$<BUILD_INTERFACE:${json11_SOURCE_DIR}/include/json11>
@@ -16,8 +20,6 @@ target_include_directories(json11 PUBLIC
 	$<BUILD_INTERFACE:${json11_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>
 )
-
-
 
 # Set warning flags, which may vary per platform
 
