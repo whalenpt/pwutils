@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(pwutils VERSION 0.0.1 LANGUAGES CXX)
 
-option(PWUTILS_STATIC "Build pwutils as static (ON) or shared library (OFF)" OFF)
+option(PWUTILS_STATIC "Build pwutils as static (ON) or shared library (OFF)" ON)
 option(PWUTILS_TEST "Build pwutils tests" OFF)
 option(PWUTILS_EXAMPLES "Build pwutils examples" OFF)
 

@@ -21,22 +21,17 @@ namespace json{
     void readJSONstring(const std::filesystem::path& path,std::string& str);
     void readJsonObject(const std::filesystem::path& path,json11::Json& json_obj);
 
-    void readVecData(const json11::Json& json_obj,std::vector<double>& vec,\
-            const std::string& id,std::string id_label="");
-    void readVecData(const json11::Json& json_obj,std::vector<float>& vec,\
-            const std::string& id,std::string id_label="");
-    void readVecData(const json11::Json& json_obj,std::vector<int>& vec,\
-            const std::string& id,std::string id_label="");
-    void readVecData(const json11::Json& json_obj,std::vector<std::string>& vec,\
-            const std::string& id,std::string id_label="");
-
-    void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<double>>& vec,\
-            const std::string& id,std::string id_label="");
-    void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<float>>& vec,\
-            const std::string& id,std::string id_label="");
-    void readComplexVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& vec,\
-            const std::string& id,std::string id_label="");
-
+    void readVecData(const json11::Json& json_obj,std::vector<double>& vec,const std::string& id);
+    void readVecData(const json11::Json& json_obj,std::vector<float>& vec,const std::string& id);
+    void readVecData(const json11::Json& json_obj,std::vector<int>& vec,const std::string& id);
+    void readVecData(const json11::Json& json_obj,std::vector<std::string>& vec,const std::string& id);
+    void readVecData(const json11::Json& json_obj,std::vector<std::complex<double>>& vec,\
+            const std::string& id);
+    void readVecData(const json11::Json& json_obj,std::vector<std::complex<float>>& vec,\
+            const std::string& id);
+    void readVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& vec,\
+            const std::string& id);
+    void dataNotFound(const std::string& id);
 
     pw::OperatorSignature operatorSignature(const std::filesystem::path& path);
 
@@ -47,8 +42,8 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x","xlabel");
-        readVecData(json_obj,y,"y","ylabel");
+        readVecData(json_obj,x,"x");
+        readVecData(json_obj,y,"y");
         return metadata;
     } 
      
@@ -59,8 +54,8 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x","xlabel");
-        readComplexVecData(json_obj,y,"y","ylabel");
+        readVecData(json_obj,x,"x");
+        readVecData(json_obj,y,"y");
         return metadata;
     } 
      
@@ -72,9 +67,9 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x","xlabel");
-        readVecData(json_obj,y,"y","ylabel");
-        readVecData(json_obj,z,"z","zlabel");
+        readVecData(json_obj,x,"x");
+        readVecData(json_obj,y,"y");
+        readVecData(json_obj,z,"z");
         return metadata;
     } 
  
@@ -85,9 +80,9 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x","xlabel");
-        readVecData(json_obj,y,"y","ylabel");
-        readComplexVecData(json_obj,z,"z","zlabel");
+        readVecData(json_obj,x,"x");
+        readVecData(json_obj,y,"y");
+        readVecData(json_obj,z,"z");
         return metadata;
     } 
  
