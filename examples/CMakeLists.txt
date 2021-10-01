@@ -18,7 +18,7 @@ if(WIN32)
         )
         add_custom_command(TARGET ${ARG}
             POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:jso11> ${CMAKE_CURRENT_BINARY_DIR}
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:json11> ${CMAKE_CURRENT_BINARY_DIR}
             COMMENT "Copy json11 dll file to ${CMAKE_CURRENT_BINARY_DIR} directory" VERBATIM
         )
     endforeach()
