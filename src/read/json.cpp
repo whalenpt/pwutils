@@ -112,11 +112,12 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
 
     for(const auto& item : json_map){
         std::string key = item.first;
-        if(key == "x" && item.second.is_array())
+//        std::cout << key << std::endl;
+        if(key == pw::XLABEL && item.second.is_array())
             xfound = true;
-        else if(key == "y" && item.second.is_array())
+        else if(key == pw::YLABEL && item.second.is_array())
             yfound = true;
-        else if(key == "z" && item.second.is_array())
+        else if(key == pw::ZLABEL && item.second.is_array())
             zfound = true;
         else if(key == "dtype" && item.second.is_string()){
             if(item.second.string_value() == "complex")

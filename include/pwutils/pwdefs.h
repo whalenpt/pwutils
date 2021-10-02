@@ -12,6 +12,10 @@ namespace pw{
     enum class FileSignature{DAT,JSON,UNKNOWN};
     enum class DataSignature{XY,XCVY,XYZ,XYCVZ,UNKNOWN};
     enum class OperatorSignature{NONE,LOGX,LOGY,LOGXLOGY,LOGZ};
+
+    constexpr auto XLABEL = "x";
+    constexpr auto YLABEL = "y";
+    constexpr auto ZLABEL = "z";
 }
 
 

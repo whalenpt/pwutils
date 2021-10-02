@@ -95,25 +95,10 @@ class ReportData1D : public ReportBase
 {
 	public:
 		ReportData1D(const std::string& nm) 
-		  : ReportBase(nm) {
-                setLabelX("x");
-                setLabelY("y");
-            }
+		  : ReportBase(nm) {}
 		virtual ~ReportData1D() {}
-		std::string getLabelX() const {return m_xlabel;}
-		std::string getLabelY() const {return m_ylabel;}
-		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
-            ReportBase::setItem("xlabel",xlabel);
-		}
-		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
-            ReportBase::setItem("ylabel",ylabel);
-		}
-
 	private:
 		virtual void reportData(std::ofstream& os) const = 0;
-		std::string m_xlabel;
-		std::string m_ylabel;
-
 };
 
 
@@ -128,20 +113,9 @@ class TrackData : public ReportBase
 		virtual void updateTracker(double t) = 0; // assume time t is a double value (or convert to)
 		const TrackType getTrackType() {return m_ttype;}
 		void setTrackType(TrackType ttype) {m_ttype = ttype;}
-		std::string getLabelX() const {return m_xlabel;}
-		std::string getLabelY() const {return m_ylabel;}
-		void setLabelX(const std::string& xlabel) {m_xlabel=xlabel;
-            ReportBase::setItem("xlabel",xlabel);
-		}
-		void setLabelY(const std::string& ylabel) {m_ylabel=ylabel;
-            ReportBase::setItem("ylabel",ylabel);
-		}
     private:
         TrackType m_ttype;
 		virtual void reportData(std::ofstream& os) const = 0;
-		std::string m_xlabel;
-		std::string m_ylabel;
-
 };
 
 // Need a non-templated base class for holding all ReportData1D instances in an STL container
@@ -152,27 +126,8 @@ class ReportData2D : public ReportBase
 		ReportData2D(const std::string& nm) :
             ReportBase(nm),
             m_strideX(1), 
-            m_strideY(1) {
-                setLabelX("x");
-                setLabelY("y");
-                setLabelZ("z");
-            }
+            m_strideY(1) {}
 		virtual ~ReportData2D() {}
-        std::string getLabelX() const {return m_xlabel;}
-        std::string getLabelY() const {return m_ylabel;}
-        std::string getLabelZ() const {return m_zlabel;}
-        void setLabelX(const std::string& label) {
-            m_xlabel = label;
-            ReportBase::setItem("xlabel",label);
-        }
-        void setLabelY(const std::string& label) {
-            m_ylabel = label;
-            ReportBase::setItem("ylabel",label);
-        }
-        void setLabelZ(const std::string& label) {
-            m_zlabel = label;
-            ReportBase::setItem("zlabel",label);
-        }
 		unsigned int getStrideX() const {return m_strideX;}
 		unsigned int getStrideY() const {return m_strideY;}
 		void setStrideX(unsigned int strideX) { assert (strideX >= 1);
@@ -183,9 +138,6 @@ class ReportData2D : public ReportBase
 		virtual void reportData(std::ofstream& os) const = 0;
 		unsigned int m_strideX;
 		unsigned int m_strideY;
-        std::string m_xlabel;
-        std::string m_ylabel;
-        std::string m_zlabel;
 };
 
 

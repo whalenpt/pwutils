@@ -42,8 +42,8 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x");
-        readVecData(json_obj,y,"y");
+        readVecData(json_obj,x,pw::XLABEL);
+        readVecData(json_obj,y,pw::YLABEL);
         return metadata;
     } 
      
@@ -54,8 +54,8 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x");
-        readVecData(json_obj,y,"y");
+        readVecData(json_obj,x,pw::XLABEL);
+        readVecData(json_obj,y,pw::YLABEL);
         return metadata;
     } 
      
@@ -67,9 +67,9 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x");
-        readVecData(json_obj,y,"y");
-        readVecData(json_obj,z,"z");
+        readVecData(json_obj,x,pw::XLABEL);
+        readVecData(json_obj,y,pw::YLABEL);
+        readVecData(json_obj,z,pw::ZLABEL);
         return metadata;
     } 
  
@@ -80,9 +80,9 @@ namespace json{
         pw::metadataMap metadata = getMetaData(path);
         json11::Json json_obj;
         readJsonObject(path,json_obj);
-        readVecData(json_obj,x,"x");
-        readVecData(json_obj,y,"y");
-        readVecData(json_obj,z,"z");
+        readVecData(json_obj,x,pw::XLABEL);
+        readVecData(json_obj,y,pw::YLABEL);
+        readVecData(json_obj,z,pw::ZLABEL);
         return metadata;
     } 
  
