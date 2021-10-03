@@ -7,257 +7,165 @@
 #include <chrono>
 #include <ctime>
 #include <cstdio>
+#include <stdexcept>
 
 namespace pw{
 
-StatCenter::StatCenter(std::string nm,int stPerRp)
+StatCenter::StatCenter(std::string name,unsigned steps_per_report) :
+    m_name(name)
 {
-  statRequests = 0;
-  statReports = 0;
-  name = nm;
-  stepsPerReport = stPerRp;
+    if(steps_per_report == 0)
+        throw std::invalid_argument("StatCenter steps_per_report \
+                must be an integer greater than 0");
+    m_steps_per_report = steps_per_report;
+    m_stat_requests = 0;
+    m_stat_reports = 0;
 }
 
 void StatCenter::statUpdate(std::ostream& os)
 {
-  statRequests++;
-  if(stepsPerReport == 0)
-    return;
-  else{
-    if(!(statRequests % stepsPerReport))
+  m_stat_requests++;
+  if(!(m_stat_requests % m_steps_per_report))
       report(os);
-  }
 }
 
 void StatCenter::report(std::ostream& os) const
 {
-  os <<  name << std::endl;
-  timer.report(os);
-  counter.report(os);
-  tracker.report(os);
-  clocker.report(os);
-  os << std::endl;
+    os <<  m_name << std::endl;
+    m_timer.report(os);
+    m_counter.report(os);
+    m_tracker.report(os);
+    m_clocker.report(os);
+    os << std::endl;
 }
  
-void Counter::addCounter(std::string str,int val)
+void Counter::addCounter(std::string str,unsigned initial_count)
 {
-  map.insert(intPair(str,0));
-  sz.insert(intPair(str,val));
+    m_map.insert(unsignedPair(str,initial_count));
 }
-bool Counter::increment(std::string str)
+
+void Counter::increment(std::string str)
 {
-  countMap::iterator it;
-  it = map.find(str);
-  if(it != map.end()){
-    int val = (*it).second;
-    countMap::iterator itb;
-    itb = sz.find(str);
-    if(itb != sz.end()){
-      int incr = (*itb).second;
-      val+=incr; 
-      map[str] = val;
-      return true;
-    }
+    auto it = m_map.find(str);
+    if(it != m_map.end())
+        (*it).second++;
     else
-      return false;
-  }
-  else
-    return false;
+        addCounter(str,1);
 }
 
 void Counter::incrementAll()
 {
-  countMap::iterator it = map.begin();
-  while(it != map.end()){
-    std::string str = (*it).first;
-    int val = (*it).second;
-    int incr = sz[str];
-    val+=incr; 
-    map[str] = val;
-    it++;
-  }
+    for(auto it = m_map.begin(); it != m_map.end(); it++)
+        (*it).second++;
 }
 
 void Counter::report(std::ostream& os) const
 {
-  countMap::const_iterator it = map.begin();
-  while(it != map.end()){
-    os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
-    os << std::setw(16) << (*it).second << std::endl;
-    it++;
-  }
+    for(unsignedMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+        os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
+        os << std::setw(16) << (*it).second << std::endl;
+    }
 }
 
-/*
 void Timer::addTimer(std::string str)
 {
-  map.insert(dblPair(str,0.0));
-  st.insert(timePair(str,time(0)));
-  end.insert(timePair(str,time(0)));
+    using std::chrono::system_clock;
+    std::chrono::time_point<system_clock> start;
+    std::chrono::duration<double> netTime(0.0);
+    m_map.insert(chronoDurPair(str,netTime));
+    m_st.insert(chronoPair(str,start));
 }
 
-bool Timer::startTimer(std::string str)
+void Timer::startTimer(std::string str)
 {
-  timeMap::iterator it;
-  it = st.find(str);
-  if(it != st.end()){
-    time(&(*it).second);
-    return true;
-  }
-  else
-    return false;
+    // Find starting timer element for str
+    auto it = m_st.find(str);
+    if(it != m_st.end())
+        (*it).second = std::chrono::system_clock::now();
+    else{
+        // No starting timer element for str, so create one
+        addTimer(str);
+        m_st[str] = std::chrono::system_clock::now();
+    }
 }
 
 bool Timer::endTimer(std::string str)
 {
-  sizet sttime;
-  sizet end_time;
-  timeMap::iterator it;
-  it = end.find(str);
-  if(it != end.end()){
-    time(&(*it).second);
-    end_time = (*it).second;
-    timeMap::iterator its;
-    its = st.find(str);
-    if(its != st.end())
-      st_time = (*its).second;
-    else
-      return false;
-    double dTime = difftime(end_time,st_time);
-    double netTime = map[str];
-    netTime += dTime;
-    map[str] = netTime;
+    auto st_it = m_st.find(str);
+    if(st_it == m_st.end())
+        return false;
+    auto map_it = m_map.find(str);
+    if(map_it != m_map.end())
+        return false;
+    std::chrono::duration<double> elapsed_time = std::chrono::system_clock::now() - st_it->second;
+    map_it->second += elapsed_time;
     return true;
-  }
-  else
-    return false;
 }
 
 void Timer::report(std::ostream& os) const
 {
-  dblMap::const_iterator it = map.begin();
-  while(it != map.end()){
-    os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
-    os << std::setw(16) << std::fixed << (*it).second << std::endl;
-    it++;
-  }
-}
-
-
-*/
-
-void Timer::addTimer(std::string str)
-{
-  using std::chrono::system_clock;
-  std::chrono::time_point<system_clock> start,endt;
-  std::chrono::duration<double> netTime(0.0);
-  map.insert(chronoDurPair(str,netTime));
-  st.insert(chronoPair(str,start));
-  end.insert(chronoPair(str,endt));
-}
-
-bool Timer::startTimer(std::string str)
-{
-  chronoMap::iterator it;
-  it = st.find(str);
-  if(it != st.end()){
-    (*it).second = std::chrono::system_clock::now();
-    return true;
-  }
-  else
-    return false;
-}
-
-bool Timer::endTimer(std::string str)
-{
-  std::chrono::duration<double> elapsed_time;
-  chronoMap::iterator end_it = end.find(str);
-  if(end_it != end.end()){
-    (*end_it).second = std::chrono::system_clock::now();
-    chronoMap::iterator st_it = st.find(str);
-    if(st_it != st.end())
-      elapsed_time = (*end_it).second - (*st_it).second;
-    else
-      return false;
-    map[str] = map[str] + elapsed_time;
-    return true;
-  }
-  else
-    return false;
-}
-
-void Timer::report(std::ostream& os) const
-{
-  chronoDurMap::const_iterator it = map.begin();
-  while(it != map.end()){
-    os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
-    os << std::setw(16) << std::fixed << (*it).second.count() << std::endl;
-    it++;
-  }
+    for(chronoDurMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+        os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
+        os << std::setw(16) << std::fixed << (*it).second.count() << std::endl;
+    }
 }
 
 void Tracker::addTracker(std::string str,double val)
 {
-  map.insert(dblPair(str,val));
+    m_map.insert(dblPair(str,val));
 }
 
 void Tracker::updateTracker(std::string str,double val)
 {
-  map[str] = val;
+    m_map[str] = val;
 }
 
 void Tracker::report(std::ostream& os) const
 {
-  dblMap::const_iterator it = map.begin();
-  while(it != map.end()){
-    os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
-    os << std::setw(16) << std::scientific << std::setprecision(3) << (*it).second << std::endl;
-    it++;
-  }
+    for(dblMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+        os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
+        os << std::setw(16) << std::scientific << std::setprecision(3) << (*it).second << std::endl;
+    }
 }
 
 void Clocker::addClock(std::string str)
 {
-  map.insert(dblPair(str,0.0));
-  st.insert(clockPair(str,clock()));
+    m_map.insert(dblPair(str,0.0));
+    m_st.insert(clockPair(str,clock()));
 }
 
-bool Clocker::startClock(std::string str)
+void Clocker::startClock(std::string str)
 {
-  clockMap::iterator it;
-  it = st.find(str);
-  if(it != st.end()){
-    (*it).second = std::clock();
-    return true;
-  }
-  else
-    return false;
+    auto it = m_st.find(str);
+    if(it != m_st.end())
+        (*it).second = std::clock();
+    else{
+        addClock(str);
+        m_st[str] = std::clock();
+    }
 }
 
 bool Clocker::endClock(std::string str)
 {
-  clockMap::iterator it;
-  it = st.find(str);
-  if(it != st.end()){
-    std::clock_t clockTicks = std::clock() - (*it).second;
-    double dTime = clockTicks / (double) CLOCKS_PER_SEC;  
-    double netTime = map[str];
-    netTime += dTime;
-    map[str] = netTime;
+    auto st_it = m_st.find(str);
+    if(st_it == m_st.end())
+        return false;
+    auto map_it = m_map.find(str);
+    if(map_it == m_map.end())
+        return false;
+  
+    std::clock_t clockTicks = std::clock() - (*st_it).second;
+    double d_time = clockTicks / (double) CLOCKS_PER_SEC;  
+    map_it->second += d_time;
     return true;
-  }
-  else
-    return false;
 }
 
 void Clocker::report(std::ostream& os) const
 {
-  dblMap::const_iterator it = map.begin();
-  while(it != map.end()){
-    os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
-    os << std::setw(16) << std::fixed << (*it).second << std::endl;
-    it++;
-  }
+    for(dblMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+        os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
+        os << std::setw(16) << std::fixed << (*it).second << std::endl;
+    }
 }
 
 }
