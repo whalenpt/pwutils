@@ -63,14 +63,12 @@ int main()
     std::filesystem::path input4(std::filesystem::current_path()/std::filesystem::path("data/SQ_T_0.dat"));
     std::filesystem::path input5(std::filesystem::current_path()/std::filesystem::path("data/SQ_T_0.txt"));
     std::filesystem::path input6(std::filesystem::current_path()/std::filesystem::path("data/SQ_T_0_sig.txt"));
-    std::filesystem::path input7(std::filesystem::current_path()/std::filesystem::path("data/airchi.tab"));
     print_file_sig(input1);
     print_file_sig(input2);
     print_file_sig(input3);
     print_file_sig(input4);
     print_file_sig(input5);
     print_file_sig(input6);
-    print_file_sig(input7);
 
     std::cout << std::endl << std::endl;
     print_data_sig(input1,pw::FileSignature::JSON);
@@ -79,7 +77,6 @@ int main()
     print_data_sig(input4,pw::FileSignature::DAT);
     print_data_sig(input5,pw::FileSignature::DAT);
     print_data_sig(input6,pw::FileSignature::DAT);
-    print_data_sig(input7,pw::FileSignature::DAT);
     return 0;
 }
 

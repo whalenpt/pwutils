@@ -249,15 +249,20 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1,T2>
 template<class T1,class T2>
 void ReportComplexData1D<T1,T2>::reportData(std::ofstream& os) const
 {
+    if(!this->getPhase() && !this->getPower()){
+        writeJSONLabel(os,"dtype");
+        writeJSONValue(os,"complex");
+    }
     writeJSONVector(os,pw::XLABEL,this->getX(),1,"\t",false);
 	if(this->getPhase())
 		writeJSONPhaseVector(os,pw::YLABEL,this->getY(),1,"\t",true);
     else if(this->getPower()){
 	    writeJSONPowerVector(os,pw::YLABEL,this->getY(),1,"\t",true);
-	} else
-	   writeJSONVector(os,pw::YLABEL,this->getY(),1,"\t",true);
-}
+	} else{
+        writeJSONVector(os,pw::YLABEL,this->getY(),1,"\t",true);
+    }
 
+}
 template<class T>
 class TrackData : public pw::TrackDataBase<T>
 {
@@ -387,6 +392,11 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2,T3>
 template<class T1,class T2,class T3>
 void ReportComplexData2D<T1,T2,T3>::reportData(std::ofstream& os) const
 {
+    if(!this->getPhase() && !this->getPower()){
+        writeJSONLabel(os,"dtype");
+        writeJSONValue(os,"complex");
+    }
+
     if(this->getPhase()){
         writeJSONPower2D(os,this->getX(),this->getStrideX(),\
             this->getY(),this->getStrideY(),this->getZ(),"\t");
