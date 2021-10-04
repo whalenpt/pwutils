@@ -11,26 +11,26 @@
 
 namespace pw{
 
-StatCenter::StatCenter(std::string name,unsigned steps_per_report) :
+StatCenter::StatCenter(std::string name,unsigned steps_per_log) :
     m_name(name)
 {
-    setReportFrequency(steps_per_report);
+    setLogFrequency(steps_per_log);
     m_stat_requests = 0;
     m_stat_reports = 0;
 }
 
-void StatCenter::setReportFrequency(unsigned val) 
+void StatCenter::setLogFrequency(unsigned val) 
 {
     if(val < 1)
         throw std::invalid_argument("Error in StatCenter::setReportFrequency(val):\
                 val must be an integer greater than 0");
-    m_steps_per_report = val;
+    m_steps_per_log = val;
 }
 
 void StatCenter::statUpdate(std::ostream& os)
 {
   m_stat_requests++;
-  if(!(m_stat_requests % m_steps_per_report))
+  if(!(m_stat_requests % m_steps_per_log))
       report(os);
 }
 
@@ -56,12 +56,6 @@ void Counter::increment(std::string str,unsigned incr_amount)
         (*it).second += incr_amount;
     else
         addCounter(str,incr_amount);
-}
-
-void Counter::incrementAll()
-{
-    for(auto it = m_map.begin(); it != m_map.end(); it++)
-        (*it).second++;
 }
 
 void Counter::report(std::ostream& os) const

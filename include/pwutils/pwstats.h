@@ -67,7 +67,7 @@ class Tracker{
 
 class StatCenter{
     public:
-        StatCenter(std::string name = "STATS",unsigned steps_per_report = 1);
+        StatCenter(std::string name = "STATS",unsigned steps_per_log = 1);
         ~StatCenter() {}
         void statUpdate(std::ostream& os = std::cout);
         void report(std::ostream& os = std::cout) const;
@@ -87,7 +87,7 @@ class StatCenter{
         void addTracker(std::string str,double val = 0.0) {m_tracker.addTracker(str,val);}
         void updateTracker(std::string str,double val) {m_tracker.updateTracker(str,val);}
 
-        void setReportFrequency(unsigned val); 
+        void setLogFrequency(unsigned val); 
         void setHeader(std::string str) {m_name = str;}
     private:
         Timer m_timer;
@@ -96,7 +96,7 @@ class StatCenter{
         Clocker m_clocker;
         unsigned m_stat_requests;
         unsigned m_stat_reports;
-        unsigned m_steps_per_report;
+        unsigned m_steps_per_log;
         std::string m_name;
 };
 
