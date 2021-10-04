@@ -24,6 +24,7 @@ class ReportBase{
 		virtual ~ReportBase() {};
 
 		void report(std::ofstream& os) const;
+		void report(std::ofstream& os,unsigned rep_num) const;
 		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase& def);
 		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase* def);
 		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def);
@@ -57,12 +58,6 @@ class ReportBase{
             return pw::filePath(m_dirpath,m_name,m_extension);}
         std::filesystem::path path(int rep_num) const {
             return pw::filePath(m_dirpath,m_name,rep_num,m_extension);}
-
-        std::filesystem::path generatePath(const std::filesystem::path& dir_path) const
-            { return pw::filePath(dir_path,m_name,m_extension);}
-        std::filesystem::path generatePath(const std::filesystem::path& dir_path,int repNum) const
-            { return pw::filePath(dir_path,m_name,repNum,m_extension);}
-
 		bool metadataOn() const {return m_report_metadata;}
 
 	private:
@@ -74,8 +69,6 @@ class ReportBase{
 		virtual void reportMetadata(std::ofstream& os) const = 0;
 		virtual void reportData(std::ofstream& os) const = 0;
         std::filesystem::path m_dirpath;
-		void internalFileHandleReport(std::ofstream& os) const;
-		void externalFileHandleReport(std::ofstream& os) const;
 };
 
 // Need a non-templated base class for holding all ReportData1D instances in an STL container

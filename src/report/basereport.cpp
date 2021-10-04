@@ -19,6 +19,17 @@ void ReportBase::report(std::ofstream& os) const
     os.close();
 }
 
+void ReportBase::report(std::ofstream& os,unsigned rep_num) const
+{
+    pw::createDirectory(m_dirpath,false);
+    os.open(ReportBase::path(rep_num));
+    if(!os.is_open())
+        throw std::runtime_error("Failed to open data file for output stream");
+    reportImplement(os);
+    os.close();
+}
+
+
 std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){
     def.report(os);
     return os;
