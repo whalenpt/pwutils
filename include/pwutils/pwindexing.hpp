@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+#include <cmath>
 
 namespace pw{
 
@@ -20,11 +21,11 @@ unsigned int nearestIndex(std::vector<T>& sorted_vec,T val)
     auto it = std::lower_bound(std::cbegin(sorted_vec),std::cend(sorted_vec),val);
     if(it == sorted_vec.cbegin())
         return 0;
-    unsigned int target = std::distance(std::cbegin(sorted_vec),it);
+    unsigned target = std::distance(std::cbegin(sorted_vec),it);
 
     auto a = *(it - 1);
     auto b = *(it);
-    return std::abs(val - a) < std::abs(val-b) ? target-1 : target;
+    return (std::abs(val - a) < std::abs(val-b) ? (target-1) : target);
 }     
 
 
