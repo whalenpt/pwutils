@@ -9,7 +9,7 @@
 
 namespace pw{
 
-void ReportBase::internalFileHandleReport(std::ofstream& os) const
+void ReportBase::report(std::ofstream& os) const
 {
     pw::createDirectory(m_dirpath,false);
     os.open(ReportBase::path());
@@ -18,14 +18,6 @@ void ReportBase::internalFileHandleReport(std::ofstream& os) const
     reportImplement(os);
     os.close();
 }
-
-void ReportBase::externalFileHandleReport(std::ofstream& os) const
-{
-    if(!os.is_open())
-        throw std::runtime_error("Failed to open data file for output stream");
-    reportImplement(os);
-}
-
 
 std::ofstream& operator<<(std::ofstream& os,const ReportBase& def){
     def.report(os);

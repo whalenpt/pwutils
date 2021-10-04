@@ -11,13 +11,8 @@
 
 namespace pw{
 
-enum class TrackType { Max,
-    Min
-};
-
-enum class ComplexOp {None,
-    Power
-};
+enum class TrackType { Max, Min };
+enum class ComplexOp {None, Power };
 
 class ReportBase{
 	public:
@@ -28,13 +23,7 @@ class ReportBase{
 	      m_dirpath("outfolder") {}
 		virtual ~ReportBase() {};
 
-		void report(std::ofstream& os) const {
-            if(!os.is_open())
-                internalFileHandleReport(os);
-            else
-                externalFileHandleReport(os);
-        }
-
+		void report(std::ofstream& os) const;
 		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase& def);
 		friend std::ofstream& operator<<(std::ofstream& os,const ReportBase* def);
 		friend std::ofstream& operator<<(std::ofstream& os,const std::unique_ptr<ReportBase> def);
