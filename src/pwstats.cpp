@@ -14,12 +14,17 @@ namespace pw{
 StatCenter::StatCenter(std::string name,unsigned steps_per_report) :
     m_name(name)
 {
-    if(steps_per_report == 0)
-        throw std::invalid_argument("StatCenter steps_per_report \
-                must be an integer greater than 0");
-    m_steps_per_report = steps_per_report;
+    setReportFrequency(steps_per_report);
     m_stat_requests = 0;
     m_stat_reports = 0;
+}
+
+void StatCenter::setReportFrequency(unsigned val) 
+{
+    if(val < 1)
+        throw std::invalid_argument("Error in StatCenter::setReportFrequency(val):\
+                val must be an integer greater than 0");
+    m_steps_per_report = val;
 }
 
 void StatCenter::statUpdate(std::ostream& os)
