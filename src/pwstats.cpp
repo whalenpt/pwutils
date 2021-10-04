@@ -49,13 +49,13 @@ void Counter::addCounter(std::string str,unsigned initial_count)
     m_map.insert(unsignedPair(str,initial_count));
 }
 
-void Counter::increment(std::string str)
+void Counter::increment(std::string str,unsigned incr_amount)
 {
     auto it = m_map.find(str);
     if(it != m_map.end())
-        (*it).second++;
+        (*it).second += incr_amount;
     else
-        addCounter(str,1);
+        addCounter(str,incr_amount);
 }
 
 void Counter::incrementAll()

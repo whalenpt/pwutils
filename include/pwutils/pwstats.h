@@ -25,8 +25,7 @@ class Counter{
     public:
         Counter() {}
         void addCounter(std::string str,unsigned initial_count=0);
-        void increment(std::string str);
-        void incrementAll();
+        void increment(std::string str,unsigned incr_amount=1);
         void report(std::ostream& os = std::cout) const;
     private:
         unsignedMap m_map; 
@@ -72,10 +71,11 @@ class StatCenter{
         ~StatCenter() {}
         void statUpdate(std::ostream& os = std::cout);
         void report(std::ostream& os = std::cout) const;
-        void addCounter(std::string str,unsigned val) {m_counter.addCounter(str,val);}
-        void incrementCounter(std::string str) {m_counter.increment(str);}
-        void incrementAllCounters() {m_counter.incrementAll();}
-
+        void addCounter(std::string str,unsigned start_count) {
+            m_counter.addCounter(str,start_count);}
+        void incrementCounter(std::string str,unsigned incr_amount) {
+            m_counter.increment(str,incr_amount);
+        }
         void addTimer(std::string str) {m_timer.addTimer(str);}
         void startTimer(std::string str) {m_timer.startTimer(str);}
         bool endTimer(std::string str) {return m_timer.endTimer(str);}
