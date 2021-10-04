@@ -71,9 +71,9 @@ class StatCenter{
         ~StatCenter() {}
         void statUpdate(std::ostream& os = std::cout);
         void report(std::ostream& os = std::cout) const;
-        void addCounter(std::string str,unsigned start_count) {
+        void addCounter(std::string str,unsigned start_count = 0) {
             m_counter.addCounter(str,start_count);}
-        void incrementCounter(std::string str,unsigned incr_amount) {
+        void incrementCounter(std::string str,unsigned incr_amount = 1) {
             m_counter.increment(str,incr_amount);
         }
         void addTimer(std::string str) {m_timer.addTimer(str);}
