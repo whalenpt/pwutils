@@ -24,7 +24,7 @@ target_include_directories(json11 PUBLIC
 # Set warning flags, which may vary per platform
 
 install(TARGETS json11 
-	EXPORT JsonTargets
+    EXPORT JSON11Targets
 	LIBRARY DESTINATION lib 
 	ARCHIVE DESTINATION lib 
 	RUNTIME DESTINATION bin
@@ -32,15 +32,21 @@ install(TARGETS json11
 install(DIRECTORY ${INCL_DIR}
 	DESTINATION include
 )
-install(EXPORT JsonTargets
-	FILE JsonTargets.cmake
-	DESTINATION lib/cmake/json11
+install(EXPORT JSON11Targets
+    FILE JSON11Targets.cmake
+    DESTINATION lib/cmake/json11
 )
-configure_file("${json11_SOURCE_DIR}/cmake/json11.pc.in"
-    "json11.pc" @ONLY
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${json11_SOURCE_DIR}/cmake/JSON11Config.cmake.in
+    ${json11_BINARY_DIR}/cmake/JSON11Config.cmake
+    INSTALL_DESTINATION lib/cmake/json11
+    PATH_VARS CMAKE_INSTALL_LIBDIR
 )
+
 install(
-	FILES "${CMAKE_CURRENT_BINARY_DIR}/json11.pc"
+    FILES "${json11_BINARY_DIR}/cmake/JSON11Config.cmake"
     DESTINATION lib/cmake/json11
 )
 

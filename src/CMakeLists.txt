@@ -85,6 +85,7 @@ install(EXPORT PWUtilsTargets
 	NAMESPACE pw::
 	DESTINATION lib/cmake/pwutils
 )
+
 configure_file(${pwutils_SOURCE_DIR}/cmake/PWUtilsConfig.cmake.in
     PWUtilsConfig.cmake @ONLY
 )
