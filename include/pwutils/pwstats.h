@@ -10,20 +10,20 @@
 namespace pw{
 
 using unsignedPair = std::pair<std::string,unsigned>;
-using unsignedMap = std::map<std::string,unsigned>;
+using unsignedMap = std::map<std::string,unsigned,std::less<>>;
 using dblPair = std::pair<std::string,double>;
-using dblMap = std::map<std::string,double>;
+using dblMap = std::map<std::string,double, std::less<>>;
 
 using chronoPair = std::pair<std::string, std::chrono::time_point<std::chrono::system_clock> >;
-using chronoMap = std::map<std::string,std::chrono::time_point<std::chrono::system_clock> >;
+using chronoMap = std::map<std::string,std::chrono::time_point<std::chrono::system_clock>, std::less<>>;
 using chronoDurPair = std::pair<std::string, std::chrono::duration<double> >;
-using chronoDurMap = std::map<std::string,std::chrono::duration<double> >;
+using chronoDurMap = std::map<std::string,std::chrono::duration<double>, std::less<>>;
 using clockPair = std::pair<std::string,clock_t>;
-using clockMap = std::map<std::string,clock_t>;
+using clockMap = std::map<std::string,clock_t, std::less<>>;
 
 class Counter{
     public:
-        Counter() {}
+        Counter() = default;
         void addCounter(std::string str,unsigned initial_count=0);
         void increment(std::string str,unsigned incr_amount=1);
         void report(std::ostream& os = std::cout) const;
@@ -100,9 +100,4 @@ class StatCenter{
         std::string m_name;
 };
 
-
-
 }
-
-
-

@@ -134,7 +134,7 @@ void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
     std::vector<double> phaseVec(y.size());
     for(unsigned int i=0; i < y.size(); i++)
         phaseVec[i] = arg(y[i]);
-    pw::AdjustPhase(phaseVec,phaseVec.size());
+    pw::AdjustPhase(phaseVec,static_cast<int>(phaseVec.size()));
     writeDat1D(os,x,phaseVec);
 }
 
@@ -174,7 +174,7 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
-        ~ReportData1D() {};
+        ~ReportData1D() = default;
     private:
 		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
@@ -202,11 +202,11 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1,T2>
                     pw::ReportBase::setFileExtension("dat");
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
-		~ReportComplexData1D() {}
+		~ReportComplexData1D() = default;
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
-		void reportImplement(std::ofstream& os) const {
+		void reportMetadata(std::ofstream& os) const override {streamToDat(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const override; 
+		void reportImplement(std::ofstream& os) const override {
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
@@ -237,7 +237,7 @@ class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>
                 pw::ReportBase::setFileExtension("dat");
                 pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
             }
-        ~ReportData2D() {};
+        ~ReportData2D() = default;
     private:
         void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
         void reportData(std::ofstream& os) const; 
@@ -269,11 +269,11 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2,T3>
                  pw::ReportBase::setFileExtension("dat");
                  pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
             }
-        ~ReportComplexData2D() {}
+        ~ReportComplexData2D() = default;
     private:
-    	void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-    	void reportData(std::ofstream& os) const; 
-        void reportImplement(std::ofstream& os) const {
+    	void reportMetadata(std::ofstream& os) const override {streamToDat(os,this->getMetadata());}
+    	void reportData(std::ofstream& os) const override; 
+        void reportImplement(std::ofstream& os) const override {
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
@@ -309,9 +309,9 @@ class TrackData : public pw::TrackDataBase<T>
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
-        void reportImplement(std::ofstream& os) const {
+		void reportMetadata(std::ofstream& os) const override {streamToDat(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const override; 
+        void reportImplement(std::ofstream& os) const override {
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
@@ -337,9 +337,9 @@ class TrackComplexData : public pw::TrackComplexDataBase<T>
                     pw::ReportBase::setFileSignature(pw::FileSignature::DAT);
                 }
     private:
-		void reportMetadata(std::ofstream& os) const {streamToDat(os,this->getMetadata());}
-		void reportData(std::ofstream& os) const; 
-        void reportImplement(std::ofstream& os) const {
+		void reportMetadata(std::ofstream& os) const override {streamToDat(os,this->getMetadata());}
+		void reportData(std::ofstream& os) const override; 
+        void reportImplement(std::ofstream& os) const override {
             if(pw::ReportBase::metadataOn())
                 reportMetadata(os);
             reportData(os);
@@ -356,10 +356,4 @@ void TrackComplexData<T>::reportData(std::ofstream& os) const
         writeDat1D(os,this->getX(),this->getOpY());
 }
 
-
-
-
 }
-
-
-

@@ -7,7 +7,7 @@ namespace pw{
 
 // Assume vector array is sorted from lowest to highest. Check first that val is within the vector range."
 template<typename T>
-unsigned int nearestIndex(std::vector<T>& sorted_vec,T val)
+unsigned nearestIndex(const std::vector<T>& sorted_vec,T val)
 {
     if(val < sorted_vec[0]){
         std::string msg = "nearestIndex(T val,vector<T>& sorted_vec) error: the val of "\
@@ -24,10 +24,9 @@ unsigned int nearestIndex(std::vector<T>& sorted_vec,T val)
     unsigned target = std::distance(std::cbegin(sorted_vec),it);
 
     auto a = *(it - 1);
-    auto b = *(it);
+    auto b = *it;
     return (std::abs(val - a) < std::abs(val-b) ? (target-1) : target);
 }     
 
 
 }
-

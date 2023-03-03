@@ -8,7 +8,6 @@
 
 namespace pw{
 
-//  using namespace std;
   std::string trimString(const std::string& str,std::string delim = " \t");
   int countFirstChar(const std::string& str,std::string delim = " \t");
 

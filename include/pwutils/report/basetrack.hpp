@@ -20,16 +20,15 @@ class TrackDataBase : public TrackData
             TrackType ttype,
             const std::vector<T>& data) :
                 TrackData(name,ttype),m_data(data) {}
-        virtual ~TrackDataBase() {};
+        ~TrackDataBase() override  = default;
         const std::vector<double>& getX() const {return m_x;}
         const std::vector<T>& getY() const {return m_y;}
         const std::vector<T>& getData() const {return m_data;}
-		void updateTracker(double x); 
+		void updateTracker(double x) override; 
 	private:
         const std::vector<T>& m_data;
         std::vector<double> m_x;
         std::vector<T> m_y;
-		virtual void reportData(std::ofstream& os) const = 0;
 };
 
 template<class T>
@@ -53,7 +52,7 @@ class TrackComplexDataBase : public TrackDataBase<std::complex<T>>
             ComplexOp cmplxop = ComplexOp::None) : 
                 TrackDataBase<std::complex<T>>(name,ttype,data),
                 m_cmplxop(cmplxop) {}
-        virtual ~TrackComplexDataBase() {};
+        ~TrackComplexDataBase() override = default;
         const std::vector<T>& getOpY() const {return m_opy;}
 		void updateTracker(double x); 
 		void setComplexOp(ComplexOp cmplxop) {m_cmplxop=cmplxop;}
@@ -84,8 +83,4 @@ void TrackComplexDataBase<T>::updateTracker(double x)
     }
 }
 
-
-
 }
-
-
