@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <fstream>
+#include <cassert>
 #include <filesystem>
+#include <fstream>
+#include <string>
+#include <vector>
 #include "pwutils/report/reporthelper.h"
 
 namespace pw{
