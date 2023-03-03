@@ -1,6 +1,4 @@
-
-#ifndef DATAIO_HPP_
-#define DATAIO_HPP_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -14,7 +12,7 @@ namespace fs = std::filesystem;
 
 class DataIO{
     public:
-        DataIO(const fs::path& dirpath = fs::current_path());
+        explicit DataIO(const fs::path& dirpath = fs::current_path());
         void setDirectoryPath(const fs::path& dirpath);
         template<typename T>
         void writeFile(const fs::path& fname,const std::vector<T>& x) const;
@@ -36,7 +34,7 @@ class DataIO{
         template<typename T1,typename T2>
         void appendFile(const fs::path& fname,const T1& val1,const T2& val2) const;
 
-        void clearDirectory() { pw::clearDirectory(m_dirpath); }
+        void clearDirectory() const { pw::clearDirectory(m_dirpath); }
         void checkExistence(const fs::path& filepath) const;
         void checkOpens(const fs::path& filepath) const;
     private:
@@ -135,14 +133,4 @@ void DataIO::readFile(const fs::path& fname,std::vector<T1>&x,std::vector<T2>&y,
     fin.close();
 }
 
-
-
-
-
-
-
-
 }
-
-#endif
-

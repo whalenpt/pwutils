@@ -80,7 +80,6 @@ void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::
         phaseVec[count] = arg(v[i]);
         count++;
         phaseVec.resize(count);
-//		pw::AdjustPhase(phaseVec,count);
 		writeJSONVector<T>(os,label,phaseVec,1,indent,end_value);
 }
 
@@ -201,7 +200,7 @@ class ReportData1D : public pw::ReportDataBase1D<T1,T2>
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
-        ~ReportData1D() {};
+        ~ReportData1D() = default;
     private:
 		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
@@ -233,7 +232,7 @@ class ReportComplexData1D : public pw::ReportComplexDataBase1D<T1,T2>
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
-		~ReportComplexData1D() {}
+		~ReportComplexData1D() = default;
     private:
 		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
@@ -274,7 +273,7 @@ class TrackData : public pw::TrackDataBase<T>
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
-        ~TrackData() {};
+        ~TrackData() = default;
     private:
 		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
@@ -343,7 +342,7 @@ class ReportData2D : public pw::ReportDataBase2D<T1,T2,T3>
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
-        ~ReportData2D() {};
+        ~ReportData2D() = default;
     private:
 		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
@@ -376,7 +375,7 @@ class ReportComplexData2D : public pw::ReportComplexDataBase2D<T1,T2,T3>
                     pw::ReportBase::setFileExtension("json");
                     pw::ReportBase::setFileSignature(pw::FileSignature::JSON);
                 }
-		~ReportComplexData2D() {}
+		~ReportComplexData2D() = default;
     private:
 		void reportMetadata(std::ofstream& os) const {streamToJSON(os,this->getMetadata());}
 		void reportData(std::ofstream& os) const; 
@@ -410,10 +409,4 @@ void ReportComplexData2D<T1,T2,T3>::reportData(std::ofstream& os) const
     }
 }
 
-
-
-
 }
-
-
-
