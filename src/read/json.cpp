@@ -158,7 +158,7 @@ void readVecData(const json11::Json& json_obj,std::vector<double>& vec,const std
     if(json_obj[id].is_array()){
         const json11::Json::array& json_arr = json_obj[id].array_items();
         vec.resize(json_arr.size());
-        for(auto i = 0; i < json_arr.size(); i++)
+        for(size_t i = 0; i < json_arr.size(); i++)
             vec[i] = json_arr[i].number_value();
     }else
         dataNotFound(id);
@@ -169,7 +169,7 @@ void readVecData(const json11::Json& json_obj,std::vector<float>& vec,const std:
     if(json_obj[id].is_array()){
         const json11::Json::array& json_arr = json_obj[id].array_items();
         vec.resize(json_arr.size());
-        for(auto i = 0; i < json_arr.size(); i++)
+        for(size_t i = 0; i < json_arr.size(); i++)
             vec[i] = json_arr[i].number_value();
     } else
         dataNotFound(id);
@@ -180,7 +180,7 @@ void readVecData(const json11::Json& json_obj,std::vector<int>& vec,const std::s
     if(json_obj[id].is_array()){
         const json11::Json::array& json_arr = json_obj[id].array_items();
         vec.resize(json_arr.size());
-        for(auto i = 0; i < json_arr.size(); i++)
+        for(size_t i = 0; i < json_arr.size(); i++)
             vec[i] = json_arr[i].int_value();
     } else
         dataNotFound(id);
@@ -191,7 +191,7 @@ void readVecData(const json11::Json& json_obj,std::vector<std::string>& vec,cons
     if(json_obj[id].is_array()){
         const json11::Json::array& json_arr = json_obj[id].array_items();
         vec.resize(json_arr.size());
-        for(auto i = 0; i < json_arr.size(); i++)
+        for(size_t i = 0; i < json_arr.size(); i++)
             vec[i] = json_arr[i].string_value();
     } else
         dataNotFound(id);
@@ -205,7 +205,7 @@ void readVecData(const json11::Json& json_obj,std::vector<std::complex<double>>&
         if(json_arr.size() % 2 != 0)
             throw std::domain_error("readComplexVecData requires an even number of components in the json array");
         vec.resize(json_arr.size()/2);
-        for(auto i = 0; i < json_arr.size()/2;i++)
+        for(size_t i = 0; i < json_arr.size()/2;i++)
             vec[i] = std::complex<double>(json_arr[2*i].number_value(),json_arr[2*i+1].number_value());
     } else
         dataNotFound(id);
@@ -219,7 +219,7 @@ void readVecData(const json11::Json& json_obj,std::vector<std::complex<float>>& 
         if(json_arr.size() % 2 != 0)
             throw std::domain_error("readComplexVecData requires an even number of components in the json array");
         vec.resize(json_arr.size()/2);
-        for(auto i = 0; i < json_arr.size()/2;i++)
+        for(size_t i = 0; i < json_arr.size()/2;i++)
             vec[i] = std::complex<float>(static_cast<float>(json_arr[2*i].number_value()),\
                     static_cast<float>(json_arr[2*i+1].number_value()));
     } else
@@ -234,7 +234,7 @@ void readVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& ve
         if(json_arr.size() % 2 != 0)
             throw std::domain_error("readComplexVecData requires an even number of components in the json array");
         vec.resize(json_arr.size()/2);
-        for(auto i = 0; i < json_arr.size()/2;i++)
+        for(size_t i = 0; i < json_arr.size()/2;i++)
             vec[i] = std::complex<int>(json_arr[2*i].int_value(),json_arr[2*i+1].int_value());
     
     } else

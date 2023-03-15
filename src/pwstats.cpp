@@ -11,19 +11,17 @@
 
 namespace pw{
 
-StatCenter::StatCenter(std::string name,unsigned steps_per_log) :
+StatCenter::StatCenter(const std::string& name,unsigned steps_per_log) :
     m_name(name)
 {
     setLogFrequency(steps_per_log);
-    m_stat_requests = 0;
-    m_stat_reports = 0;
 }
 
-void StatCenter::setLogFrequency(unsigned val) 
+void StatCenter::setLogFrequency(unsigned val)
 {
     if(val < 1)
-        throw std::invalid_argument("Error in StatCenter::setReportFrequency(val):\
-                val must be an integer greater than 0");
+        throw std::invalid_argument("Error in StatCenter::setReportFrequency(val): "
+                "val must be an integer greater than 0");
     m_steps_per_log = val;
 }
 
@@ -44,12 +42,12 @@ void StatCenter::report(std::ostream& os) const
     os << std::endl;
 }
  
-void Counter::addCounter(std::string str,unsigned initial_count)
+void Counter::addCounter(const std::string& str,unsigned initial_count)
 {
-    m_map.insert(unsignedPair(str,initial_count));
+    m_map.try_emplace(str,initial_count);
 }
 
-void Counter::increment(std::string str,unsigned incr_amount)
+void Counter::increment(const std::string& str,unsigned incr_amount)
 {
     auto it = m_map.find(str);
     if(it != m_map.end())
@@ -60,22 +58,22 @@ void Counter::increment(std::string str,unsigned incr_amount)
 
 void Counter::report(std::ostream& os) const
 {
-    for(unsignedMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+    for(auto it = m_map.cbegin(); it != m_map.cend(); it++){
         os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
         os << std::setw(16) << (*it).second << std::endl;
     }
 }
 
-void Timer::addTimer(std::string str)
+void Timer::addTimer(const std::string& str)
 {
     using std::chrono::system_clock;
     std::chrono::time_point<system_clock> start;
     std::chrono::duration<double> netTime(0.0);
-    m_map.insert(chronoDurPair(str,netTime));
-    m_st.insert(chronoPair(str,start));
+    m_map.try_emplace(str,netTime);
+    m_st.try_emplace(str,start);
 }
 
-void Timer::startTimer(std::string str)
+void Timer::startTimer(const std::string& str)
 {
     // Find starting timer element for str
     auto it = m_st.find(str);
@@ -88,7 +86,7 @@ void Timer::startTimer(std::string str)
     }
 }
 
-bool Timer::endTimer(std::string str)
+bool Timer::endTimer(const std::string& str)
 {
     auto st_it = m_st.find(str);
     if(st_it == m_st.end())
@@ -103,37 +101,37 @@ bool Timer::endTimer(std::string str)
 
 void Timer::report(std::ostream& os) const
 {
-    for(chronoDurMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+    for(auto it = m_map.cbegin(); it != m_map.cend(); it++){
         os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
         os << std::setw(16) << std::fixed << (*it).second.count() << std::endl;
     }
 }
 
-void Tracker::addTracker(std::string str,double val)
+void Tracker::addTracker(const std::string& str,double val)
 {
-    m_map.insert(dblPair(str,val));
+    m_map.try_emplace(str,val);
 }
 
-void Tracker::updateTracker(std::string str,double val)
+void Tracker::updateTracker(const std::string& str,double val)
 {
     m_map[str] = val;
 }
 
 void Tracker::report(std::ostream& os) const
 {
-    for(dblMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+    for(auto it = m_map.cbegin(); it != m_map.cend(); it++){
         os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
         os << std::setw(16) << std::scientific << std::setprecision(3) << (*it).second << std::endl;
     }
 }
 
-void Clocker::addClock(std::string str)
+void Clocker::addClock(const std::string& str)
 {
-    m_map.insert(dblPair(str,0.0));
-    m_st.insert(clockPair(str,clock()));
+    m_map.try_emplace(str,0.0);
+    m_st.try_emplace(str,clock());
 }
 
-void Clocker::startClock(std::string str)
+void Clocker::startClock(const std::string& str)
 {
     auto it = m_st.find(str);
     if(it != m_st.end())
@@ -144,7 +142,7 @@ void Clocker::startClock(std::string str)
     }
 }
 
-bool Clocker::endClock(std::string str)
+bool Clocker::endClock(const std::string& str)
 {
     auto st_it = m_st.find(str);
     if(st_it == m_st.end())
@@ -154,14 +152,14 @@ bool Clocker::endClock(std::string str)
         return false;
   
     std::clock_t clockTicks = std::clock() - (*st_it).second;
-    double d_time = clockTicks / (double) CLOCKS_PER_SEC;  
+    auto d_time = static_cast<double>(clockTicks) / static_cast<double>(CLOCKS_PER_SEC);  
     map_it->second += d_time;
     return true;
 }
 
 void Clocker::report(std::ostream& os) const
 {
-    for(dblMap::const_iterator it = m_map.cbegin(); it != m_map.cend(); it++){
+    for(auto it = m_map.cbegin(); it != m_map.cend(); it++){
         os << "  " << std::setiosflags(std::ios::left) <<  std::setw(50) << (*it).first + ":";
         os << std::setw(16) << std::fixed << (*it).second << std::endl;
     }

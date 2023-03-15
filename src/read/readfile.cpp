@@ -1,4 +1,3 @@
-
 #include <fstream>
 #include <vector>
 #include <string>
@@ -58,7 +57,7 @@ namespace pw{
                 if(stream.eof())
                     return pw::FileSignature::UNKNOWN;
                 line_data = pw::parseString(line,' ');
-                if(!pw::rowIsDoubles(line_data) || line_data.size() != n1)
+                if(!pw::rowIsDoubles(line_data) || static_cast<int>(line_data.size()) != n1)
                     return pw::FileSignature::UNKNOWN;
                 return pw::FileSignature::DAT;
             } else if(line_data.size() == 2) // Assume data is XY format (two-columns)
