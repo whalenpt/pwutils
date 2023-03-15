@@ -46,18 +46,19 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
         // Check for XYZ data (first_line has format [nx ny], next nx+ny lines are size 1
         if(sz1 != 2 || sz2 != 1 || sz3 != 1)
             return pw::DataSignature::UNKNOWN;
-        int nx,ny;
+        unsigned nx;
+        unsigned ny;
         std::cout << "Reading nx and ny" << std::endl;
         try{
-            nx = std::stoi(first_line[0]);
-            ny = std::stoi(first_line[1]);
+            nx = static_cast<unsigned>(std::stoi(first_line[0]));
+            ny = static_cast<unsigned>(std::stoi(first_line[1]));
         } catch(...) {
             return pw::DataSignature::UNKNOWN;
         }
         std::cout << "nx " << std::to_string(nx) << std::endl;
         std::cout << "ny " << std::to_string(ny) << std::endl;
         std::vector<std::string> line;
-        for(auto i = 0; i < (nx+ny-2); i++){
+        for(unsigned i = 0; i < (nx+ny-2); i++){
             getLineOfData(fin,line);
             if(line.size() != 1)
                 return pw::DataSignature::UNKNOWN;
@@ -90,7 +91,7 @@ pw::OperatorSignature operatorSignature(const std::filesystem::path& path)
 }
 
 pw::metadataMap getHeaderContent(std::ifstream& fin){
-    std::map<std::string,std::string> header_map;
+    pw::metadataMap header_map;
     std::string line_feed;
     int oldpos = fin.tellg();
     while(std::getline(fin,line_feed)){
@@ -130,14 +131,5 @@ void getLineOfData(std::ifstream& fin,std::vector<std::string>& line_data)
     }
     line_data.clear();
 }
-
     
-
 }
-
-
-
-
-
-
-

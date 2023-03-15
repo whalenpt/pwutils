@@ -99,7 +99,7 @@ std::string joinVector(const std::vector<std::string>& vec,const char delim)
         return vec[0];
 
     std::string str = vec[0];
-    for(auto i = 1; i < vec.size(); i++)
+    for(size_t i = 1; i < vec.size(); i++)
         str += delim + vec[i]; 
     return str;
 }

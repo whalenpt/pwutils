@@ -10,6 +10,7 @@
 *.txt
 *~
 compile_commands*
+*.vscode
 
 
 
