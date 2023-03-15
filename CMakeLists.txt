@@ -1,14 +1,26 @@
 cmake_minimum_required(VERSION 3.19.1)
 set(CMAKE_CXX_STANDARD 17)
 
-project(pwutils VERSION 0.0.1 LANGUAGES CXX)
+project(pwutils VERSION 0.0.2 LANGUAGES CXX)
 
 option(PWUTILS_STATIC "Build pwutils as static (ON) or shared library (OFF)" ON)
 option(PWUTILS_TEST "Build pwutils tests" OFF)
 option(PWUTILS_EXAMPLES "Build pwutils examples" OFF)
 
+
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-	include(GNUInstallDirs)
+    # LIBDIR -> lib, INCLUDEDIR-> include, BINDIR-> bin
+    include(GNUInstallDirs)
+    if(NOT CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Release)
+    endif()
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+    else()
+        set(CMAKE_CXX_FLAGS "-Wall")
+        set(CMAKE_CXX_FLAGS_DEBUG "-g")
+        set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+    endif()
 endif()
 
 if (NOT PWUTILS_STATIC)
@@ -33,11 +45,11 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         enable_testing()
         set(INSTALL_GTEST OFF CACHE BOOL "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)")
 	if(WIN32)
-		unset(CMAKE_CXX_STANDARD)
-                add_subdirectory(external/googletest)
-		set(CMAKE_CXX_STANDARD 17)
+	    unset(CMAKE_CXX_STANDARD)
+            add_subdirectory(external/googletest)
+	    set(CMAKE_CXX_STANDARD 17)
 	else()
-		add_subdirectory(external/googletest)
+	    add_subdirectory(external/googletest)
 	endif()
         add_subdirectory(test)
     endif()
@@ -45,11 +57,4 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
         add_subdirectory(examples)
     endif()
 endif()
-
-
-
-
-
-
-
 
