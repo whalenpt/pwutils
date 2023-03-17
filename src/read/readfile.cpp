@@ -31,7 +31,7 @@ namespace pw{
             else if(line == "{"){
                 // JSON? check to be sure
                 return checkJSONSignature(stream,line);
-            } else if(pw::lineIsIntegers(line) || pw::lineIsDoubles(line)){
+            } else if(pw::isIntegers(line) || pw::isDoubles(line)){
                 // DAT? check to be sure
                 return checkDatSignature(stream,line);
             }
@@ -42,11 +42,11 @@ namespace pw{
     FileSignature checkDatSignature(std::ifstream& stream,std::string& str){
         std::string line = pw::eatWhiteSpace(str);
         std::vector<std::string> line_data = pw::parseString(line,' ');
-        if(!pw::rowIsDoubles(line_data))
+        if(!pw::isDoubles(line_data))
             return FileSignature::UNKNOWN;
 
         // Check for next line data
-        if(line_data.size() == 2 && pw::rowIsIntegers(line_data)){
+        if(line_data.size() == 2 && pw::isIntegers(line_data)){
             int n1 = std::stoi(line_data[0]);
             int n2 = std::stoi(line_data[1]);
             getDatLineData(stream,line_data);
@@ -57,20 +57,20 @@ namespace pw{
                 if(stream.eof())
                     return pw::FileSignature::UNKNOWN;
                 line_data = pw::parseString(line,' ');
-                if(!pw::rowIsDoubles(line_data) || static_cast<int>(line_data.size()) != n1)
+                if(!pw::isDoubles(line_data) || static_cast<int>(line_data.size()) != n1)
                     return pw::FileSignature::UNKNOWN;
                 return pw::FileSignature::DAT;
             } else if(line_data.size() == 2) // Assume data is XY format (two-columns)
                 return pw::FileSignature::DAT;
-        } else if(line_data.size() == 2 && pw::rowIsDoubles(line_data)){
+        } else if(line_data.size() == 2 && pw::isDoubles(line_data)){
             getDatLineData(stream,line_data);
-            if(line_data.size() == 2 && pw::rowIsDoubles(line_data))
+            if(line_data.size() == 2 && pw::isDoubles(line_data))
                 return pw::FileSignature::DAT;
             else 
                 return pw::FileSignature::UNKNOWN;
-        } else if(line_data.size() == 3 && pw::rowIsDoubles(line_data)){
+        } else if(line_data.size() == 3 && pw::isDoubles(line_data)){
             getDatLineData(stream,line_data);
-            if(line_data.size() == 3 && pw::rowIsDoubles(line_data))
+            if(line_data.size() == 3 && pw::isDoubles(line_data))
                 return pw::FileSignature::DAT;
             else 
                 return pw::FileSignature::UNKNOWN;

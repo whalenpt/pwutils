@@ -1,13 +1,11 @@
+#pragma once
 
-#ifndef PWMATH_HPP_ 
-#define PWMATH_HPP_
-
+#include <algorithm> //max_element, min_element
+#include <cmath> //sqrt
+#include <complex>
+#include <numeric> //accumulate
 #include <string>
 #include <vector>
-#include <cmath> //sqrt
-#include <numeric> //accumulate
-#include <algorithm> //max_element, min_element
-#include <complex>
 
 namespace pw{
 
@@ -104,16 +102,12 @@ namespace pw{
 
 
     int factorial(int);
-    bool isInteger(const std::string& s);
-    bool rowIsIntegers(const std::vector<std::string>& row);
-    bool lineIsIntegers(const std::string& s);
-    bool isDouble(const std::string& s);
-    bool rowIsDoubles(const std::vector<std::string>& row);
-    bool lineIsDoubles(const std::string& s);
+    bool isInteger(const std::string& s) noexcept;
+    bool isIntegers(const std::vector<std::string>& row) noexcept;
+    bool isIntegers(const std::string& s) noexcept;
+    bool isDouble(const std::string& s) noexcept;
+    bool isDoubles(const std::vector<std::string>& row) noexcept;
+    bool isDoubles(const std::string& s) noexcept;
     int intceil(int x,int y);
     unsigned int intceil(unsigned int x,unsigned int y);
 }
-
-#endif
-
-

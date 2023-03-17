@@ -1,22 +1,21 @@
-
-#include "pwutils/pwmath.hpp"
-#include "pwutils/pwstrings.h"
 #include <algorithm>
-#include <string>
 #include <cmath>
 #include <stdexcept>
+#include <string>
+#include "pwutils/pwmath.hpp"
+#include "pwutils/pwstrings.h"
 
 namespace pw{
 
 int intceil(int x,int y)
 {
-    int q = x/y + (x % y != 0);
+    int q = x/y + static_cast<int>((x % y != 0));
     return q;
 }
 
 unsigned int intceil(unsigned int x,unsigned int y)
 {
-    unsigned int q = x/y + (x % y != 0);
+    unsigned int q = x/y + static_cast<int>((x % y != 0));
     return q;
 }
 
@@ -25,75 +24,63 @@ int factorial(int n)
   return (n == 1 || n ==0 ) ? 1 : factorial(n-1)*n;
 }
 
-bool isInteger(const std::string& s)
+bool isInteger(const std::string& s) noexcept
 {
+    size_t pos{0};
+    [[maybe_unused]] int val;
     try{
-        [[maybe_unused]] int val = std::stoi(s);
-        return true;
+        val = std::stoi(s, &pos);
     }
-    catch(std::exception& e){
+    catch(...){
         return false;
     }
+    if(pos != s.size()) // no characters other than integers
+        return false;
     return true;
 }
 
-bool rowIsIntegers(const std::vector<std::string>& row){
+bool isIntegers(const std::vector<std::string>& row) noexcept {
     if(row.empty())
         return false;
-    for(const auto& item : row)
-        if(!isInteger(item))
-            return false;
-    return true;
+    return std::all_of(row.cbegin(), row.cend(), isInteger);
 }
 
-bool lineIsIntegers(const std::string& s)
+bool isIntegers(const std::string& s) noexcept
 {
-    std::string line = pw::eatWhiteSpace(s);
-    if(line.empty())
+    auto str = pw::eatWhiteSpace(s);
+    if(str.empty())
         return false;
-    std::vector<std::string> line_data = pw::parseString(line,' ');
-    for(const auto& item : line_data)
-        if(!isInteger(item))
-            return false;
-    return true;
+    auto str_vec = pw::parseString(str,' ');
+    return isIntegers(str_vec);
 }
 
-bool isDouble(const std::string& s){
+bool isDouble(const std::string& s) noexcept {
+    size_t pos{0};
+    [[maybe_unused]] double val;
     try{
-        [[maybe_unused]] double val = std::stod(s);
-        return true;
+        val = std::stod(s, &pos);
     }
-    catch(std::exception& e){
+    catch(...){
         return false;
     }
+    if(pos != s.size()) // use the whole string
+        return false;
     return true;
 }
 
-bool rowIsDoubles(const std::vector<std::string>& row){
+bool isDoubles(const std::vector<std::string>& row) noexcept{
     if(row.empty())
         return false;
-    for(const auto& item : row)
-        if(!isDouble(item))
-            return false;
-    return true;
+    return std::all_of(row.cbegin(), row.cend(), isDouble);
 }
 
-bool lineIsDoubles(const std::string& s)
+bool isDoubles(const std::string& s) noexcept
 {
-    std::string line = pw::eatWhiteSpace(s);
-    if(line.empty())
+    auto str = pw::eatWhiteSpace(s);
+    if(str.empty())
         return false;
-    std::vector<std::string> line_data = pw::parseString(line,' ');
-    for(const auto& item : line_data)
-        if(!isDouble(item))
-            return false;
-    return true;
+    auto str_vec = pw::parseString(str,' ');
+    return isDoubles(str_vec);
 }
 
-
-
-
 }
-
-
-

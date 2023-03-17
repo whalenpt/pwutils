@@ -96,7 +96,6 @@ class StatCenter{
         Tracker m_tracker;
         Clocker m_clocker;
         unsigned m_stat_requests{0};
-        unsigned m_stat_reports{0};
         unsigned m_steps_per_log;
         std::string m_name;
 };

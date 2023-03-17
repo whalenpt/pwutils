@@ -33,7 +33,7 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
         if((sz1 != 2) && (sz1 != 3))
             return pw::DataSignature::UNKNOWN;
         // Check that all the data is doubles (or perhaps floats, but not ints)
-        if(!(pw::rowIsDoubles(first_line) && pw::rowIsDoubles(second_line) && pw::rowIsDoubles(third_line)))
+        if(!(pw::isDoubles(first_line) && pw::isDoubles(second_line) && pw::isDoubles(third_line)))
             return pw::DataSignature::UNKNOWN;
         // Assume this is two column data throughout
         if(sz1 == 2)

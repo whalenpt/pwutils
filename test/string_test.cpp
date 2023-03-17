@@ -9,9 +9,3 @@ TEST(PWUTILS_TESTS,STRINGS) {
 	EXPECT_EQ(pw::stringLowerCase(str),"upper and lower cases"); 
 	EXPECT_EQ(pw::stringUpperCase(str),"UPPER AND LOWER CASES"); 
 }
-
-
-
-
-
-

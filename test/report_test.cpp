@@ -51,12 +51,6 @@ TEST(REPORT_TEST,REPORT_JSON){
     os << std::scientific << std::setprecision(4);
     os << data2;
     EXPECT_TRUE(std::filesystem::exists(data2.path()));
-
-//    json::TrackData<double> track_max("double_vector",pw::TrackType::Max,double_vec);
-//    os.open(track_max.filePath(std::filesystem::temp_directory_path()));
-//    os << track_max;
-//    os.close();
-
 }
 
 
@@ -99,11 +93,3 @@ TEST(REPORT_TEST,REPORT_DAT_2D){
     EXPECT_EQ(z.size(),zin.size());
     EXPECT_DOUBLE_EQ(z[10],1.0);
 }
-
-
-
-
-
-
-
-
