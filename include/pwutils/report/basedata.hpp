@@ -81,7 +81,3 @@ class ReportComplexDataBase2D : public ReportDataBase2D<T1,T2,std::complex<T3>>
 };
 
 }
-
-
-
-

@@ -1,10 +1,8 @@
+#pragma once
 
-#ifndef PWSTRINGS_H_ 
-#define PWSTRINGS_H_
-
-#include<vector>
-#include<string>
 #include<iostream>
+#include<string>
+#include<vector>
 
 namespace pw{
 
@@ -41,6 +39,3 @@ namespace pw{
   void addLineBreaks(std::string& str,int charsPerLine);
   std::ostream& columnOutput(std::ostream&,std::string,int,int,int);
 }
-
-#endif
-

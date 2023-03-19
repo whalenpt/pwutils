@@ -1,11 +1,9 @@
+#pragma once
 
-#ifndef REPORT_HELPER_H_
-#define REPORT_HELPER_H_
-
-#include <vector>
+#include <filesystem>
 #include <map>
 #include <string>
-#include <filesystem>
+#include <vector>
 #include "pwutils/pwconstants.h"
 
 namespace pw{
@@ -29,7 +27,3 @@ void AdjustPhase(std::vector<double>& in,int sz);
 int ComputeOutN_2D(int nD,int stride);
 
 }
-
-
-#endif
-

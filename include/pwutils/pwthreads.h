@@ -1,5 +1,5 @@
-//pwthreads.h
 #pragma once
+
 #include <vector>
 
 namespace pw{
@@ -14,6 +14,5 @@ class ThreadManager{
     private:
         unsigned m_num_threads;
 };
-
 
 }

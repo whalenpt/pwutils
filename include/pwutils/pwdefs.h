@@ -17,5 +17,3 @@ namespace pw{
     constexpr auto YLABEL = "y";
     constexpr auto ZLABEL = "z";
 }
-
-

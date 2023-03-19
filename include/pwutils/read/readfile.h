@@ -18,7 +18,3 @@ namespace pw{
     DataSignature dataSignature(const std::filesystem::path& path,FileSignature file_signature);
     OperatorSignature operatorSignature(const std::filesystem::path& path,FileSignature file_signature);
 }
-
-
-
-

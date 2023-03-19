@@ -20,7 +20,7 @@ pw::metadataMap getMetaData(const std::filesystem::path& path)
 pw::metadataMap getMetaData(std::ifstream& iss){
 
     size_t length = 16;
-    char* buffer = new char[length+1];
+    auto* buffer = new char[length+1];
     std::string metastring;
     bool search = true;
     // read until first array is found
@@ -55,8 +55,8 @@ pw::metadataMap getMetaData(std::ifstream& iss){
     const auto meta_json = json11::Json::parse(metastring,err_str);
     const auto& json_map = meta_json.object_items();
     pw::metadataMap metamap;
-    for(const auto& item : json_map)
-        metamap.insert(std::pair(item.first,item.second.string_value()));
+    for(const auto& [key, val] : json_map)
+        metamap.try_emplace(key, val.string_value());
     return metamap;
 }
 
@@ -110,18 +110,15 @@ pw::DataSignature deduceDataSignature(std::ifstream& fin)
     bool zfound = false;
     bool data_complex = false;
 
-    for(const auto& item : json_map){
-        std::string key = item.first;
-//        std::cout << key << std::endl;
-        if(key == pw::XLABEL && item.second.is_array())
+    for(const auto& [key, val] : json_map){
+        if(key == pw::XLABEL && val.is_array())
             xfound = true;
-        else if(key == pw::YLABEL && item.second.is_array())
+        else if(key == pw::YLABEL && val.is_array())
             yfound = true;
-        else if(key == pw::ZLABEL && item.second.is_array())
+        else if(key == pw::ZLABEL && val.is_array())
             zfound = true;
-        else if(key == "dtype" && item.second.is_string()){
-            if(item.second.string_value() == "complex")
-                data_complex = true;
+        else if(key == "dtype" && val.is_string() && val.string_value() == "complex"){
+            data_complex = true;
         }
     }
 
@@ -147,7 +144,7 @@ pw::OperatorSignature operatorSignature(const std::filesystem::path& path)
         return pw::OperatorSignature::NONE;
 }
 
-void dataNotFound(const std::string& id)
+[[noreturn]] void dataNotFound(const std::string& id)
 {
     const std::string str("Error in readVecData: id "+ id + " was not found in the json object"); 
             throw std::domain_error(str);
@@ -170,7 +167,7 @@ void readVecData(const json11::Json& json_obj,std::vector<float>& vec,const std:
         const json11::Json::array& json_arr = json_obj[id].array_items();
         vec.resize(json_arr.size());
         for(size_t i = 0; i < json_arr.size(); i++)
-            vec[i] = json_arr[i].number_value();
+            vec[i] = static_cast<float>(json_arr[i].number_value());
     } else
         dataNotFound(id);
 }
@@ -241,17 +238,4 @@ void readVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& ve
         dataNotFound(id);
 }
 
-
-
 }
-
-
-
-
-
-
-
-
-
-
-

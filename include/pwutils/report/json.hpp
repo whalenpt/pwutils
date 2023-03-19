@@ -27,7 +27,7 @@ void writeJSONVector(std::ofstream& os,const std::string& label,const std::vecto
 {
     writeJSONLabel(os,label,indent);
     os << "[";
-    unsigned int i;
+    size_t i;
     for(i = 0; i < v.size()-stride; i+=stride){
     	os << v[i] << ", ";
     }
@@ -41,7 +41,7 @@ void writeJSONVector(std::ofstream& os,const std::string& label,const std::vecto
 {
     writeJSONLabel(os,label,indent);
     os << "[";
-    unsigned int i;
+    size_t i;
     for(i = 0; i < v.size()-stride; i+=stride){
     	os << v[i].real() << ", " << v[i].imag() << ", ";
     }
@@ -56,7 +56,7 @@ void writeJSONPowerVector(std::ofstream& os,const std::string& label,const std::
 {
     writeJSONLabel(os,label,indent);
 	os << "[";
-    unsigned int i;
+    size_t i;
 	for(i=0; i < v.size()-stride; i+=stride){
         os << pow(abs(v[i]),2) << ", ";
 	}
@@ -71,8 +71,8 @@ void writeJSONPhaseVector(std::ofstream& os,const std::string& label,const std::
         unsigned int stride=1,const std::string& indent="\t",bool end_value=false)
 {
 		std::vector<T> phaseVec(v.size(),0.0);
-        unsigned int count = 0;
-        unsigned int i;
+        unsigned count = 0;
+        size_t i;
 		for(i = 0; i < v.size(); i+=stride){
             phaseVec[count] = arg(v[i]);
             count++;
@@ -104,13 +104,13 @@ void writeJSON2D(std::ofstream& os,\
     writeJSON2D_xy(os,x,strideX,y,strideY,indent);
     writeJSONLabel(os,pw::ZLABEL,indent);
 	os << "[";
-    unsigned int i = 0;
+    size_t i;
 	for(i = 0; i < x.size()-strideX; i+=strideX){
 	    for(unsigned int j=0; j < y.size(); j+=strideY){
             os << z[i*y.size()+j] << ", ";
         }
 	}
-    unsigned int j;
+    size_t j;
 	for(j = 0; j < y.size()-strideY; j++)
         os << z[i*y.size()+j] << ", ";
     os << z[i*y.size()+j];
@@ -128,13 +128,13 @@ void writeJSON2D(std::ofstream& os,\
     writeJSON2D_xy(os,x,strideX,y,strideY,indent);
     writeJSONLabel(os,pw::ZLABEL,indent);
 	os << "[";
-    unsigned int i = 0;
+    size_t i;
 	for(i = 0; i < x.size()-strideX; i+=strideX){
 	    for(unsigned int j=0; j < y.size(); j+=strideY){
             os << z[i*y.size()+j].real() << ", " << z[i*y.size()+j].imag() << ", ";
         }
 	}
-    unsigned int j;
+    size_t j;
 	for(j = 0; j < y.size()-strideY; j++)
         os << z[i*y.size()+j].real() << ", " << z[i*y.size()+j].imag() << ", ";
     os << z[i*y.size()+j].real() << ", " << z[i*y.size()+j].imag();
@@ -152,13 +152,13 @@ void writeJSONPower2D(std::ofstream& os,\
     writeJSON2D_xy(os,x,strideX,y,strideY,indent);
     writeJSONLabel(os,pw::ZLABEL,indent);
 	os << "[";
-    unsigned int i = 0;
+    size_t i;
 	for(i = 0; i < x.size()-strideX; i+=strideX){
 	    for(unsigned int j=0; j < y.size(); j+=strideY){
             os << pow(abs(z[i*y.size()+j]),2) << ", ";
         }
 	}
-    unsigned int j;
+    size_t j;
 	for(j = 0; j < y.size()-strideY; j++)
         os << pow(abs(z[i*y.size()+j]),2) << ", ";
     os << pow(abs(z[i*y.size()+j]),2);
@@ -176,13 +176,13 @@ void writeJSONPhase2D(std::ofstream& os,\
     writeJSON2D_xy(os,x,strideX,y,strideY,indent);
     writeJSONLabel(os,pw::ZLABEL,indent);
 	os << "[";
-    unsigned int i = 0;
+    size_t i;
 	for(i = 0; i < x.size()-strideX; i+=strideX){
 	    for(unsigned int j=0; j < y.size(); j+=strideY){
             os << arg(z[i*y.size()+j]) << ", ";
         }
 	}
-    unsigned int j;
+    size_t j;
 	for(j = 0; j < y.size()-strideY; j++)
         os << arg(z[i*y.size()+j]) << ", ";
     os << arg(z[i*y.size()+j],2);
