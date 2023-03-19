@@ -42,7 +42,7 @@ namespace dat{
         pw::metadataMap metadata = getHeaderContent(infile);
         while(!infile.eof()){
             T1 a;
-            T2 b,c;
+            T2 b; T2 c;
             infile >> a >> b >> c;
             x.push_back(a);
             y.push_back(std::complex<T2>(b,c));
@@ -53,7 +53,7 @@ namespace dat{
     template<typename T1,typename T2>
     void readXY3D(std::ifstream& fin,std::vector<T1>& x,std::vector<T2>& y)
     {
-        unsigned int nx,ny;
+        unsigned nx; unsigned ny;
         fin >> nx >> ny;
         x.resize(nx);
         y.resize(ny);
@@ -94,7 +94,7 @@ namespace dat{
         z.resize(x.size()*y.size());
         std::string line;
         while(std::getline(infile,line)){
-            T3 real_val, imag_val;
+            T3 real_val; T3 imag_val;
             std::stringstream ss(line);
             while(ss >> real_val >> imag_val)
                 z.push_back(dcmplx(real_val,imag_val));
@@ -104,6 +104,3 @@ namespace dat{
 
 
 }
-
-
-

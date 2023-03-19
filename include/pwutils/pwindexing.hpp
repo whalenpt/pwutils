@@ -1,7 +1,7 @@
-#include <vector>
+#include <cmath>
 #include <stdexcept>
 #include <string>
-#include <cmath>
+#include <vector>
 
 namespace pw{
 

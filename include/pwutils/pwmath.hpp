@@ -56,7 +56,7 @@ namespace pw{
         assert(v1.size() == v2.size());
         auto v1_norm = pw::norm<T>(v1);
         T sum = 0;
-        for(auto i = 0; i < v1.size(); i++)
+        for(size_t i = 0; i < v1.size(); i++)
             sum += std::norm(v1[i]-v2[i]); 
         return sqrt(sum)/v1_norm;
     }
@@ -95,7 +95,7 @@ namespace pw{
         assert(v1.size() == v2.size());
         auto v1_norm = pw::norm<T>(v1);
         T sum = 0;
-        for(auto i = 0; i < v1.size(); i++)
+        for(size_t i = 0; i < v1.size(); i++)
             sum += pow(v1[i]-v2[i],2); 
         return sqrt(sum)/v1_norm;
     }

@@ -26,7 +26,7 @@ template<typename T1,typename T2>
 void writeDat1D(std::ofstream& os,const std::vector<T1>& x,const std::vector<T2>& y) 
 {
     assert (x.size() == y.size());
-	for(unsigned int i = 0; i < x.size(); i++){
+	for(size_t i = 0; i < x.size(); i++){
 		os << x[i] << " " << y[i] << std::endl;
 	}
 }
@@ -36,7 +36,7 @@ void writeDat1D(std::ofstream& os,const std::vector<T1>& x,\
     const std::vector<std::complex<T2>>& y)
 {
     assert (x.size() == y.size());
-	for(unsigned int i = 0; i < x.size(); i++)
+	for(size_t i = 0; i < x.size(); i++)
 		os << x[i] << " " <<  y[i].real() << " " <<  y[i].imag() << std::endl;
 }
 
@@ -44,12 +44,12 @@ template<typename T1,typename T2>
 void writeDat2D_xy(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,\
         const std::vector<T2>& y,unsigned int strideY)
 {
-    unsigned int nx = pw::intceil(x.size(),strideX);
-    unsigned int ny = pw::intceil(y.size(),strideY);
+    unsigned nx = pw::intceil(x.size(),strideX);
+    unsigned ny = pw::intceil(y.size(),strideY);
     os << nx << " " << ny << std::endl;
-    for(unsigned int i = 0; i < x.size(); i+=strideX)
+    for(size_t i = 0; i < x.size(); i+=strideX)
         os << x[i] << std::endl; 
-    for(unsigned int j = 0; j < y.size(); j+=strideY)
+    for(size_t j = 0; j < y.size(); j+=strideY)
         os << y[j] << std::endl;
 }
 
@@ -60,8 +60,8 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,
 {
     assert (x.size()*y.size() == z.size());
     writeDat2D_xy(os,x,strideX,y,strideY);
-    for(unsigned int i = 0; i < x.size(); i+=strideX){
-    	for(unsigned int j = 0; j < y.size(); j+=strideY){
+    for(size_t i = 0; i < x.size(); i+=strideX){
+    	for(size_t j = 0; j < y.size(); j+=strideY){
        	    os << z[i*y.size()+j] << " ";
     	}
     	os << std::endl;
@@ -76,8 +76,8 @@ void writeDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int strideX,
 {
     assert (x.size()*y.size() == z.size());
     writeDat2D_xy(os,x,strideX,y,strideY);
-    for(unsigned int i = 0; i < x.size(); i+=strideX){
-    	for(unsigned int j = 0; j < y.size(); j+=strideY){
+    for(size_t i = 0; i < x.size(); i+=strideX){
+    	for(size_t j = 0; j < y.size(); j+=strideY){
             os << z[i*y.size()+j].real() << " " << z[i*y.size()+j].imag() << " ";
     	}
     	os << std::endl;
@@ -93,8 +93,8 @@ void writePowerDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int str
 
     // 2D DAT format prints the integer sizes of the x array and y array on the same line
     writeDat2D_xy(os,x,strideX,y,strideY);
-    for(unsigned int i = 0; i < x.size(); i+=strideX){
-        for(unsigned int j = 0; j < y.size(); j+=strideY){
+    for(size_t i = 0; i < x.size(); i+=strideX){
+        for(size_t j = 0; j < y.size(); j+=strideY){
             os << pow(abs(z[i*y.size()+j]),2) << " ";
         }
     	os << std::endl;
@@ -108,8 +108,8 @@ void writePhaseDat2D(std::ofstream& os,const std::vector<T1>& x,unsigned int str
 {
     assert (x.size()*y.size() == z.size());
     writeDat2D_xy(os,x,strideX,y,strideY);
-    for(unsigned int i = 0; i < x.size(); i+=strideX){
-        for(unsigned int j = 0; j < y.size(); j+=strideY){
+    for(size_t i = 0; i < x.size(); i+=strideX){
+        for(size_t j = 0; j < y.size(); j+=strideY){
             os << arg(z[i]) << " ";
         }
     	os << std::endl;
@@ -132,7 +132,7 @@ void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
 {
     assert (x.size() == y.size());
     std::vector<double> phaseVec(y.size());
-    for(unsigned int i=0; i < y.size(); i++)
+    for(size_t i=0; i < y.size(); i++)
         phaseVec[i] = arg(y[i]);
     pw::AdjustPhase(phaseVec,static_cast<int>(phaseVec.size()));
     writeDat1D(os,x,phaseVec);
@@ -141,7 +141,7 @@ void writePhaseDat1D(std::ofstream& os,const std::vector<T1>& x,
 
 template<typename T>
 void writeRowVec(std::ofstream& os,const std::vector<T>& x) {
-	for(unsigned int i = 0; i < x.size(); i++){
+	for(size_t i = 0; i < x.size(); i++){
 		os << x[i] << " "; 
     }
 	os << std::endl;
@@ -150,7 +150,7 @@ void writeRowVec(std::ofstream& os,const std::vector<T>& x) {
 template<typename T>
 void writeColVec(std::ofstream& os,const std::vector<T>& x)
 {
-	for(unsigned int i = 0; i < x.size(); i++){
+	for(size_t i = 0; i < x.size(); i++){
 		os << x[i] << std::endl; 
     }
 }
@@ -158,7 +158,7 @@ void writeColVec(std::ofstream& os,const std::vector<T>& x)
 template<typename T>
 void writeColVec(std::ofstream& os,const std::vector<std::complex<T>>& x)
 {
-	for(unsigned int i = 0; i < x.size(); i++){
+	for(size_t i = 0; i < x.size(); i++){
 		os << x[i].real() << " " <<  x[i].imag() << std::endl;
 	}
 }

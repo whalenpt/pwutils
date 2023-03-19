@@ -1,5 +1,4 @@
-#ifndef PWEXCEPT_H
-#define PWEXCEPT_H
+#pragma once
 
 #include <string>
 #include <exception>
@@ -21,8 +20,3 @@ class Exception : public std::exception
 
 
 }
-
-#endif
-
-
-

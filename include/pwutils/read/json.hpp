@@ -1,10 +1,10 @@
 // json.hpp
 #pragma once 
 
-#include <fstream>
-#include <vector>
-#include <string>
 #include <filesystem>
+#include <fstream>
+#include <string>
+#include <vector>
 #include <json11/json11.hpp>
 #include "pwutils/pwdefs.h"
 
@@ -31,7 +31,7 @@ namespace json{
             const std::string& id);
     void readVecData(const json11::Json& json_obj,std::vector<std::complex<int>>& vec,\
             const std::string& id);
-    void dataNotFound(const std::string& id);
+    [[noreturn]] void dataNotFound(const std::string& id);
 
     pw::OperatorSignature operatorSignature(const std::filesystem::path& path);
 
@@ -87,5 +87,3 @@ namespace json{
     } 
  
 }
-
-
